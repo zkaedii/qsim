@@ -1,0 +1,5 @@
+CREATE2 deployed to 0x17504999da6561cd
+DELEGATECALL executed with 0x123...logic, calldata: function_call_data
+SHA3 hash of input: 0xbcfa85bce506a58
+LOG3 emitted with topics: topic1, topic2, topic3
+STATICCALL to 0x456...contract with calldata: view_function_data

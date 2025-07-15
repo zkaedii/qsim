@@ -1,0 +1,6 @@
+{
+  "timestamp": "2025-07-15T04:01:19.091061",
+  "cluster_state": {
+    "node1": {
+      "status": "unreachable",
+      "last_seen": 

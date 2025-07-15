@@ -1,0 +1,348 @@
+2025-07-15 00:03:14,311 - INFO - 
+\U0001f4ca H_hat EVALUATION SUMMARY
+2025-07-15 00:03:14,311 - INFO - Average H_hat: 1.9404
+2025-07-15 00:03:14,311 - INFO - Standard Deviation: 0.2875
+2025-07-15 00:03:14,311 - INFO - Min H_hat: 0.5695
+2025-07-15 00:03:14,311 - INFO - Max H_hat: 2.3617
+2025-07-15 00:03:14,312 - INFO - 
+\U0001f3c5 LEVEL LOGIC PERFORMANCE REPORT
+2025-07-15 00:03:14,312 - INFO - Basic Logic Layer: Operational
+2025-07-15 00:03:14,312 - INFO - Rare Logic Layer: High Precision
+2025-07-15 00:03:14,312 - INFO - Advanced Logic Layer: Nominal
+2025-07-15 00:03:14,312 - INFO - Elite Logic Layer: Stable
+2025-07-15 00:03:14,312 - INFO - Mastery Logic Layer: Validated
+2025-07-15 00:03:14,312 - INFO - Basic Param Tuning: n=5, sigma=0.200
+2025-07-15 00:03:14,312 - INFO - Rare Param Tuning: gamma=2.0, alpha=0.150
+2025-07-15 00:03:14,312 - INFO - Advanced Param Tuning: beta=0.080, kappa=1.5
+2025-07-15 00:03:14,312 - INFO - Elite Param Tuning: theta=0.3, mu=0.100
+2025-07-15 00:03:14,312 - INFO - Mastery Param Tuning: rho=0.95, lambda=0.020, xi=0.050, omega=0.4
+2025-07-15 00:03:14,312 - INFO - Execution Logic Achievements: \u2705 ALL LEVELS INTEGRATED
+
+2025-07-15 00:03:33,227 - INFO - 
+\U0001f4ca H_hat EVALUATION SUMMARY
+2025-07-15 00:03:33,227 - INFO - Average H_hat: 1.9548
+2025-07-15 00:03:33,227 - INFO - Standard Deviation: 0.3112
+2025-07-15 00:03:33,228 - INFO - Min H_hat: 0.3160
+2025-07-15 00:03:33,228 - INFO - Max H_hat: 2.3805
+2025-07-15 00:03:33,228 - INFO - 
+\U0001f3c5 LEVEL LOGIC PERFORMANCE REPORT
+2025-07-15 00:03:33,228 - INFO - Basic Logic Layer: Operational
+2025-07-15 00:03:33,228 - INFO - Rare Logic Layer: High Precision
+2025-07-15 00:03:33,228 - INFO - Advanced Logic Layer: Nominal
+2025-07-15 00:03:33,228 - INFO - Elite Logic Layer: Stable
+2025-07-15 00:03:33,228 - INFO - Mastery Logic Layer: Validated
+2025-07-15 00:03:33,228 - INFO - Basic Param Tuning: n=5, sigma=0.200
+2025-07-15 00:03:33,229 - INFO - Rare Param Tuning: gamma=2.0, alpha=0.150
+2025-07-15 00:03:33,229 - INFO - Advanced Param Tuning: beta=0.080, kappa=1.5
+2025-07-15 00:03:33,229 - INFO - Elite Param Tuning: theta=0.3, mu=0.100
+2025-07-15 00:03:33,229 - INFO - Mastery Param Tuning: rho=0.95, lambda=0.020, xi=0.050, omega=0.4
+2025-07-15 00:03:33,229 - INFO - Execution Logic Achievements: \u2705 ALL LEVELS INTEGRATED
+
+2025-07-15 00:12:59,604 - INFO - 
+\U0001fa99 TOKEN VALUATION SCORE
+2025-07-15 00:12:59,604 - INFO - Utility Logic Score: 23
+2025-07-15 00:12:59,604 - INFO - H_hat Dynamic Range: 1.5965
+2025-07-15 00:12:59,604 - INFO - H_hat Volatility Penalty: 0.2915
+2025-07-15 00:12:59,604 - INFO - Final Token Utility Score: 231.3050
+2025-07-15 00:12:59,607 - INFO - 
+\U0001f4ca H_hat EVALUATION SUMMARY
+2025-07-15 00:12:59,607 - INFO - Average H_hat: 1.9998
+2025-07-15 00:12:59,607 - INFO - Standard Deviation: 0.3180
+2025-07-15 00:12:59,608 - INFO - Min H_hat: 0.5797
+2025-07-15 00:12:59,608 - INFO - Max H_hat: 2.5963
+2025-07-15 00:12:59,608 - INFO - 
+\U0001f3c5 LEVEL LOGIC PERFORMANCE REPORT
+2025-07-15 00:12:59,608 - INFO - Basic Logic Layer: Operational
+2025-07-15 00:12:59,608 - INFO - Rare Logic Layer: High Precision
+2025-07-15 00:12:59,608 - INFO - Advanced Logic Layer: Nominal
+2025-07-15 00:12:59,608 - INFO - Elite Logic Layer: Stable
+2025-07-15 00:12:59,608 - INFO - Mastery Logic Layer: Validated
+2025-07-15 00:12:59,608 - INFO - Basic Param Tuning: n=5, sigma=0.200
+2025-07-15 00:12:59,608 - INFO - Rare Param Tuning: gamma=2.0, alpha=0.150
+2025-07-15 00:12:59,608 - INFO - Advanced Param Tuning: beta=0.080, kappa=1.5
+2025-07-15 00:12:59,608 - INFO - Elite Param Tuning: theta=0.3, mu=0.100
+2025-07-15 00:12:59,608 - INFO - Mastery Param Tuning: rho=0.95, lambda=0.020, xi=0.050, omega=0.4
+2025-07-15 00:12:59,608 - INFO - Execution Logic Achievements: \u2705 ALL LEVELS INTEGRATED
+
+2025-07-15 00:19:31,412 - INFO - Event hook registered: hhat_compute -> <lambda>
+2025-07-15 00:19:31,414 - INFO - Event hook registered: opcode_emulate -> _log_entry
+2025-07-15 00:19:31,415 - INFO - Event opcode_emulate triggered function _log_entry
+2025-07-15 00:19:31,415 - INFO - Event opcode_emulate triggered function _log_entry
+2025-07-15 00:19:31,415 - INFO - Event opcode_emulate triggered function _log_entry
+2025-07-15 00:19:31,415 - INFO - Event hook registered: extended_emulate -> append
+2025-07-15 00:19:31,415 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,415 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,415 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,416 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,416 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,416 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,416 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,416 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,416 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,416 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,417 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,418 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,419 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,419 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,419 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,419 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,419 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,419 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,419 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,419 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,419 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,419 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,420 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,421 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,421 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,421 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,421 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,421 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,421 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,421 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,421 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,421 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,421 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,421 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,421 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,421 - INFO - Event extended_emulate triggered function append
+2025-07-15 00:19:31,422 - INFO - H_hat computed at t=0, base=0.0000, stoch=-0.4145
+2025-07-15 00:19:31,422 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,423 - INFO - H_hat computed at t=1, base=0.0584, stoch=-0.0581
+2025-07-15 00:19:31,423 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,423 - INFO - H_hat computed at t=2, base=0.1076, stoch=0.2311
+2025-07-15 00:19:31,423 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,423 - INFO - H_hat computed at t=3, base=0.1398, stoch=0.1415
+2025-07-15 00:19:31,423 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,424 - INFO - H_hat computed at t=4, base=0.1499, stoch=0.0234
+2025-07-15 00:19:31,424 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,424 - INFO - Event hook registered: player_update -> _on_player_update
+2025-07-15 00:19:31,424 - INFO - Event hook registered: game_complete -> _on_game_complete
+2025-07-15 00:19:31,424 - INFO - Player VaultKnight earned 0 rewards, 0 XP
+2025-07-15 00:19:31,424 - INFO - Event player_update triggered function _on_player_update
+2025-07-15 00:19:31,424 - INFO - Game completed: VaultKnight played Operational tier
+2025-07-15 00:19:31,424 - INFO - Event game_complete triggered function _on_game_complete
+2025-07-15 00:19:31,425 - INFO - Player VaultKnight earned 0 rewards, 0 XP
+2025-07-15 00:19:31,425 - INFO - Event player_update triggered function _on_player_update
+2025-07-15 00:19:31,425 - INFO - Game completed: VaultKnight played Nominal tier
+2025-07-15 00:19:31,425 - INFO - Event game_complete triggered function _on_game_complete
+2025-07-15 00:19:31,425 - INFO - Player VaultKnight earned 0 rewards, 0 XP
+2025-07-15 00:19:31,426 - INFO - Event player_update triggered function _on_player_update
+2025-07-15 00:19:31,426 - INFO - Game completed: VaultKnight played Validated tier
+2025-07-15 00:19:31,426 - INFO - Event game_complete triggered function _on_game_complete
+2025-07-15 00:19:31,426 - INFO - Event hook registered: game_complete -> _on_game_complete
+2025-07-15 00:19:31,426 - INFO - Player ChaosAlchemist earned 0 rewards, 0 XP
+2025-07-15 00:19:31,426 - INFO - Event player_update triggered function _on_player_update
+2025-07-15 00:19:31,426 - INFO - Event game_complete triggered function _on_game_complete
+2025-07-15 00:19:31,426 - INFO - Player ChaosAlchemist earned 0 rewards, 0 XP
+2025-07-15 00:19:31,426 - INFO - Event player_update triggered function _on_player_update
+2025-07-15 00:19:31,426 - INFO - Event game_complete triggered function _on_game_complete
+2025-07-15 00:19:31,426 - INFO - Player ChaosAlchemist earned 0 rewards, 0 XP
+2025-07-15 00:19:31,426 - INFO - Event player_update triggered function _on_player_update
+2025-07-15 00:19:31,427 - INFO - Event game_complete triggered function _on_game_complete
+2025-07-15 00:19:31,427 - INFO - Event hook registered: game_complete -> _on_game_complete
+2025-07-15 00:19:31,427 - INFO - Player QuantumMiner earned 0 rewards, 0 XP
+2025-07-15 00:19:31,427 - INFO - Event player_update triggered function _on_player_update
+2025-07-15 00:19:31,427 - INFO - Event game_complete triggered function _on_game_complete
+2025-07-15 00:19:31,427 - INFO - Player QuantumMiner earned 0 rewards, 0 XP
+2025-07-15 00:19:31,427 - INFO - Event player_update triggered function _on_player_update
+2025-07-15 00:19:31,427 - INFO - Event game_complete triggered function _on_game_complete
+2025-07-15 00:19:31,427 - INFO - Player QuantumMiner earned 0 rewards, 0 XP
+2025-07-15 00:19:31,427 - INFO - Event player_update triggered function _on_player_update
+2025-07-15 00:19:31,428 - INFO - Event game_complete triggered function _on_game_complete
+2025-07-15 00:19:31,429 - INFO - Event hook registered: fusion_boost -> _on_fusion_boost
+2025-07-15 00:19:31,429 - INFO - Event hook registered: ai_event -> _on_ai_event
+2025-07-15 00:19:31,429 - INFO - Fusion boost activated with power score: 57.0
+2025-07-15 00:19:31,429 - INFO - Event fusion_boost triggered function _on_fusion_boost
+2025-07-15 00:19:31,429 - INFO - AI event for VaultKnight, nemesis mode: False
+2025-07-15 00:19:31,429 - INFO - Event ai_event triggered function _on_ai_event
+2025-07-15 00:19:31,429 - INFO - Event hook registered: chaos_event -> append
+2025-07-15 00:19:31,429 - INFO - Event chaos_event triggered function append
+2025-07-15 00:19:31,430 - INFO - Event chaos_event triggered function append
+2025-07-15 00:19:31,431 - INFO - Event chaos_event triggered function append
+2025-07-15 00:19:31,431 - INFO - Event chaos_event triggered function append
+2025-07-15 00:19:31,431 - INFO - Event chaos_event triggered function append
+2025-07-15 00:19:31,431 - INFO - Event hook registered: env_event -> append
+2025-07-15 00:19:31,431 - INFO - Event env_event triggered function append
+2025-07-15 00:19:31,432 - INFO - Event env_event triggered function append
+2025-07-15 00:19:31,432 - INFO - Event env_event triggered function append
+2025-07-15 00:19:31,432 - INFO - Event env_event triggered function append
+2025-07-15 00:19:31,433 - INFO - H_hat computed at t=0, base=0.0000, stoch=-0.0448
+2025-07-15 00:19:31,433 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,433 - INFO - H_hat computed at t=1, base=0.0584, stoch=-0.0456
+2025-07-15 00:19:31,433 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,433 - INFO - H_hat computed at t=2, base=0.1076, stoch=-0.1845
+2025-07-15 00:19:31,433 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,433 - INFO - H_hat computed at t=3, base=0.1398, stoch=-0.2786
+2025-07-15 00:19:31,433 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,433 - INFO - H_hat computed at t=4, base=0.1499, stoch=0.0575
+2025-07-15 00:19:31,434 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,434 - INFO - H_hat computed at t=5, base=0.1364, stoch=0.1294
+2025-07-15 00:19:31,434 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,434 - INFO - H_hat computed at t=6, base=0.1013, stoch=0.3104
+2025-07-15 00:19:31,434 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,434 - INFO - H_hat computed at t=7, base=0.0502, stoch=0.2691
+2025-07-15 00:19:31,434 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,434 - INFO - H_hat computed at t=8, base=-0.0088, stoch=-0.3750
+2025-07-15 00:19:31,434 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,434 - INFO - H_hat computed at t=9, base=-0.0664, stoch=-0.0595
+2025-07-15 00:19:31,434 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,434 - INFO - H_hat computed at t=10, base=-0.1135, stoch=-0.3488
+2025-07-15 00:19:31,434 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,434 - INFO - H_hat computed at t=11, base=-0.1427, stoch=0.1429
+2025-07-15 00:19:31,434 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,435 - INFO - H_hat computed at t=12, base=-0.1494, stoch=0.3390
+2025-07-15 00:19:31,435 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,435 - INFO - H_hat computed at t=13, base=-0.1325, stoch=-0.0237
+2025-07-15 00:19:31,435 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,435 - INFO - H_hat computed at t=14, base=-0.0947, stoch=0.1847
+2025-07-15 00:19:31,435 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,435 - INFO - H_hat computed at t=15, base=-0.0419, stoch=0.0336
+2025-07-15 00:19:31,436 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,436 - INFO - H_hat computed at t=16, base=0.0175, stoch=-0.3902
+2025-07-15 00:19:31,436 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,436 - INFO - H_hat computed at t=17, base=0.0741, stoch=-0.1274
+2025-07-15 00:19:31,436 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,436 - INFO - H_hat computed at t=18, base=0.1191, stoch=0.2757
+2025-07-15 00:19:31,436 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,436 - INFO - H_hat computed at t=19, base=0.1452, stoch=0.1655
+2025-07-15 00:19:31,436 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,436 - INFO - H_hat computed at t=20, base=0.1484, stoch=0.0358
+2025-07-15 00:19:31,436 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,436 - INFO - H_hat computed at t=21, base=0.1282, stoch=-0.0465
+2025-07-15 00:19:31,436 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,436 - INFO - H_hat computed at t=22, base=0.0877, stoch=-0.2030
+2025-07-15 00:19:31,436 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,437 - INFO - H_hat computed at t=23, base=0.0334, stoch=0.2966
+2025-07-15 00:19:31,437 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,437 - INFO - H_hat computed at t=24, base=-0.0261, stoch=-0.3488
+2025-07-15 00:19:31,437 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,437 - INFO - H_hat computed at t=25, base=-0.0816, stoch=-0.1516
+2025-07-15 00:19:31,437 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,437 - INFO - H_hat computed at t=26, base=-0.1242, stoch=-0.3068
+2025-07-15 00:19:31,437 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,437 - INFO - H_hat computed at t=27, base=-0.1471, stoch=0.0075
+2025-07-15 00:19:31,437 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,437 - INFO - H_hat computed at t=28, base=-0.1469, stoch=-0.0003
+2025-07-15 00:19:31,437 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,437 - INFO - H_hat computed at t=29, base=-0.1234, stoch=-0.0095
+2025-07-15 00:19:31,437 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,438 - INFO - H_hat computed at t=30, base=-0.0805, stoch=0.3267
+2025-07-15 00:19:31,438 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,438 - INFO - H_hat computed at t=31, base=-0.0248, stoch=-0.0013
+2025-07-15 00:19:31,438 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,438 - INFO - H_hat computed at t=32, base=0.0347, stoch=0.2855
+2025-07-15 00:19:31,438 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,438 - INFO - H_hat computed at t=33, base=0.0888, stoch=0.0049
+2025-07-15 00:19:31,438 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,438 - INFO - H_hat computed at t=34, base=0.1289, stoch=0.2206
+2025-07-15 00:19:31,438 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,438 - INFO - H_hat computed at t=35, base=0.1486, stoch=-0.1859
+2025-07-15 00:19:31,438 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,438 - INFO - H_hat computed at t=36, base=0.1448, stoch=-0.2331
+2025-07-15 00:19:31,438 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,439 - INFO - H_hat computed at t=37, base=0.1182, stoch=0.0191
+2025-07-15 00:19:31,439 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,439 - INFO - H_hat computed at t=38, base=0.0730, stoch=-0.2102
+2025-07-15 00:19:31,439 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,440 - INFO - H_hat computed at t=39, base=0.0162, stoch=-0.0486
+2025-07-15 00:19:31,440 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,440 - INFO - H_hat computed at t=40, base=-0.0432, stoch=-0.0040
+2025-07-15 00:19:31,440 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,440 - INFO - H_hat computed at t=41, base=-0.0957, stoch=0.1416
+2025-07-15 00:19:31,440 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,440 - INFO - H_hat computed at t=42, base=-0.1331, stoch=0.2223
+2025-07-15 00:19:31,440 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,440 - INFO - H_hat computed at t=43, base=-0.1495, stoch=-0.1243
+2025-07-15 00:19:31,440 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,441 - INFO - H_hat computed at t=44, base=-0.1423, stoch=0.0666
+2025-07-15 00:19:31,441 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,441 - INFO - H_hat computed at t=45, base=-0.1126, stoch=-0.0668
+2025-07-15 00:19:31,441 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,441 - INFO - H_hat computed at t=46, base=-0.0652, stoch=-0.1743
+2025-07-15 00:19:31,441 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,441 - INFO - H_hat computed at t=47, base=-0.0074, stoch=-0.1864
+2025-07-15 00:19:31,441 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,442 - INFO - H_hat computed at t=48, base=0.0515, stoch=-0.1472
+2025-07-15 00:19:31,442 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,442 - INFO - H_hat computed at t=49, base=0.1023, stoch=-0.1171
+2025-07-15 00:19:31,442 - INFO - Event hhat_compute triggered function <lambda>
+2025-07-15 00:19:31,442 - INFO - 
+\U0001f4ca H_hat EVALUATION SUMMARY
+2025-07-15 00:19:31,442 - INFO - Average H_hat: 1.9368
+2025-07-15 00:19:31,442 - INFO - Standard Deviation: 0.2970
+2025-07-15 00:19:31,442 - INFO - Min H_hat: 0.6503
+2025-07-15 00:19:31,442 - INFO - Max H_hat: 2.3926
+2025-07-15 00:19:31,442 - INFO - 
+\U0001f3c5 LEVEL LOGIC PERFORMANCE REPORT
+2025-07-15 00:19:31,442 - INFO - Basic Logic Layer: Operational
+2025-07-15 00:19:31,443 - INFO - Rare Logic Layer: High Precision
+2025-07-15 00:19:31,443 - INFO - Advanced Logic Layer: Nominal
+2025-07-15 00:19:31,443 - INFO - Elite Logic Layer: Stable
+2025-07-15 00:19:31,443 - INFO - Mastery Logic Layer: Validated
+2025-07-15 00:19:31,443 - INFO - Execution Logic Achievements: \u2705 ALL LEVELS INTEGRATED
+

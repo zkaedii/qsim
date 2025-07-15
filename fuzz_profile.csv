@@ -1,0 +1,17 @@
+Metric,Value
+Total Fuzz Runs,5,750,000
+Unique Paths,4,969,250
+Entropy Score,0.3932
+Raw Entropy,0.9130
+Test Count,5
+Average Coverage Ratio,0.8642
+Target Entropy,0.85
+Status,NEEDS_IMPROVEMENT
+Timestamp,2025-07-15T03:02:54.253009Z
+
+Coverage Distribution
+0-20%,0
+20-40%,0
+40-60%,0
+60-80%,0
+80-100%,5

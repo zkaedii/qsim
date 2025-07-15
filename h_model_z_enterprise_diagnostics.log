@@ -1,0 +1,42 @@
+2025-07-15 00:37:37,062 - INFO - root - Initializing Supreme Enterprise Command Center...
+2025-07-15 00:37:37,063 - INFO - root - Supreme Enterprise Command Center initialization complete
+2025-07-15 00:37:37,065 - INFO - root - SupremeEnterpriseCommandCenter: Beginning enterprise-grade operation
+2025-07-15 00:37:37,066 - INFO - root - Strategy overview: {'lead_id': 'FLAL-5360', 'strategy_type': 'hierarchical_flash_loan_coordination', 'sequence': ['1. Pre-validation and health checks', '2. Resource allocation and batching', '3. Coordinated execution with monitoring', '4. Post-execution reporting and cleanup'], 'rationale': 'Maximize system reliability while maintaining operational efficiency', 'expected_outcomes': ['Successful flash loan simulation', 'System health preservation', 'Comprehensive audit trail']}
+2025-07-15 00:37:37,066 - INFO - root - EnterpriseFlashLoanAgentLead FLAL-5360: leading enhanced operation
+2025-07-15 00:37:37,066 - INFO - root - [2025-07-15T00:37:37.066357] Pre-execution: Resource allocation and logging setup
+2025-07-15 00:37:37,066 - INFO - root - [2025-07-15T00:37:37.066357][FLW-4325] TASK_START: Task #1
+2025-07-15 00:37:37,491 - WARNING - root - Attempt 1 failed: 'EnhancedExtendedBlackVaultOpcodes' object has no attribute 'run_all', retrying in 1s
+2025-07-15 00:37:38,703 - WARNING - root - Attempt 2 failed: 'EnhancedExtendedBlackVaultOpcodes' object has no attribute 'run_all', retrying in 2s
+2025-07-15 00:37:40,915 - WARNING - root - Attempt 3 failed: 'EnhancedExtendedBlackVaultOpcodes' object has no attribute 'run_all', retrying in 4s
+2025-07-15 00:37:44,915 - ERROR - root - All retry attempts exhausted
+2025-07-15 00:37:44,915 - INFO - root - [2025-07-15T00:37:44.915347][FLW-4325] TASK_ERROR: Flash loan operation failed after all retries
+2025-07-15 00:37:44,915 - ERROR - root - Helper execution failed: Flash loan operation failed after all retries
+2025-07-15 00:37:44,915 - INFO - root - Post-execution: Duration 7.85s, cleanup complete
+2025-07-15 00:37:44,915 - ERROR - root - Leadership operation failed: Flash loan operation failed after all retries
+2025-07-15 00:37:44,915 - INFO - root - Audit trail generated: 8d8e0df8957741ac
+2025-07-15 00:56:23,686 - INFO - root - Initializing Supreme Enterprise Command Center...
+2025-07-15 00:56:23,688 - INFO - root - Supreme Enterprise Command Center initialization complete
+2025-07-15 00:56:23,689 - INFO - root - SupremeEnterpriseCommandCenter: Beginning enterprise-grade operation
+2025-07-15 00:56:23,689 - INFO - root - Strategy overview: {'lead_id': 'FLAL-2334', 'strategy_type': 'hierarchical_flash_loan_coordination', 'sequence': ['1. Pre-validation and health checks', '2. Resource allocation and batching', '3. Coordinated execution with monitoring', '4. Post-execution reporting and cleanup'], 'rationale': 'Maximize system reliability while maintaining operational efficiency', 'expected_outcomes': ['Successful flash loan simulation', 'System health preservation', 'Comprehensive audit trail']}
+2025-07-15 00:56:23,690 - INFO - root - EnterpriseFlashLoanAgentLead FLAL-2334: leading enhanced operation
+2025-07-15 00:56:23,690 - INFO - root - [2025-07-15T00:56:23.690367] Pre-execution: Resource allocation and logging setup
+2025-07-15 00:56:23,690 - INFO - root - [2025-07-15T00:56:23.690367][FLW-3102] TASK_START: Task #1
+2025-07-15 00:56:24,137 - INFO - root - EnterpriseFlashLoanManager: orchestrated with health monitoring
+2025-07-15 00:56:24,137 - INFO - root - [2025-07-15T00:56:24.137924][FLW-3102] TASK_SUCCESS: Normalized result: Enterprise orchestration completed successfully
+2025-07-15 00:56:24,138 - INFO - root - Post-execution: Duration 0.45s, cleanup complete
+2025-07-15 00:56:24,243 - INFO - root - Audit trail generated: bc76167aaeaa4c4d
+2025-07-15 00:56:24,243 - INFO - root - EnterpriseFlashLoanAgentLead FLAL-2334: operation complete with audit bc76167aaeaa4c4d
+2025-07-15 00:56:24,243 - INFO - root - SupremeEnterpriseCommandCenter: Enterprise operation complete
+2025-07-15 00:56:34,118 - INFO - root - Initializing Supreme Enterprise Command Center...
+2025-07-15 00:56:34,119 - INFO - root - Supreme Enterprise Command Center initialization complete
+2025-07-15 00:56:34,121 - INFO - root - SupremeEnterpriseCommandCenter: Beginning enterprise-grade operation
+2025-07-15 00:56:34,121 - INFO - root - Strategy overview: {'lead_id': 'FLAL-5102', 'strategy_type': 'hierarchical_flash_loan_coordination', 'sequence': ['1. Pre-validation and health checks', '2. Resource allocation and batching', '3. Coordinated execution with monitoring', '4. Post-execution reporting and cleanup'], 'rationale': 'Maximize system reliability while maintaining operational efficiency', 'expected_outcomes': ['Successful flash loan simulation', 'System health preservation', 'Comprehensive audit trail']}
+2025-07-15 00:56:34,121 - INFO - root - EnterpriseFlashLoanAgentLead FLAL-5102: leading enhanced operation
+2025-07-15 00:56:34,121 - INFO - root - [2025-07-15T00:56:34.121547] Pre-execution: Resource allocation and logging setup
+2025-07-15 00:56:34,122 - INFO - root - [2025-07-15T00:56:34.121547][FLW-8263] TASK_START: Task #1
+2025-07-15 00:56:34,542 - INFO - root - EnterpriseFlashLoanManager: orchestrated with health monitoring
+2025-07-15 00:56:34,542 - INFO - root - [2025-07-15T00:56:34.542797][FLW-8263] TASK_SUCCESS: Normalized result: Enterprise orchestration completed successfully
+2025-07-15 00:56:34,542 - INFO - root - Post-execution: Duration 0.42s, cleanup complete
+2025-07-15 00:56:34,647 - INFO - root - Audit trail generated: 107bc5c7d35cbe2b
+2025-07-15 00:56:34,648 - INFO - root - EnterpriseFlashLoanAgentLead FLAL-5102: operation complete with audit 107bc5c7d35cbe2b
+2025-07-15 00:56:34,648 - INFO - root - SupremeEnterpriseCommandCenter: Enterprise operation complete

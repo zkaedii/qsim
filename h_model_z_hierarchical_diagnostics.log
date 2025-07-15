@@ -1,0 +1,146 @@
+2025-07-15 00:28:26,582 - INFO - SupremeCommandCenter: Beginning supreme hierarchical operation
+2025-07-15 00:28:26,582 - INFO - FlashLoanAgentLead: leading flash loan operation
+2025-07-15 00:28:26,582 - INFO - FlashLoanHelper: preparing orchestration
+2025-07-15 00:28:26,583 - INFO - FlashLoanAssistant: preparing to orchestrate
+2025-07-15 00:28:26,583 - INFO - FlashLoanManager: orchestrated opcode simulations.
+2025-07-15 00:28:26,583 - INFO - FlashLoanAssistant: orchestration complete
+2025-07-15 00:28:26,583 - INFO - FlashLoanWorker: task executed
+2025-07-15 00:28:26,585 - INFO - FlashLoanHelper: orchestration prepared and executed
+2025-07-15 00:28:26,585 - INFO - FlashLoanAgentLead: flash loan operation complete
+2025-07-15 00:28:26,585 - INFO - MathAgentLead: leading mathematical analysis
+2025-07-15 00:28:26,585 - INFO - MathHelper: preparing analysis
+2025-07-15 00:28:26,585 - INFO - MathFrameworkAssistant: starting assisted analysis
+2025-07-15 00:28:26,585 - INFO - H_hat computed at t=0
+2025-07-15 00:28:26,585 - INFO - H_hat computed at t=1
+2025-07-15 00:28:26,585 - INFO - H_hat computed at t=2
+2025-07-15 00:28:26,585 - INFO - H_hat computed at t=3
+2025-07-15 00:28:26,585 - INFO - H_hat computed at t=4
+2025-07-15 00:28:26,585 - INFO - H_hat computed at t=5
+2025-07-15 00:28:26,585 - INFO - H_hat computed at t=6
+2025-07-15 00:28:26,585 - INFO - H_hat computed at t=7
+2025-07-15 00:28:26,585 - INFO - H_hat computed at t=8
+2025-07-15 00:28:26,585 - INFO - H_hat computed at t=9
+2025-07-15 00:28:26,585 - INFO - H_hat computed at t=10
+2025-07-15 00:28:26,585 - INFO - H_hat computed at t=11
+2025-07-15 00:28:26,585 - INFO - H_hat computed at t=12
+2025-07-15 00:28:26,585 - INFO - H_hat computed at t=13
+2025-07-15 00:28:26,585 - INFO - H_hat computed at t=14
+2025-07-15 00:28:26,586 - INFO - H_hat computed at t=15
+2025-07-15 00:28:26,586 - INFO - H_hat computed at t=16
+2025-07-15 00:28:26,586 - INFO - H_hat computed at t=17
+2025-07-15 00:28:26,586 - INFO - H_hat computed at t=18
+2025-07-15 00:28:26,586 - INFO - H_hat computed at t=19
+2025-07-15 00:28:26,586 - INFO - H_hat computed at t=20
+2025-07-15 00:28:26,586 - INFO - H_hat computed at t=21
+2025-07-15 00:28:26,586 - INFO - H_hat computed at t=22
+2025-07-15 00:28:26,586 - INFO - H_hat computed at t=23
+2025-07-15 00:28:26,586 - INFO - H_hat computed at t=24
+2025-07-15 00:28:26,586 - INFO - H_hat computed at t=25
+2025-07-15 00:28:26,586 - INFO - H_hat computed at t=26
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=27
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=28
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=29
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=30
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=31
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=32
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=33
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=34
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=35
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=36
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=37
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=38
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=39
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=40
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=41
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=42
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=43
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=44
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=45
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=46
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=47
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=48
+2025-07-15 00:28:26,587 - INFO - H_hat computed at t=49
+2025-07-15 00:28:26,588 - INFO - MathFrameworkManager: average H_hat=-0.0067
+2025-07-15 00:28:26,588 - INFO - MathFrameworkAssistant: analysis complete, avg=-0.0067
+2025-07-15 00:28:26,588 - INFO - MathWorker: analysis executed
+2025-07-15 00:28:26,588 - INFO - MathHelper: analysis prepared and executed
+2025-07-15 00:28:26,588 - INFO - MathAgentLead: mathematical analysis complete
+2025-07-15 00:28:26,588 - INFO - GamingAgentLead: leading gaming tournament
+2025-07-15 00:28:26,588 - INFO - GamingHelper: preparing tournament
+2025-07-15 00:28:26,588 - INFO - GamingAssistant: setting up assisted tournament
+2025-07-15 00:28:26,588 - INFO - GamingAssistant: tournament complete
+2025-07-15 00:28:26,588 - INFO - GamingWorker: tournament executed
+2025-07-15 00:28:26,588 - INFO - GamingHelper: tournament prepared and executed
+2025-07-15 00:28:26,588 - INFO - GamingAgentLead: gaming tournament complete
+2025-07-15 00:28:26,588 - INFO - EnvironmentAgentLead: leading environment simulation
+2025-07-15 00:28:26,588 - INFO - EnvironmentHelper: preparing simulation
+2025-07-15 00:28:26,588 - INFO - EnvironmentAssistant: starting assisted simulation
+2025-07-15 00:28:26,588 - INFO - EnvironmentManager: simulated events ['Gas x1.52', 'MEV success', 'Network partition detected', 'Latency 302ms']
+2025-07-15 00:28:26,588 - INFO - EnvironmentAssistant: simulation complete
+2025-07-15 00:28:26,588 - INFO - EnvironmentWorker: environment simulation executed
+2025-07-15 00:28:26,588 - INFO - EnvironmentHelper: simulation prepared and executed
+2025-07-15 00:28:26,588 - INFO - EnvironmentAgentLead: environment simulation complete
+2025-07-15 00:28:26,588 - INFO - ChaosAgentLead: leading chaos operations
+2025-07-15 00:28:26,588 - INFO - ChaosHelper: preparing chaos events
+2025-07-15 00:28:26,588 - INFO - ChaosAssistant: triggering assisted chaos
+2025-07-15 00:28:26,588 - INFO - ChaosManager: unleashed chaos events ['CHAOS:logic_mirror', 'CHAOS:surge', 'CHAOS:surge']
+2025-07-15 00:28:26,588 - INFO - ChaosAssistant: chaos events generated
+2025-07-15 00:28:26,589 - INFO - ChaosWorker: chaos executed
+2025-07-15 00:28:26,589 - INFO - ChaosHelper: chaos events prepared and executed
+2025-07-15 00:28:26,589 - INFO - ChaosAgentLead: chaos operations complete
+2025-07-15 00:28:26,589 - INFO - SupremeCommandCenter: Supreme hierarchical operation complete
+2025-07-15 00:28:26,589 - INFO - H_hat computed at t=0
+2025-07-15 00:28:26,590 - INFO - H_hat computed at t=1
+2025-07-15 00:28:26,590 - INFO - H_hat computed at t=2
+2025-07-15 00:28:26,590 - INFO - H_hat computed at t=3
+2025-07-15 00:28:26,590 - INFO - H_hat computed at t=4
+2025-07-15 00:28:26,592 - INFO - H_hat computed at t=0
+2025-07-15 00:28:26,592 - INFO - H_hat computed at t=1
+2025-07-15 00:28:26,592 - INFO - H_hat computed at t=2
+2025-07-15 00:28:26,592 - INFO - H_hat computed at t=3
+2025-07-15 00:28:26,593 - INFO - H_hat computed at t=4
+2025-07-15 00:28:26,593 - INFO - H_hat computed at t=5
+2025-07-15 00:28:26,593 - INFO - H_hat computed at t=6
+2025-07-15 00:28:26,593 - INFO - H_hat computed at t=7
+2025-07-15 00:28:26,593 - INFO - H_hat computed at t=8
+2025-07-15 00:28:26,593 - INFO - H_hat computed at t=9
+2025-07-15 00:28:26,593 - INFO - H_hat computed at t=10
+2025-07-15 00:28:26,593 - INFO - H_hat computed at t=11
+2025-07-15 00:28:26,593 - INFO - H_hat computed at t=12
+2025-07-15 00:28:26,594 - INFO - H_hat computed at t=13
+2025-07-15 00:28:26,594 - INFO - H_hat computed at t=14
+2025-07-15 00:28:26,594 - INFO - H_hat computed at t=15
+2025-07-15 00:28:26,594 - INFO - H_hat computed at t=16
+2025-07-15 00:28:26,594 - INFO - H_hat computed at t=17
+2025-07-15 00:28:26,594 - INFO - H_hat computed at t=18
+2025-07-15 00:28:26,594 - INFO - H_hat computed at t=19
+2025-07-15 00:28:26,594 - INFO - H_hat computed at t=20
+2025-07-15 00:28:26,594 - INFO - H_hat computed at t=21
+2025-07-15 00:28:26,594 - INFO - H_hat computed at t=22
+2025-07-15 00:28:26,594 - INFO - H_hat computed at t=23
+2025-07-15 00:28:26,594 - INFO - H_hat computed at t=24
+2025-07-15 00:28:26,594 - INFO - H_hat computed at t=25
+2025-07-15 00:28:26,594 - INFO - H_hat computed at t=26
+2025-07-15 00:28:26,594 - INFO - H_hat computed at t=27
+2025-07-15 00:28:26,594 - INFO - H_hat computed at t=28
+2025-07-15 00:28:26,594 - INFO - H_hat computed at t=29
+2025-07-15 00:28:26,594 - INFO - H_hat computed at t=30
+2025-07-15 00:28:26,595 - INFO - H_hat computed at t=31
+2025-07-15 00:28:26,595 - INFO - H_hat computed at t=32
+2025-07-15 00:28:26,595 - INFO - H_hat computed at t=33
+2025-07-15 00:28:26,595 - INFO - H_hat computed at t=34
+2025-07-15 00:28:26,595 - INFO - H_hat computed at t=35
+2025-07-15 00:28:26,595 - INFO - H_hat computed at t=36
+2025-07-15 00:28:26,595 - INFO - H_hat computed at t=37
+2025-07-15 00:28:26,595 - INFO - H_hat computed at t=38
+2025-07-15 00:28:26,595 - INFO - H_hat computed at t=39
+2025-07-15 00:28:26,595 - INFO - H_hat computed at t=40
+2025-07-15 00:28:26,595 - INFO - H_hat computed at t=41
+2025-07-15 00:28:26,595 - INFO - H_hat computed at t=42
+2025-07-15 00:28:26,595 - INFO - H_hat computed at t=43
+2025-07-15 00:28:26,595 - INFO - H_hat computed at t=44
+2025-07-15 00:28:26,595 - INFO - H_hat computed at t=45
+2025-07-15 00:28:26,595 - INFO - H_hat computed at t=46
+2025-07-15 00:28:26,595 - INFO - H_hat computed at t=47
+2025-07-15 00:28:26,595 - INFO - H_hat computed at t=48
+2025-07-15 00:28:26,596 - INFO - H_hat computed at t=49

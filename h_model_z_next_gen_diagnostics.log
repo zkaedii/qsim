@@ -1,0 +1,101 @@
+2025-07-15 01:13:09,344 - INFO - root - Initializing Next-Generation Enterprise Command Center...
+2025-07-15 01:13:09,347 - INFO - root - Node node-0 added to cluster cluster-3892
+2025-07-15 01:13:09,347 - INFO - root - Node node-1 added to cluster cluster-3892
+2025-07-15 01:13:09,347 - INFO - root - Node node-2 added to cluster cluster-3892
+2025-07-15 01:13:09,347 - INFO - root - Leader elected: node-2
+2025-07-15 01:13:09,348 - INFO - root - User admin created with role admin
+2025-07-15 01:13:09,349 - INFO - root - Next-Generation Enterprise Command Center initialized
+2025-07-15 01:13:09,350 - INFO - root - NextGenEnterpriseCommandCenter: Beginning next-generation operation
+2025-07-15 01:13:09,351 - INFO - root - Smoke tests completed: 4/4 passed
+2025-07-15 01:13:09,462 - INFO - root - Task task-3119 dispatched to cluster
+2025-07-15 01:13:09,491 - ERROR - root - Hook error on game_play: 'EnterpriseUser1'
+Traceback (most recent call last):
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 127, in trigger
+    func(*args, **kwargs)
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 772, in _on_play
+    self.board.update(pid,reward,xp)
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 783, in update
+    d=self.lb[p]; d['games']+=1; d['rewards']+=r; d['xp']+=x
+      ~~~~~~~^^^
+KeyError: 'EnterpriseUser1'
+2025-07-15 01:13:09,492 - ERROR - root - Hook error on game_play: 'EnterpriseUser1'
+Traceback (most recent call last):
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 127, in trigger
+    func(*args, **kwargs)
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 772, in _on_play
+    self.board.update(pid,reward,xp)
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 783, in update
+    d=self.lb[p]; d['games']+=1; d['rewards']+=r; d['xp']+=x
+      ~~~~~~~^^^
+KeyError: 'EnterpriseUser1'
+2025-07-15 01:13:09,493 - ERROR - root - Hook error on game_play: 'EnterpriseUser1'
+Traceback (most recent call last):
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 127, in trigger
+    func(*args, **kwargs)
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 772, in _on_play
+    self.board.update(pid,reward,xp)
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 783, in update
+    d=self.lb[p]; d['games']+=1; d['rewards']+=r; d['xp']+=x
+      ~~~~~~~^^^
+KeyError: 'EnterpriseUser1'
+2025-07-15 01:13:09,493 - ERROR - root - Hook error on game_play: 'EnterpriseUser2'
+Traceback (most recent call last):
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 127, in trigger
+    func(*args, **kwargs)
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 772, in _on_play
+    self.board.update(pid,reward,xp)
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 783, in update
+    d=self.lb[p]; d['games']+=1; d['rewards']+=r; d['xp']+=x
+      ~~~~~~~^^^
+KeyError: 'EnterpriseUser2'
+2025-07-15 01:13:09,493 - ERROR - root - Hook error on game_play: 'EnterpriseUser2'
+Traceback (most recent call last):
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 127, in trigger
+    func(*args, **kwargs)
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 772, in _on_play
+    self.board.update(pid,reward,xp)
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 783, in update
+    d=self.lb[p]; d['games']+=1; d['rewards']+=r; d['xp']+=x
+      ~~~~~~~^^^
+KeyError: 'EnterpriseUser2'
+2025-07-15 01:13:09,494 - ERROR - root - Hook error on game_play: 'EnterpriseUser2'
+Traceback (most recent call last):
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 127, in trigger
+    func(*args, **kwargs)
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 772, in _on_play
+    self.board.update(pid,reward,xp)
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 783, in update
+    d=self.lb[p]; d['games']+=1; d['rewards']+=r; d['xp']+=x
+      ~~~~~~~^^^
+KeyError: 'EnterpriseUser2'
+2025-07-15 01:13:09,494 - ERROR - root - Hook error on game_play: 'EnterpriseUser3'
+Traceback (most recent call last):
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 127, in trigger
+    func(*args, **kwargs)
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 772, in _on_play
+    self.board.update(pid,reward,xp)
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 783, in update
+    d=self.lb[p]; d['games']+=1; d['rewards']+=r; d['xp']+=x
+      ~~~~~~~^^^
+KeyError: 'EnterpriseUser3'
+2025-07-15 01:13:09,494 - ERROR - root - Hook error on game_play: 'EnterpriseUser3'
+Traceback (most recent call last):
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 127, in trigger
+    func(*args, **kwargs)
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 772, in _on_play
+    self.board.update(pid,reward,xp)
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 783, in update
+    d=self.lb[p]; d['games']+=1; d['rewards']+=r; d['xp']+=x
+      ~~~~~~~^^^
+KeyError: 'EnterpriseUser3'
+2025-07-15 01:13:09,494 - ERROR - root - Hook error on game_play: 'EnterpriseUser3'
+Traceback (most recent call last):
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 127, in trigger
+    func(*args, **kwargs)
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 772, in _on_play
+    self.board.update(pid,reward,xp)
+  File "C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\h_model_z_next_generation_enterprise_ecosystem.py", line 783, in update
+    d=self.lb[p]; d['games']+=1; d['rewards']+=r; d['xp']+=x
+      ~~~~~~~^^^
+KeyError: 'EnterpriseUser3'
+2025-07-15 01:13:09,495 - INFO - root - NextGenEnterpriseCommandCenter: Next-generation operation complete

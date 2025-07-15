@@ -1,0 +1,16 @@
+{
+  "total_runs": 5750000,
+  "unique_paths": 4969250,
+  "entropy_score": 0.39321228901532523,
+  "coverage_distribution": {
+    "0-20%": 0,
+    "20-40%": 0,
+    "40-60%": 0,
+    "60-80%": 0,
+    "80-100%": 5
+  },
+  "timestamp": "2025-07-15T03:02:54.253009Z",
+  "raw_entropy": 0.913010661119653,
+  "test_count": 5,
+  "average_coverage_ratio": 0.8642173913043478
+}

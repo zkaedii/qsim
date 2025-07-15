@@ -1,0 +1,24 @@
+2025-07-15 03:59:58,237 - INFO - Starting H_MODEL_Z project organization...
+2025-07-15 03:59:58,238 - INFO - Creating backup before reorganization...
+2025-07-15 03:59:58,511 - INFO - Backup created at: C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\backups\pre_organization_1752577198
+2025-07-15 03:59:58,512 - INFO - Creating new directory structure...
+2025-07-15 03:59:58,518 - INFO - Created directory structure: src/
+2025-07-15 03:59:58,522 - INFO - Created directory structure: config/
+2025-07-15 03:59:58,528 - INFO - Created directory structure: docs/
+2025-07-15 03:59:58,531 - INFO - Created directory structure: tests/
+2025-07-15 03:59:58,536 - INFO - Created directory structure: benchmarks/
+2025-07-15 03:59:58,542 - INFO - Created directory structure: examples/
+2025-07-15 03:59:58,546 - INFO - Created directory structure: scripts/
+2025-07-15 03:59:58,549 - INFO - Created directory structure: blockchain/
+2025-07-15 03:59:58,554 - INFO - Created directory structure: assets/
+2025-07-15 03:59:58,559 - INFO - Created directory structure: build/
+2025-07-15 03:59:58,559 - INFO - Organizing files...
+2025-07-15 03:59:59,488 - INFO - Organized 164 files
+2025-07-15 03:59:59,489 - INFO - Created master README.md
+2025-07-15 03:59:59,491 - INFO - Created project metadata
+2025-07-15 03:59:59,491 - INFO - Cleaning up empty directories...
+2025-07-15 04:00:00,128 - INFO - Removed empty directory: C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\lib\openzeppelin-contracts\.git\objects\info
+2025-07-15 04:00:00,134 - INFO - Removed empty directory: C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\lib\openzeppelin-contracts\.git\refs\tags
+2025-07-15 04:00:02,934 - INFO - Generated organization report
+2025-07-15 04:00:02,947 - INFO - Backup created at: C:\Users\ideak\OneDrive\Desktop\_agents\_h_model_z_\backups\pre_organization_1752577198
+2025-07-15 04:00:02,948 - INFO - Check ORGANIZATION_REPORT.md for details

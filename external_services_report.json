@@ -1,0 +1,274 @@
+{
+  "timestamp": "2025-07-15T03:12:59.513152Z",
+  "execution_time": 14.12,
+  "overall_metrics": {
+    "total_tests": 78,
+    "passed_tests": 6,
+    "success_rate": 7.69,
+    "average_response_time": 0.349,
+    "average_data_quality": 1.0,
+    "external_readiness_score": 0.246
+  },
+  "test_categories": {
+    "availability": {
+      "total": 12,
+      "passed": 5,
+      "success_rate": 41.67,
+      "avg_response_time": 0.576
+    },
+    "performance": {
+      "total": 15,
+      "passed": 0,
+      "success_rate": 0.0,
+      "avg_response_time": 0.091
+    },
+    "rate_limiting": {
+      "total": 40,
+      "passed": 0,
+      "success_rate": 0.0,
+      "avg_response_time": 0.401
+    },
+    "timeout_resilience": {
+      "total": 2,
+      "passed": 0,
+      "success_rate": 0.0,
+      "avg_response_time": 0.087
+    },
+    "consensus": {
+      "total": 1,
+      "passed": 1,
+      "success_rate": 100.0,
+      "avg_response_time": 0.97
+    },
+    "blockchain_connectivity": {
+      "total": 4,
+      "passed": 0,
+      "success_rate": 0.0,
+      "avg_response_time": 0.088
+    },
+    "block_data": {
+      "total": 4,
+      "passed": 0,
+      "success_rate": 0.0,
+      "avg_response_time": 0
+    }
+  },
+  "service_status": {
+    "Ethereum_Mainnet": {
+      "total_tests": 29,
+      "success_rate": 0.0,
+      "avg_response_time": 0.32,
+      "avg_data_quality": 1.0,
+      "critical": true,
+      "status": "DEGRADED"
+    },
+    "Polygon_Mainnet": {
+      "total_tests": 29,
+      "success_rate": 0.0,
+      "avg_response_time": 0.342,
+      "avg_data_quality": 1.0,
+      "critical": true,
+      "status": "DEGRADED"
+    },
+    "Arbitrum_One": {
+      "total_tests": 8,
+      "success_rate": 0.0,
+      "avg_response_time": 0.172,
+      "avg_data_quality": 1.0,
+      "critical": true,
+      "status": "DEGRADED"
+    },
+    "Optimism_Mainnet": {
+      "total_tests": 3,
+      "success_rate": 0.0,
+      "avg_response_time": 0.36,
+      "avg_data_quality": 1.0,
+      "critical": true,
+      "status": "DEGRADED"
+    },
+    "Chainlink_ETH_USD": {
+      "total_tests": 1,
+      "success_rate": 100.0,
+      "avg_response_time": 0.417,
+      "avg_data_quality": 1.0,
+      "critical": true,
+      "status": "HEALTHY"
+    },
+    "CoinMarketCap_API": {
+      "total_tests": 1,
+      "success_rate": 0.0,
+      "avg_response_time": 0.457,
+      "avg_data_quality": 1.0,
+      "critical": false,
+      "status": "DEGRADED"
+    },
+    "Alpha_Vantage_API": {
+      "total_tests": 1,
+      "success_rate": 100.0,
+      "avg_response_time": 0.448,
+      "avg_data_quality": 1.0,
+      "critical": false,
+      "status": "HEALTHY"
+    },
+    "Etherscan_API": {
+      "total_tests": 1,
+      "success_rate": 100.0,
+      "avg_response_time": 0.635,
+      "avg_data_quality": 1.0,
+      "critical": false,
+      "status": "HEALTHY"
+    },
+    "Polygonscan_API": {
+      "total_tests": 1,
+      "success_rate": 100.0,
+      "avg_response_time": 0.652,
+      "avg_data_quality": 1.0,
+      "critical": false,
+      "status": "HEALTHY"
+    },
+    "IPFS_Gateway": {
+      "total_tests": 1,
+      "success_rate": 100.0,
+      "avg_response_time": 0.42,
+      "avg_data_quality": 1.0,
+      "critical": false,
+      "status": "HEALTHY"
+    },
+    "OpenAI_API": {
+      "total_tests": 1,
+      "success_rate": 0.0,
+      "avg_response_time": 0.912,
+      "avg_data_quality": 1.0,
+      "critical": false,
+      "status": "DEGRADED"
+    },
+    "HuggingFace_API": {
+      "total_tests": 1,
+      "success_rate": 0.0,
+      "avg_response_time": 0.453,
+      "avg_data_quality": 1.0,
+      "critical": false,
+      "status": "DEGRADED"
+    },
+    "Oracle_Aggregation": {
+      "total_tests": 1,
+      "success_rate": 100.0,
+      "avg_response_time": 0.97,
+      "avg_data_quality": 0.997,
+      "critical": false,
+      "status": "HEALTHY"
+    }
+  },
+  "critical_failures": [
+    {
+      "service": "Ethereum_Mainnet",
+      "success_rate": 0.0,
+      "issues": [
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'"
+      ]
+    },
+    {
+      "service": "Polygon_Mainnet",
+      "success_rate": 0.0,
+      "issues": [
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'"
+      ]
+    },
+    {
+      "service": "Arbitrum_One",
+      "success_rate": 0.0,
+      "issues": [
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://arbitrum-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://arbitrum-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://arbitrum-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://arbitrum-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://arbitrum-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://arbitrum-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://arbitrum-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://arbitrum-mainnet.infura.io/v3/demo'"
+      ]
+    },
+    {
+      "service": "Optimism_Mainnet",
+      "success_rate": 0.0,
+      "issues": [
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://optimism-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://optimism-mainnet.infura.io/v3/demo'",
+        "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://optimism-mainnet.infura.io/v3/demo'"
+      ]
+    }
+  ],
+  "recommendations": [
+    "\ud83d\udea8 Address critical service failures before audit submission",
+    "\u2022 Ethereum_Mainnet: 0.0% success rate",
+    "\u2022 Polygon_Mainnet: 0.0% success rate",
+    "\u2022 Arbitrum_One: 0.0% success rate",
+    "\u2022 Optimism_Mainnet: 0.0% success rate",
+    "\ud83d\udd04 Implement better rate limiting strategies",
+    "\u2705 Excellent external service coverage",
+    "\ud83d\udcca Continue monitoring external dependencies in production",
+    "\ud83d\udd27 Consider implementing circuit breakers for critical services"
+  ],
+  "audit_impact": {
+    "level": "CONCERNING",
+    "audit_boost": "0%",
+    "message": "External service issues may impact audit readiness",
+    "ready_for_audit": false
+  }
+}

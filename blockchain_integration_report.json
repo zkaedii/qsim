@@ -1,0 +1,132 @@
+{
+  "timestamp": "2025-07-15T03:13:27.578996Z",
+  "execution_time": 7.55,
+  "overall_metrics": {
+    "total_tests": 8,
+    "passed_tests": 4,
+    "success_rate": 50.0,
+    "chains_tested": 5,
+    "operational_chains": 1,
+    "blockchain_readiness_score": 0.45
+  },
+  "chain_status": {
+    "Ethereum": {
+      "tests_passed": 0,
+      "total_tests": 1,
+      "success_rate": 0.0,
+      "avg_response_time": 0.38,
+      "status": "DEGRADED"
+    },
+    "Polygon": {
+      "tests_passed": 0,
+      "total_tests": 1,
+      "success_rate": 0.0,
+      "avg_response_time": 0.379,
+      "status": "DEGRADED"
+    },
+    "Arbitrum": {
+      "tests_passed": 0,
+      "total_tests": 1,
+      "success_rate": 0.0,
+      "avg_response_time": 0.383,
+      "status": "DEGRADED"
+    },
+    "Optimism": {
+      "tests_passed": 0,
+      "total_tests": 1,
+      "success_rate": 0.0,
+      "avg_response_time": 0.45,
+      "status": "DEGRADED"
+    },
+    "BSC": {
+      "tests_passed": 4,
+      "total_tests": 4,
+      "success_rate": 100.0,
+      "avg_response_time": 0.207,
+      "status": "OPERATIONAL"
+    }
+  },
+  "test_results": [
+    {
+      "chain": "Ethereum",
+      "test": "connectivity",
+      "success": false,
+      "response_time": 0.3804502487182617,
+      "error": "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://mainnet.infura.io/v3/demo'"
+    },
+    {
+      "chain": "Polygon",
+      "test": "connectivity",
+      "success": false,
+      "response_time": 0.37880706787109375,
+      "error": "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://polygon-mainnet.infura.io/v3/demo'"
+    },
+    {
+      "chain": "Arbitrum",
+      "test": "connectivity",
+      "success": false,
+      "response_time": 0.38292455673217773,
+      "error": "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://arbitrum-mainnet.infura.io/v3/demo'"
+    },
+    {
+      "chain": "Optimism",
+      "test": "connectivity",
+      "success": false,
+      "response_time": 0.45008206367492676,
+      "error": "401, message='Attempt to decode JSON with unexpected mimetype: text/plain; charset=utf-8', url='https://optimism-mainnet.infura.io/v3/demo'"
+    },
+    {
+      "chain": "BSC",
+      "test": "connectivity",
+      "success": true,
+      "response_time": 0.5485665798187256,
+      "chain_id_match": true,
+      "reported_chain_id": 56,
+      "expected_chain_id": 56
+    },
+    {
+      "chain": "BSC",
+      "test": "block_data_quality",
+      "success": true,
+      "response_time": 0.09668421745300293,
+      "quality_score": 1.0,
+      "block_number": 54068459,
+      "block_age_seconds": 4,
+      "timestamp_fresh": true,
+      "transaction_count": 162,
+      "missing_fields": []
+    },
+    {
+      "chain": "BSC",
+      "test": "gas_price_oracle",
+      "success": true,
+      "response_time": 0.09377169609069824,
+      "gas_price_gwei": 0.1,
+      "price_reasonable": true,
+      "expected_range": [
+        0.1,
+        100
+      ]
+    },
+    {
+      "chain": "BSC",
+      "test": "contract_deployment_simulation",
+      "success": true,
+      "response_time": 0.08870553970336914,
+      "gas_estimate": 67256,
+      "gas_price_wei": 100000000,
+      "deployment_cost_eth": 6.7256e-06,
+      "cost_reasonable": true
+    }
+  ],
+  "recommendations": [
+    "\ud83d\udea8 Critical: Insufficient operational chains",
+    "\ud83d\udd17 Monitor cross-chain bridge operations",
+    "\ud83d\udcca Implement real-time chain health monitoring"
+  ],
+  "audit_impact": {
+    "level": "CONCERNING",
+    "multi_chain_support": false,
+    "ready_for_deployment": false
+  }
+}
