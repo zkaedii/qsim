@@ -1,0 +1,24 @@
+{
+  "demo_summary": {
+    "total_runtime": "5.00 minutes",
+    "completion_status": "successful",
+    "timestamp": 1752040957.310889
+  },
+  "final_metrics": {
+    "start_time": 1752040657.252914,
+    "errors_simulated": 19,
+    "recoveries_attempted": 8,
+    "alerts_generated": 26,
+    "orchestration_events": 37
+  },
+  "performance_summary": {
+    "errors_per_minute": 3.7992657912046766,
+    "recoveries_per_minute": 1.5996908594546007,
+    "alerts_per_minute": 5.198995293227452
+  },
+  "component_health": {
+    "all_components_active": true,
+    "integration_successful": true,
+    "communication_functional": true
+  }
+}

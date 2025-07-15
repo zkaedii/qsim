@@ -1,0 +1,22 @@
+{
+  "demo_runtime_seconds": 210.23426175117493,
+  "demo_runtime_formatted": "3.5 minutes",
+  "demo_metrics": {
+    "start_time": 1752040657.252914,
+    "errors_simulated": 14,
+    "recoveries_attempted": 5,
+    "alerts_generated": 17,
+    "orchestration_events": 26
+  },
+  "system_metrics": {
+    "cpu_percent": 14.3,
+    "memory_percent": 38.3,
+    "process_count": 609
+  },
+  "component_status": {
+    "error_manager": "active",
+    "monitor_agent": "active",
+    "recovery_agent": "active",
+    "orchestrator": "active"
+  }
+}
