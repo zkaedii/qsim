@@ -43,7 +43,7 @@ def print_coverage_dashboard():
         "Universal HT System": {"coverage": 100.0, "tests": "50/50", "status": "COMPLETE"},
         "zkAEDI Framework": {"coverage": 94.2, "tests": "69/73", "status": "ACTIVE DEV"},
         "ZKD Language": {"coverage": 94.2, "tests": "74/78", "status": "INNOVATIVE"},
-        "JavaScript Ecosystem": {"coverage": 95.0, "tests": "0/137", "status": "CONFIG ISSUES"},
+        "JavaScript Ecosystem": {"coverage": 0.0, "tests": "0/137", "status": "CONFIG ISSUES"},
         "Python Implementation": {"coverage": 85.0, "tests": "20/26", "status": "NEEDS WORK"}
     }
     
