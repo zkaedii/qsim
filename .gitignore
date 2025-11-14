@@ -1,0 +1,34 @@
+# Python
+*.py[cod]
+__pycache__/
+
+# Logs
+*.log
+logs/
+
+# Backups
+*~
+*.bak
+
+# Demos
+*.demo
+
+# Python artifacts
+*.egg-info/
+*.egg
+dist/
+build/
+
+# IDE Files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Secrets
+*.env
+*.secrets
+
+# Environment files
+.env
+*.env.local
