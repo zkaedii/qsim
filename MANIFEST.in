@@ -1,0 +1,33 @@
+# Include the license file
+include docs/LICENSE
+
+# Include documentation
+recursive-include docs *.md *.rst *.txt
+
+# Include configuration files
+recursive-include config *.json *.yaml *.yml *.toml *.txt
+
+# Include examples
+recursive-include examples *.py *.md
+
+# Include tests
+recursive-include tests *.py
+
+# Include benchmarks
+recursive-include benchmarks *.py
+
+# Exclude compiled files
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude __pycache__
+global-exclude .DS_Store
+
+# Exclude logs and backups
+global-exclude *.log
+global-exclude backup_*.json
+global-exclude demo_metrics_*.json
+
+# Include package data
+include README.md
+include pyproject.toml
+include setup.py
