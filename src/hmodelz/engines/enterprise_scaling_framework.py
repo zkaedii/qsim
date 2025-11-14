@@ -30,7 +30,11 @@ import hashlib
 import hmac
 import uuid
 import sqlite3
-import redis
+try:
+    import redis
+    REDIS_AVAILABLE = True
+except ImportError:
+    REDIS_AVAILABLE = False
 import pickle
 from contextlib import asynccontextmanager
 import aiohttp
