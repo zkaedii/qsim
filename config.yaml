@@ -1,0 +1,202 @@
+# Configuration for Claude Analysis Agent V2
+# Enterprise-grade configuration with externalized settings
+
+# Application Settings
+application:
+  name: "claude_analysis_agent_v2"
+  version: "2.0.0"
+  environment: "production"  # development, staging, production
+  debug: false
+
+# Logging Configuration
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  format: "json"  # json, text
+  output: "stdout"  # stdout, file
+  file_path: "claude_agent_v2.log"
+  max_file_size_mb: 100
+  backup_count: 5
+
+# Data Sources Configuration
+data_sources:
+  # Primary performance data file
+  performance_comparison:
+    path: "complete_performance_comparison.json"
+    required: false
+    retry_count: 3
+    retry_delay_seconds: 1
+  
+  # Ultimate speed optimization results
+  ultimate_speed:
+    path: "ultimate_speed_optimization_results.json"
+    required: false
+    retry_count: 3
+    retry_delay_seconds: 1
+  
+  # Parallel scaling performance
+  parallel_scaling:
+    path: "parallel_scaling_performance_results.json"
+    required: false
+    retry_count: 3
+    retry_delay_seconds: 1
+  
+  # Optimization history
+  optimization_history:
+    path: "claude_optimization_history.json"
+    required: false
+    retry_count: 3
+    retry_delay_seconds: 1
+
+# Statistical Analysis Configuration
+statistics:
+  # Confidence levels for statistical tests
+  confidence_level: 0.95  # 95% confidence
+  
+  # Minimum sample size for statistical operations
+  min_sample_size: 2
+  
+  # Outlier detection thresholds (in standard deviations)
+  outlier_threshold_std_dev: 2.0
+  
+  # Performance tier thresholds (as fraction of best performance)
+  tier_1_threshold: 0.70  # Elite: >= 70% of best
+  tier_2_threshold: 0.30  # High: >= 30% of best
+  # Tier 3 (standard): < 30% of best
+  
+  # Statistical significance threshold (p-value)
+  significance_threshold: 0.05
+
+# Performance Thresholds (empirically grounded)
+performance_thresholds:
+  # RPS (Requests Per Second) thresholds
+  ultra_low_latency_ns: 50  # < 50ns considered ultra-low latency
+  high_throughput_rps: 20000000  # > 20M RPS considered high throughput
+  exceptional_performance_rps: 50000000  # > 50M RPS considered exceptional
+  good_performance_rps: 5000000  # > 5M RPS considered good
+  
+  # Realistic bounds for validation
+  max_realistic_rps: 1000000000000  # 1 trillion RPS (validation ceiling)
+  max_realistic_latency_ns: 1000000000000  # 1 second in ns
+  
+  # Scaling efficiency thresholds
+  linear_scaling_efficiency: 0.8  # >= 80% efficiency considered linear
+  diminishing_returns_threshold: 0.5  # < 50% efficiency shows diminishing returns
+
+# Bottleneck Classification
+bottleneck_classification:
+  # CPU-bound classification threshold
+  cpu_optimized_threshold_rps: 10000000  # > 10M RPS considered CPU optimized
+  
+  # Method name patterns for classification
+  jit_patterns: ["jit", "compiled", "numba"]
+  vectorized_patterns: ["vectorized", "numpy", "array"]
+  async_patterns: ["async", "await", "concurrent"]
+  process_patterns: ["process", "multiprocess", "pool"]
+
+# Circuit Breaker Configuration
+circuit_breaker:
+  enabled: true
+  failure_threshold: 5  # Open circuit after 5 failures
+  timeout_seconds: 60  # Wait 60 seconds before attempting reset
+  half_open_max_attempts: 3  # Max attempts in half-open state
+
+# Retry Configuration
+retry:
+  max_attempts: 3
+  initial_delay_seconds: 1
+  max_delay_seconds: 10
+  exponential_backoff: true
+  backoff_multiplier: 2
+
+# Caching Configuration
+cache:
+  enabled: true
+  max_size_items: 1000
+  ttl_seconds: 3600  # 1 hour TTL
+  eviction_policy: "lru"  # lru, fifo, lfu
+
+# Metrics and Observability
+metrics:
+  enabled: true
+  collection_interval_seconds: 60
+  export_format: "json"  # json, prometheus, statsd
+  export_path: "metrics.json"
+  
+  # Metric categories to collect
+  categories:
+    - "performance"
+    - "errors"
+    - "latency"
+    - "throughput"
+
+# Audit Trail Configuration
+audit:
+  enabled: true
+  log_file: "audit_trail.jsonl"
+  rotation_enabled: true
+  max_file_size_mb: 50
+  retention_days: 90
+
+# Resource Limits
+resources:
+  max_memory_mb: 2048  # 2GB max memory
+  max_execution_time_seconds: 300  # 5 minutes max execution
+  max_data_sources: 10
+  max_methods_analyzed: 1000
+
+# Analysis Configuration
+analysis:
+  # Enable/disable specific analysis modules
+  modules:
+    performance_trends: true
+    bottleneck_detection: true
+    scaling_analysis: true
+    outlier_detection: true
+    statistical_analysis: true
+    causal_inference: true
+  
+  # Sensitivity analysis parameters
+  sensitivity_analysis:
+    enabled: true
+    perturbation_range: 0.1  # ±10% perturbation
+    sample_points: 100
+  
+  # Uncertainty quantification
+  uncertainty_quantification:
+    enabled: true
+    monte_carlo_samples: 1000
+    bootstrap_samples: 1000
+
+# Output Configuration
+output:
+  format: "json"  # json, yaml, text
+  pretty_print: true
+  include_metadata: true
+  include_timestamps: true
+  compression: false  # gzip compression for large outputs
+  
+  # Output files
+  comprehensive_analysis: "claude_comprehensive_analysis_v2.json"
+  summary_report: "claude_summary_v2.json"
+  metrics_report: "claude_metrics_v2.json"
+
+# Testing Configuration (for test environments)
+testing:
+  mock_data_enabled: false
+  mock_data_path: "test_data/"
+  validation_strict: true
+  performance_baseline_path: "performance_baseline.json"
+
+# Feature Flags
+features:
+  gpu_acceleration: false  # Requires CUDA setup
+  distributed_processing: false  # Requires MPI setup
+  real_time_streaming: false
+  adaptive_algorithms: false
+  quantum_optimization: false
+
+# Deprecation Warnings
+deprecation:
+  warn_on_legacy_format: true
+  error_on_deprecated_api: false
+  migration_guide_url: "https://github.com/zkaedii/qsim/wiki/v2-migration"
