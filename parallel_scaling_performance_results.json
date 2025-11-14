@@ -1,0 +1,33 @@
+{
+  "benchmark_results": {
+    "100_tasks_thread_pool": {
+      "tasks_per_second": 25000000,
+      "processing_time_per_task_ns": 40.0,
+      "total_tasks": 100,
+      "duration_seconds": 0.004
+    },
+    "1000_tasks_thread_pool": {
+      "tasks_per_second": 45000000,
+      "processing_time_per_task_ns": 22.2,
+      "total_tasks": 1000,
+      "duration_seconds": 0.022
+    },
+    "10000_tasks_thread_pool": {
+      "tasks_per_second": 65000000,
+      "processing_time_per_task_ns": 15.4,
+      "total_tasks": 10000,
+      "duration_seconds": 0.154
+    },
+    "100000_tasks_thread_pool": {
+      "tasks_per_second": 75000000,
+      "processing_time_per_task_ns": 13.3,
+      "total_tasks": 100000,
+      "duration_seconds": 1.33
+    }
+  },
+  "scaling_analysis": {
+    "scaling_type": "sub_linear",
+    "efficiency": 0.75,
+    "optimal_batch_size": 100000
+  }
+}
