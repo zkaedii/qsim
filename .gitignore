@@ -32,3 +32,13 @@ build/
 # Environment files
 .env
 *.env.local
+
+# Analysis output files
+claude_comprehensive_analysis*.json
+audit_trail.jsonl
+
+# Test data files
+complete_performance_comparison.json
+ultimate_speed_optimization_results.json
+parallel_scaling_performance_results.json
+claude_optimization_history.json
