@@ -1,0 +1,48 @@
+{
+  "timestamp": "2025-07-15T01:04:25.855693Z",
+  "overall_score": 89.2,
+  "metrics": {
+    "test_coverage": {
+      "score": 94,
+      "status": "PASS"
+    },
+    "gas_optimization": {
+      "score": 95,
+      "status": "PASS",
+      "details": {
+        "stake_gas": 64926,
+        "target": 65000,
+        "reduction": "24.5%"
+      }
+    },
+    "security": {
+      "score": 95,
+      "status": "PASS",
+      "rating": "A+"
+    },
+    "documentation": {
+      "score": 95,
+      "status": "PASS",
+      "files_found": 2
+    },
+    "fork_consistency": {
+      "score": 99.92,
+      "status": "PASS",
+      "variance": "8bps"
+    },
+    "fuzz_entropy": {
+      "score": 39.32122890153252,
+      "status": "PENDING"
+    },
+    "ci_integration": {
+      "score": 100,
+      "status": "PASS"
+    },
+    "oracle_testing": {
+      "score": 75,
+      "status": "WARNING",
+      "note": "Needs expansion"
+    }
+  },
+  "audit_ready": false
+}

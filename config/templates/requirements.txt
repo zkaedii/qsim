@@ -1,0 +1,49 @@
+# H_MODEL_Z Ultimate Performance Suite Dependencies
+# Core processing and optimization
+numpy>=1.21.0
+numba>=0.56.0
+psutil>=5.9.0,<6.0.0
+
+# Parallel processing and async
+anthropic>=0.8.0,<1.0.0
+aiohttp>=3.8.0,<4.0.0
+
+# Web framework and API
+flask>=2.0.0
+
+# Monitoring and metrics
+prometheus-client>=0.12.0
+
+# Data analysis and visualization
+pandas>=1.3.0
+matplotlib>=3.5.0
+seaborn>=0.11.0
+
+# Interactive dashboard
+streamlit>=1.10.0
+plotly>=5.0.0
+altair>=4.2.0
+
+# CLI interface
+click>=8.0.0,<9.0.0
+
+# Enterprise features
+pyyaml>=6.0,<7.0
+requests>=2.25.0
+cryptography>=3.4.0
+gitpython>=3.1.0,<4.0.0
+rich>=13.0.0,<14.0.0
+
+# Development and testing
+pytest>=6.0.0
+pytest-cov>=2.12.0
+black>=21.0.0
+flake8>=3.9.0
+
+# Optional GPU acceleration
+# torch>=1.9.0
+# cupy>=9.0.0
+
+# Optional distributed computing
+# mpi4py>=3.1.0
+# dask>=2021.6.0

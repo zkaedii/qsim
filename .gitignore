@@ -1,3 +1,232 @@
+claude/analyze-01Fjmf6E5nojsb4bcyPQwHCJ
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# H_MODEL_Z specific
+# Log files
+*.log
+application.log
+audit.log
+error.log
+performance.log
+organization.log
+enterprise_scaling.log
+black_vault_*.log
+h_model_z_*_diagnostics.log
+integration_demo_*.log
+ht_test_run.log
+
+# Backup files
+backup_*.json
+*_backup.*
+
+# Demo and test data
+demo_metrics_*.json
+integration_demo_final_report_*.json
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Database files
+*.db
+*.sqlite
+*.qsb
+
+# Generated visualizations
+hamiltonian_simulation_results.png
+enhanced_fuzzing_achievement_dashboard.png
+*.png
+*.jpg
+*.svg
+!docs/**/*.png
+!docs/**/*.jpg
+!docs/**/*.svg
+
+# CSV exports
+*.csv
+fuzz_profile.csv
+
+# Compiled files
+*.pyc
+*.pyo
+*.pyd
+
+# OS specific
+Thumbs.db
+.DS_Store
+
+# Streamlit
+.streamlit/
+
+# Node modules (if using JS components)
+node_modules/
+package-lock.json
+yarn.lock
+
+# GPU/CUDA
+*.cu
+*.ptx
+
+# Profiling
+*.prof
+*.lprof
+
+# Secrets (IMPORTANT!)
+.env
+.env.local
+.env.*.local
+secrets/
+credentials.json
+*.key
+*.pem
+*.p12
+
+# Build artifacts
+*.whl
+*.tar.gz
+
+# Cache
+.cache/
+*.cache
+
+# Benchmarking results (keep in benchmarks/results/ only)
+/benchmark_*.json
+/performance_*.json
+/fuzzing_*.json
+/fuzz_metrics.json
+/enhanced_fuzz_metrics.json
+
 # Python
 *.py[cod]
 __pycache__/
@@ -42,3 +271,4 @@ complete_performance_comparison.json
 ultimate_speed_optimization_results.json
 parallel_scaling_performance_results.json
 claude_optimization_history.json
+main
