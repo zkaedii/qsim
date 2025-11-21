@@ -9,13 +9,25 @@ Quick verification that the organization was successful and all components work.
 import sys
 from pathlib import Path
 
+
 def main():
     print("🔍 H_MODEL_Z FINAL VERIFICATION")
     print("=" * 40)
-    
+
     # Check key directories
-    key_dirs = ["src", "config", "docs", "tests", "benchmarks", "examples", "scripts", "blockchain", "assets", "build"]
-    
+    key_dirs = [
+        "src",
+        "config",
+        "docs",
+        "tests",
+        "benchmarks",
+        "examples",
+        "scripts",
+        "blockchain",
+        "assets",
+        "build",
+    ]
+
     all_good = True
     for directory in key_dirs:
         dir_path = Path(directory)
@@ -25,16 +37,16 @@ def main():
         else:
             print(f"❌ {directory}/ - MISSING!")
             all_good = False
-    
+
     # Check key files
     key_files = [
         "README.md",
-        "project_metadata.json", 
+        "project_metadata.json",
         "ORGANIZATION_REPORT.md",
         "ORGANIZATION_SUCCESS_REPORT.md",
-        "config/schemas/h_model_z_complete_schema.json"
+        "config/schemas/h_model_z_complete_schema.json",
     ]
-    
+
     print(f"\n📋 KEY FILES:")
     for file_path in key_files:
         path = Path(file_path)
@@ -44,26 +56,26 @@ def main():
         else:
             print(f"❌ {file_path} - MISSING!")
             all_good = False
-    
+
     # Try importing from organized structure (if possible)
     print(f"\n🧪 STRUCTURE TEST:")
     try:
         # Check if src directory has Python files
         src_py_files = list(Path("src").rglob("*.py"))
         print(f"✅ Found {len(src_py_files)} Python files in src/")
-        
+
         # Check config files
         config_files = list(Path("config").rglob("*.json"))
         print(f"✅ Found {len(config_files)} JSON config files")
-        
+
         # Check documentation
         doc_files = list(Path("docs").rglob("*.md"))
         print(f"✅ Found {len(doc_files)} documentation files")
-        
+
     except Exception as e:
         print(f"❌ Structure test failed: {e}")
         all_good = False
-    
+
     # Final status
     print(f"\n{'='*40}")
     if all_good:
@@ -77,6 +89,7 @@ def main():
         print("❌ ORGANIZATION VERIFICATION: ISSUES FOUND")
         print("Please check the missing components above")
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

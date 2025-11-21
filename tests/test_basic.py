@@ -68,4 +68,4 @@ def test_math_operations():
     """Test basic math operations."""
     assert 2 + 2 == 4
     assert 10 / 2 == 5
-    assert 3 ** 2 == 9
+    assert 3**2 == 9

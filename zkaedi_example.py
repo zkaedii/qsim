@@ -20,9 +20,9 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 def demonstrate_dataset_generation():
     """Demonstrate synthetic dataset generation"""
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("zkAEDI Dataset Generation Demo")
-    print("="*60)
+    print("=" * 60)
 
     # Configure dataset
     config = DatasetConfig(
@@ -34,7 +34,7 @@ def demonstrate_dataset_generation():
         temporal=True,
         categorical_features=3,
         missing_rate=0.05,
-        seed=42
+        seed=42,
     )
 
     # Create generator
@@ -44,20 +44,21 @@ def demonstrate_dataset_generation():
     datasets = {}
 
     print("\nGenerating datasets...")
-    for dataset_type in ['financial', 'healthcare', 'iot', 'cybersecurity']:
+    for dataset_type in ["financial", "healthcare", "iot", "cybersecurity"]:
         print(f"  - Generating {dataset_type} dataset...")
         df = generator.generate_dataset(dataset_type)
         datasets[dataset_type] = df
 
         # Save dataset
-        os.makedirs('datasets', exist_ok=True)
-        filepath = f'datasets/{dataset_type}_synthetic.csv'
+        os.makedirs("datasets", exist_ok=True)
+        filepath = f"datasets/{dataset_type}_synthetic.csv"
         generator.save_dataset(df, filepath)
 
         # Generate and save metadata
         metadata = generator.generate_metadata(df)
         import json
-        with open(f'datasets/{dataset_type}_metadata.json', 'w') as f:
+
+        with open(f"datasets/{dataset_type}_metadata.json", "w") as f:
             json.dump(metadata, f, indent=2)
 
         print(f"    ✓ Saved to {filepath}")
@@ -69,18 +70,17 @@ def demonstrate_dataset_generation():
 
 def demonstrate_model_training(datasets):
     """Demonstrate zkAEDI model training with zero-knowledge proofs"""
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("zkAEDI Model Training Demo")
-    print("="*60)
+    print("=" * 60)
 
     # Use financial dataset for fraud detection
-    df = datasets['financial']
+    df = datasets["financial"]
 
     # Prepare features and target
-    feature_cols = [col for col in df.columns if col not in [
-        'timestamp', 'is_anomaly']]
+    feature_cols = [col for col in df.columns if col not in ["timestamp", "is_anomaly"]]
     X = df[feature_cols]
-    y = df['is_anomaly'].astype(int)
+    y = df["is_anomaly"].astype(int)
 
     # Configure model
     model_config = ModelConfig(
@@ -88,7 +88,7 @@ def demonstrate_model_training(datasets):
         n_estimators=100,
         max_depth=10,
         enable_zk_proofs=True,
-        privacy_budget=1.0
+        privacy_budget=1.0,
     )
 
     # Create and train model
@@ -109,8 +109,7 @@ def demonstrate_model_training(datasets):
 
     # Verify model integrity
     if result.zk_proof:
-        verified = model.verify_model_integrity(
-            result.model_id, result.zk_proof)
+        verified = model.verify_model_integrity(result.model_id, result.zk_proof)
         print(f"  - Model Integrity Verified: {verified}")
 
     # Make predictions with proof
@@ -124,18 +123,17 @@ def demonstrate_model_training(datasets):
 
     # Export encrypted model
     print("\nExporting encrypted model...")
-    os.makedirs('models', exist_ok=True)
-    export_path = 'models/fraud_detection_model_encrypted.json'
+    os.makedirs("models", exist_ok=True)
+    export_path = "models/fraud_detection_model_encrypted.json"
     export_data = model.export_model_encrypted(export_path)
     print(f"  - Model exported to: {export_path}")
-    print(
-        f"  - Encryption algorithm: {export_data['metadata']['encryption_algorithm']}")
+    print(f"  - Encryption algorithm: {export_data['metadata']['encryption_algorithm']}")
     print(f"  - Model commitment: {export_data['commitment'][:32]}...")
 
     # Generate privacy report
     privacy_report = model.generate_privacy_report()
     print("\nPrivacy Report:")
-    for key, value in privacy_report['security_features'].items():
+    for key, value in privacy_report["security_features"].items():
         print(f"  - {key}: {value}")
 
     return model
@@ -143,16 +141,17 @@ def demonstrate_model_training(datasets):
 
 def demonstrate_anomaly_detection(datasets):
     """Demonstrate zkAEDI anomaly detection"""
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("zkAEDI Anomaly Detection Demo")
-    print("="*60)
+    print("=" * 60)
 
     # Use IoT dataset for anomaly detection
-    df = datasets['iot']
+    df = datasets["iot"]
 
     # Prepare features
-    feature_cols = [col for col in df.columns if col not in [
-        'timestamp', 'is_anomaly', 'device_id']]
+    feature_cols = [
+        col for col in df.columns if col not in ["timestamp", "is_anomaly", "device_id"]
+    ]
     X = df[feature_cols]
 
     # Create anomaly detector
@@ -160,7 +159,7 @@ def demonstrate_anomaly_detection(datasets):
     detector = create_anomaly_detector()
 
     # Train on normal data only
-    normal_data = df[~df['is_anomaly']]
+    normal_data = df[~df["is_anomaly"]]
     X_normal = normal_data[feature_cols]
     y_normal = np.zeros(len(X_normal))  # All normal samples
 
@@ -172,7 +171,7 @@ def demonstrate_anomaly_detection(datasets):
     anomalies, anomaly_report = detector.detect_anomalies(X)
 
     # Compare with ground truth
-    true_anomalies = df['is_anomaly'].values
+    true_anomalies = df["is_anomaly"].values
     detected_anomalies = anomalies.astype(bool)
 
     true_positives = sum(true_anomalies & detected_anomalies)
@@ -202,9 +201,9 @@ def demonstrate_anomaly_detection(datasets):
 
 def demonstrate_zk_primitives():
     """Demonstrate zero-knowledge cryptographic primitives"""
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("Zero-Knowledge Primitives Demo")
-    print("="*60)
+    print("=" * 60)
 
     # Create ZK primitives
     zk = create_zk_primitives()
@@ -245,6 +244,7 @@ def demonstrate_zk_primitives():
     # 4. Set membership
     print("\n4. Set Membership Proof:")
     from zkaedi.core.zk_primitives import ZKAccumulator
+
     accumulator = ZKAccumulator(zk)
 
     # Add elements to set
@@ -264,9 +264,9 @@ def demonstrate_zk_primitives():
 
 def demonstrate_authenticated_encryption():
     """Demonstrate authenticated encryption with ZK properties"""
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("Authenticated Encryption Demo")
-    print("="*60)
+    print("=" * 60)
 
     # Create encryption instance
     encryption = create_zk_authenticated_encryption()
@@ -276,7 +276,7 @@ def demonstrate_authenticated_encryption():
         "patient_id": "P123456",
         "diagnosis": "Type 2 Diabetes",
         "treatment": "Metformin 500mg",
-        "risk_score": 0.73
+        "risk_score": 0.73,
     }
 
     print("\n1. Encrypting sensitive data:")
@@ -286,13 +286,10 @@ def demonstrate_authenticated_encryption():
     proof_data = {
         "data_type": "medical_record",
         "classification": "confidential",
-        "authorized_roles": ["doctor", "nurse"]
+        "authorized_roles": ["doctor", "nurse"],
     }
 
-    encrypted, commitment = encryption.encrypt_with_proof(
-        json.dumps(sensitive_data),
-        proof_data
-    )
+    encrypted, commitment = encryption.encrypt_with_proof(json.dumps(sensitive_data), proof_data)
 
     print(f"\n  - Encrypted ciphertext: {encrypted.ciphertext[:32]}...")
     print(f"  - Nonce: {encrypted.nonce[:16]}...")
@@ -302,8 +299,7 @@ def demonstrate_authenticated_encryption():
     # Create data proof without revealing content
     print("\n2. Creating zero-knowledge proof about encrypted data:")
     data_proof = encryption.create_data_proof(
-        json.dumps(sensitive_data).encode(),
-        "This medical record contains diabetes diagnosis"
+        json.dumps(sensitive_data).encode(), "This medical record contains diabetes diagnosis"
     )
 
     print(f"  - Statement: {data_proof['statement']}")
@@ -317,13 +313,10 @@ def demonstrate_authenticated_encryption():
 
     # Decrypt with verification
     print("\n3. Decrypting with commitment verification:")
-    decrypted_bytes, verified = encryption.decrypt_with_verification(
-        encrypted,
-        commitment
-    )
+    decrypted_bytes, verified = encryption.decrypt_with_verification(encrypted, commitment)
 
     if verified:
-        decrypted_data = json.loads(decrypted_bytes.decode('utf-8'))
+        decrypted_data = json.loads(decrypted_bytes.decode("utf-8"))
         print(f"  - Decryption successful: {verified}")
         print(f"  - Recovered data: {decrypted_data}")
     else:
@@ -334,10 +327,10 @@ def demonstrate_authenticated_encryption():
 
 def main():
     """Main demonstration function"""
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("zkAEDI - Zero-Knowledge Authenticated Encrypted Data Intelligence")
     print("Master-Tier Implementation by iDeaKz")
-    print("="*60)
+    print("=" * 60)
 
     # 1. Generate datasets
     datasets = demonstrate_dataset_generation()
@@ -354,9 +347,9 @@ def main():
     # 5. Authenticated encryption
     encryption = demonstrate_authenticated_encryption()
 
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("zkAEDI Demonstration Complete!")
-    print("="*60)
+    print("=" * 60)
     print("\nKey Features Demonstrated:")
     print("  ✓ Synthetic dataset generation (financial, healthcare, IoT, cybersecurity)")
     print("  ✓ Privacy-preserving model training with differential privacy")
@@ -369,4 +362,5 @@ def main():
 
 if __name__ == "__main__":
     import json  # Import at module level for the encryption demo
+
     main()

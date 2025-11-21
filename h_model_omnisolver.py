@@ -21,6 +21,7 @@ Features:
 import threading
 import logging
 import logging.handlers
+
 try:
     import json
 except ImportError:
@@ -77,11 +78,12 @@ import pickle
 import base64
 import warnings
 
-warnings.filterwarnings('ignore', category=UserWarning)
+warnings.filterwarnings("ignore", category=UserWarning)
 
 # Conditional import for pandas
 try:
     import pandas as pd
+
     PANDAS_AVAILABLE = True
 except ImportError:
     PANDAS_AVAILABLE = False
@@ -92,7 +94,8 @@ except ImportError:
 
     class Series:
         pass
-    if 'pd' not in locals():
+
+    if "pd" not in locals():
         pd = None
 
 # ==================== ENHANCED LOGGING CONFIGURATION ====================
@@ -103,51 +106,48 @@ class SecurityAwareFormatter(logging.Formatter):
 
     def format(self, record):
         # Sanitize the message to prevent log injection
-        if hasattr(record, 'msg'):
+        if hasattr(record, "msg"):
             record.msg = self._sanitize_log_message(str(record.msg))
         return super().format(record)
 
     def _sanitize_log_message(self, message: str) -> str:
         """Remove potentially dangerous content from log messages"""
         dangerous_patterns = [
-            r'<script[^>]*>.*?</script>',
-            r'javascript:',
-            r'data:text/html',
-            r'vbscript:',
-            r'onload\s*=',
-            r'onerror\s*=',
-            r'eval\s*\(',
-            r'exec\s*\(',
-            r'__import__\s*\(',
-            r'subprocess\.',
-            r'os\.system',
-            r'pickle\.loads',
-            r'\\x[0-9a-fA-F]{2}',
-            r'%[0-9a-fA-F]{2}',
+            r"<script[^>]*>.*?</script>",
+            r"javascript:",
+            r"data:text/html",
+            r"vbscript:",
+            r"onload\s*=",
+            r"onerror\s*=",
+            r"eval\s*\(",
+            r"exec\s*\(",
+            r"__import__\s*\(",
+            r"subprocess\.",
+            r"os\.system",
+            r"pickle\.loads",
+            r"\\x[0-9a-fA-F]{2}",
+            r"%[0-9a-fA-F]{2}",
         ]
 
         sanitized = message
         for pattern in dangerous_patterns:
-            sanitized = re.sub(
-                pattern, '[FILTERED]', sanitized, flags=re.IGNORECASE)
+            sanitized = re.sub(pattern, "[FILTERED]", sanitized, flags=re.IGNORECASE)
 
         # Limit message length to prevent log flooding
         if len(sanitized) > 1000:
-            sanitized = sanitized[:997] + '...'
+            sanitized = sanitized[:997] + "..."
 
         return sanitized
 
 
 # Enhanced logging configuration
 security_formatter = SecurityAwareFormatter(
-    '%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s'
+    "%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s"
 )
 
 # Configure file handler with rotation
 file_handler = logging.handlers.RotatingFileHandler(
-    'h_model_omnisolver.log',
-    maxBytes=10 * 1024 * 1024,  # 10MB
-    backupCount=5
+    "h_model_omnisolver.log", maxBytes=10 * 1024 * 1024, backupCount=5  # 10MB
 )
 file_handler.setFormatter(security_formatter)
 
@@ -174,24 +174,26 @@ class SecurityValidator:
 
     # Threat patterns
     DANGEROUS_PATTERNS = [
-        r'<script[^>]*>.*?</script>',
-        r'javascript:',
-        r'data:text/html',
-        r'vbscript:',
-        r'onload\s*=',
-        r'onerror\s*=',
-        r'eval\s*\(',
-        r'exec\s*\(',
-        r'__import__\s*\(',
-        r'subprocess\.',
-        r'os\.system',
-        r'pickle\.loads',
-        r'\\x[0-9a-fA-F]{2}',
-        r'%[0-9a-fA-F]{2}',
+        r"<script[^>]*>.*?</script>",
+        r"javascript:",
+        r"data:text/html",
+        r"vbscript:",
+        r"onload\s*=",
+        r"onerror\s*=",
+        r"eval\s*\(",
+        r"exec\s*\(",
+        r"__import__\s*\(",
+        r"subprocess\.",
+        r"os\.system",
+        r"pickle\.loads",
+        r"\\x[0-9a-fA-F]{2}",
+        r"%[0-9a-fA-F]{2}",
     ]
 
     @classmethod
-    def validate_input(cls, data: Any, max_size: Optional[int] = None, context: str = "input") -> bool:
+    def validate_input(
+        cls, data: Any, max_size: Optional[int] = None, context: str = "input"
+    ) -> bool:
         """Enhanced input validation with context awareness"""
         max_size = max_size or cls.MAX_INPUT_SIZE
 
@@ -200,11 +202,9 @@ class SecurityValidator:
             data_size = sys.getsizeof(data)
             if data_size > max_size:
                 logger.warning(
-                    f"Input size validation failed in {context}: "
-                    f"{data_size} > {max_size}"
+                    f"Input size validation failed in {context}: " f"{data_size} > {max_size}"
                 )
-                raise ValueError(
-                    f"Input exceeds maximum size: {data_size} > {max_size}")
+                raise ValueError(f"Input exceeds maximum size: {data_size} > {max_size}")
 
             # Type-specific validation
             if isinstance(data, str):
@@ -226,18 +226,16 @@ class SecurityValidator:
     def _validate_string(cls, data: str, context: str) -> bool:
         """String-specific security validation"""
         if len(data) > cls.MAX_STRING_LENGTH:
-            raise ValueError(
-                f"String too long in {context}: {len(data)} > {cls.MAX_STRING_LENGTH}")
+            raise ValueError(f"String too long in {context}: {len(data)} > {cls.MAX_STRING_LENGTH}")
 
         # Check for dangerous patterns
         for pattern in cls.DANGEROUS_PATTERNS:
             if re.search(pattern, data, re.IGNORECASE):
-                logger.warning(
-                    f"Dangerous pattern detected in {context}: {pattern}")
+                logger.warning(f"Dangerous pattern detected in {context}: {pattern}")
                 raise ValueError(f"Dangerous pattern detected in {context}")
 
         # Check for null bytes and control characters
-        if '\x00' in data or any(ord(c) < 32 and c not in '\t\n\r' for c in data):
+        if "\x00" in data or any(ord(c) < 32 and c not in "\t\n\r" for c in data):
             raise ValueError(f"Invalid characters detected in {context}")
 
         return True
@@ -246,8 +244,7 @@ class SecurityValidator:
     def _validate_sequence(cls, data: Union[list, tuple], context: str, depth: int = 0) -> bool:
         """Validate sequences with recursion protection"""
         if depth > cls.MAX_RECURSION_DEPTH:
-            raise ValueError(
-                f"Maximum recursion depth exceeded in {context}")
+            raise ValueError(f"Maximum recursion depth exceeded in {context}")
 
         if len(data) > 10000:  # Prevent memory exhaustion
             raise ValueError(f"Sequence too large in {context}: {len(data)}")
@@ -262,17 +259,14 @@ class SecurityValidator:
     def _validate_dict(cls, data: dict, context: str, depth: int = 0) -> bool:
         """Validate dictionaries with key and value checking"""
         if depth > cls.MAX_RECURSION_DEPTH:
-            raise ValueError(
-                f"Maximum recursion depth exceeded in {context}")
+            raise ValueError(f"Maximum recursion depth exceeded in {context}")
 
         if len(data) > 1000:  # Prevent memory exhaustion
-            raise ValueError(
-                f"Dictionary too large in {context}: {len(data)}")
+            raise ValueError(f"Dictionary too large in {context}: {len(data)}")
 
         for key, value in data.items():
             if not isinstance(key, (str, int, float)):
-                raise ValueError(
-                    f"Invalid key type in {context}: {type(key)}")
+                raise ValueError(f"Invalid key type in {context}: {type(key)}")
 
             if isinstance(key, str) and not cls._validate_string(key, f"{context}.key"):
                 return False
@@ -283,7 +277,7 @@ class SecurityValidator:
         return True
 
     @classmethod
-    def _validate_array(cls, data: 'np.ndarray', context: str) -> bool:
+    def _validate_array(cls, data: "np.ndarray", context: str) -> bool:
         """Validate NumPy arrays"""
         # Check for reasonable size
         if data.nbytes > cls.MAX_INPUT_SIZE:
@@ -295,7 +289,7 @@ class SecurityValidator:
             # Don't raise error, just log warning for NaN/Inf
 
         # Check data type
-        if hasattr(data, 'dtype') and data.dtype == object:
+        if hasattr(data, "dtype") and data.dtype == object:
             raise ValueError(f"Object arrays not allowed in {context}")
 
         return True
@@ -318,7 +312,7 @@ class SecurityValidator:
             raise ValueError(f"Unsupported hash algorithm: {algorithm}")
 
         instance = hasher()
-        instance.update(data.encode('utf-8'))
+        instance.update(data.encode("utf-8"))
         return instance.hexdigest()
 
     @staticmethod
@@ -328,23 +322,24 @@ class SecurityValidator:
         filename = Path(filename).name
 
         # Remove dangerous characters
-        filename = re.sub(r'[<>:"|?*\x00-\x1f]', '_', filename)
+        filename = re.sub(r'[<>:"|?*\x00-\x1f]', "_", filename)
 
         # Prevent reserved names on Windows
-        reserved = (['CON', 'PRN', 'AUX', 'NUL'] +
-                    [f'COM{i}' for i in range(1, 10)] +
-                    [f'LPT{i}' for i in range(1, 10)])
-        if filename.upper().split('.')[0] in reserved:
+        reserved = (
+            ["CON", "PRN", "AUX", "NUL"]
+            + [f"COM{i}" for i in range(1, 10)]
+            + [f"LPT{i}" for i in range(1, 10)]
+        )
+        if filename.upper().split(".")[0] in reserved:
             filename = f"_{filename}"
 
         # Limit length
         if len(filename) > 255:
-            name, ext = (filename.rsplit('.', 1)
-                         if '.' in filename else (filename, ''))
-            filename = name[:255 - len(ext) - 1] + \
-                '.' + ext if ext else name[:255]
+            name, ext = filename.rsplit(".", 1) if "." in filename else (filename, "")
+            filename = name[: 255 - len(ext) - 1] + "." + ext if ext else name[:255]
 
         return filename
+
 
 # Enhanced error handling decorators
 
@@ -358,60 +353,56 @@ def secure_operation(func):
     def wrapper(*args, **kwargs):
         start_time = time.perf_counter()
         operation_id = SecurityValidator.generate_token()[:16]
-        memory_before = sum(sys.getsizeof(arg) for arg in args) + \
-            sum(sys.getsizeof(kwarg) for kwarg in kwargs.items())
+        memory_before = sum(sys.getsizeof(arg) for arg in args) + sum(
+            sys.getsizeof(kwarg) for kwarg in kwargs.items()
+        )
 
         try:
             # Enhanced security validation
             for i, arg in enumerate(args):
                 if not SecurityValidator.validate_input(arg, context=f"{func.__name__}.arg[{i}]"):
-                    raise SecurityError(
-                        f"Security validation failed for argument {i}")
+                    raise SecurityError(f"Security validation failed for argument {i}")
 
             for key, value in kwargs.items():
                 if not SecurityValidator.validate_input(value, context=f"{func.__name__}.{key}"):
-                    raise SecurityError(
-                        f"Security validation failed for {key}")
+                    raise SecurityError(f"Security validation failed for {key}")
 
             # Rate limiting check (simple implementation)
-            if hasattr(func, '_last_call_times'):
+            if hasattr(func, "_last_call_times"):
                 now = time.time()
                 func._last_call_times = [
-                    t for t in func._last_call_times if now - t < 60]  # 1 minute window
+                    t for t in func._last_call_times if now - t < 60
+                ]  # 1 minute window
                 if len(func._last_call_times) > 100:  # Max 100 calls per minute
-                    raise SecurityError(
-                        f"Rate limit exceeded for {func.__name__}")
+                    raise SecurityError(f"Rate limit exceeded for {func.__name__}")
                 func._last_call_times.append(now)
             else:
                 func._last_call_times = [time.time()]
 
             # Execute operation
-            logger.info(
-                f"[{operation_id}] Starting secure operation: {func.__name__}")
+            logger.info(f"[{operation_id}] Starting secure operation: {func.__name__}")
             result = func(*args, **kwargs)
 
             execution_time = time.perf_counter() - start_time
             memory_after = sys.getsizeof(result) if result else 0
 
-            logger.info(f"[{operation_id}] Operation completed in {execution_time:.4f}s, "
-                        f"Memory: {memory_before} -> {memory_after} bytes")
+            logger.info(
+                f"[{operation_id}] Operation completed in {execution_time:.4f}s, "
+                f"Memory: {memory_before} -> {memory_after} bytes"
+            )
 
             return result
 
         except SecurityError as e:
             execution_time = time.perf_counter() - start_time
-            logger.error(
-                f"[{operation_id}] Security error in {func.__name__}: {e}")
-            logger.error(
-                f"[{operation_id}] Failed after {execution_time:.4f}s")
+            logger.error(f"[{operation_id}] Security error in {func.__name__}: {e}")
+            logger.error(f"[{operation_id}] Failed after {execution_time:.4f}s")
             raise
         except Exception as e:
             execution_time = time.perf_counter() - start_time
             logger.error(f"[{operation_id}] Error in {func.__name__}: {e}")
-            logger.debug(
-                f"[{operation_id}] Traceback: {traceback.format_exc()}")
-            raise OperationError(
-                f"Operation {func.__name__} failed: {str(e)}") from e
+            logger.debug(f"[{operation_id}] Traceback: {traceback.format_exc()}")
+            raise OperationError(f"Operation {func.__name__} failed: {str(e)}") from e
 
     return wrapper
 
@@ -429,36 +420,32 @@ def async_secure_operation(func):
             # Security validation
             for i, arg in enumerate(args):
                 if not SecurityValidator.validate_input(arg, context=f"{func.__name__}.arg[{i}]"):
-                    raise SecurityError(
-                        f"Security validation failed for argument {i}")
+                    raise SecurityError(f"Security validation failed for argument {i}")
 
-            logger.info(
-                f"[{operation_id}] Starting async secure operation: {func.__name__}")
+            logger.info(f"[{operation_id}] Starting async secure operation: {func.__name__}")
 
             # Execute with timeout protection
             # 5 minute timeout
             result = await asyncio.wait_for(func(*args, **kwargs), timeout=300.0)
 
             execution_time = time.perf_counter() - start_time
-            logger.info(
-                f"[{operation_id}] Async operation completed in {execution_time:.4f}s")
+            logger.info(f"[{operation_id}] Async operation completed in {execution_time:.4f}s")
 
             return result
 
         except asyncio.TimeoutError:
             execution_time = time.perf_counter() - start_time
             logger.error(
-                f"[{operation_id}] Async timeout in {func.__name__} after {execution_time:.4f}s")
-            raise OperationError(
-                f"Async operation {func.__name__} timed out")
+                f"[{operation_id}] Async timeout in {func.__name__} after {execution_time:.4f}s"
+            )
+            raise OperationError(f"Async operation {func.__name__} timed out")
         except Exception as e:
             execution_time = time.perf_counter() - start_time
-            logger.error(
-                f"[{operation_id}] Async error in {func.__name__}: {e}")
-            raise OperationError(
-                f"Async operation {func.__name__} failed: {str(e)}") from e
+            logger.error(f"[{operation_id}] Async error in {func.__name__}: {e}")
+            raise OperationError(f"Async operation {func.__name__} failed: {str(e)}") from e
 
     return wrapper
+
 
 # Enhanced performance monitoring
 
@@ -471,8 +458,12 @@ def performance_monitor(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         start_time = time.perf_counter()
-        start_memory = sum(sys.getsizeof(arg) for arg in args) + sum(sys.getsizeof(kwarg)
-                                                                     for kwarg in kwargs.items()) if args or kwargs else 0
+        start_memory = (
+            sum(sys.getsizeof(arg) for arg in args)
+            + sum(sys.getsizeof(kwarg) for kwarg in kwargs.items())
+            if args or kwargs
+            else 0
+        )
 
         try:
             result = func(*args, **kwargs)
@@ -482,52 +473,55 @@ def performance_monitor(func):
             memory_delta = end_memory - start_memory
 
             # Store performance metrics
-            if not hasattr(func, '_performance_stats'):
+            if not hasattr(func, "_performance_stats"):
                 func._performance_stats = {
-                    'call_count': 0,
-                    'total_time': 0,
-                    'min_time': float('inf'),
-                    'max_time': 0,
-                    'memory_usage': []
+                    "call_count": 0,
+                    "total_time": 0,
+                    "min_time": float("inf"),
+                    "max_time": 0,
+                    "memory_usage": [],
                 }
 
             stats = func._performance_stats
-            stats['call_count'] += 1
-            stats['total_time'] += execution_time
-            stats['min_time'] = min(stats['min_time'], execution_time)
-            stats['max_time'] = max(stats['max_time'], execution_time)
-            stats['memory_usage'].append(memory_delta)
+            stats["call_count"] += 1
+            stats["total_time"] += execution_time
+            stats["min_time"] = min(stats["min_time"], execution_time)
+            stats["max_time"] = max(stats["max_time"], execution_time)
+            stats["memory_usage"].append(memory_delta)
 
             # Keep only last 100 memory measurements
-            if len(stats['memory_usage']) > 100:
-                stats['memory_usage'] = stats['memory_usage'][-100:]
+            if len(stats["memory_usage"]) > 100:
+                stats["memory_usage"] = stats["memory_usage"][-100:]
 
-            avg_time = stats['total_time'] / stats['call_count']
-            avg_memory = sum(stats['memory_usage']) / \
-                len(stats['memory_usage'])
+            avg_time = stats["total_time"] / stats["call_count"]
+            avg_memory = sum(stats["memory_usage"]) / len(stats["memory_usage"])
 
-            logger.debug(f"Performance [{func.__name__}]: {execution_time:.4f}s "
-                         f"(avg: {avg_time:.4f}s, calls: {stats['call_count']}), "
-                         f"Memory delta: {memory_delta} bytes (avg: {avg_memory:.0f})")
+            logger.debug(
+                f"Performance [{func.__name__}]: {execution_time:.4f}s "
+                f"(avg: {avg_time:.4f}s, calls: {stats['call_count']}), "
+                f"Memory delta: {memory_delta} bytes (avg: {avg_memory:.0f})"
+            )
 
             # Warn about performance issues
             if execution_time > 10.0:  # Slow operation
                 logger.warning(
-                    f"Slow operation detected: {func.__name__} took {execution_time:.4f}s")
+                    f"Slow operation detected: {func.__name__} took {execution_time:.4f}s"
+                )
 
             if abs(memory_delta) > 10 * 1024 * 1024:  # Large memory change (10MB)
                 logger.warning(
-                    f"Large memory change: {func.__name__} delta: {memory_delta/1024/1024:.1f}MB")
+                    f"Large memory change: {func.__name__} delta: {memory_delta/1024/1024:.1f}MB"
+                )
 
             return result
 
         except Exception as e:
             execution_time = time.perf_counter() - start_time
-            logger.error(
-                f"Performance [{func.__name__}] FAILED after {execution_time:.4f}s: {e}")
+            logger.error(f"Performance [{func.__name__}] FAILED after {execution_time:.4f}s: {e}")
             raise
 
     return wrapper
+
 
 # ==================== ENHANCED CUSTOM EXCEPTIONS ====================
 
@@ -535,7 +529,9 @@ def performance_monitor(func):
 class HModelError(Exception):
     """Enhanced base exception with detailed error context"""
 
-    def __init__(self, message: str, error_code: Optional[str] = None, context: Optional[Dict] = None):
+    def __init__(
+        self, message: str, error_code: Optional[str] = None, context: Optional[Dict] = None
+    ):
         super().__init__(message)
         self.error_code = error_code or "UNKNOWN_ERROR"
         self.context = context or {}
@@ -543,15 +539,15 @@ class HModelError(Exception):
         if secrets:
             self.error_id = secrets.token_urlsafe(12)
         else:
-            self.error_id = 'no_secrets_module'
+            self.error_id = "no_secrets_module"
 
     def to_dict(self) -> Dict:
         return {
-            'error_id': self.error_id,
-            'error_code': self.error_code,
-            'message': str(self),
-            'context': self.context,
-            'timestamp': self.timestamp.isoformat()
+            "error_id": self.error_id,
+            "error_code": self.error_code,
+            "message": str(self),
+            "context": self.context,
+            "timestamp": self.timestamp.isoformat(),
         }
 
 
@@ -566,7 +562,9 @@ class SecurityError(HModelError):
 class OperationError(HModelError):
     """Enhanced general operation errors"""
 
-    def __init__(self, message: str, operation: Optional[str] = None, context: Optional[Dict] = None):
+    def __init__(
+        self, message: str, operation: Optional[str] = None, context: Optional[Dict] = None
+    ):
         super().__init__(message, "OPERATION_ERROR", context)
         self.operation = operation
 
@@ -574,7 +572,13 @@ class OperationError(HModelError):
 class ValidationError(HModelError):
     """Enhanced data validation errors"""
 
-    def __init__(self, message: str, field: Optional[str] = None, value: Any = None, context: Optional[Dict] = None):
+    def __init__(
+        self,
+        message: str,
+        field: Optional[str] = None,
+        value: Any = None,
+        context: Optional[Dict] = None,
+    ):
         super().__init__(message, "VALIDATION_ERROR", context)
         self.field = field
         self.value = value
@@ -583,9 +587,12 @@ class ValidationError(HModelError):
 class ModelError(HModelError):
     """Enhanced model computation errors"""
 
-    def __init__(self, message: str, model_state: Optional[Dict] = None, context: Optional[Dict] = None):
+    def __init__(
+        self, message: str, model_state: Optional[Dict] = None, context: Optional[Dict] = None
+    ):
         super().__init__(message, "MODEL_ERROR", context)
         self.model_state = model_state
+
 
 # ==================== DATA STRUCTURES ====================
 
@@ -593,9 +600,10 @@ class ModelError(HModelError):
 @dataclass
 class ModelState:
     """Comprehensive model state representation."""
+
     H_history: List[float] = field(default_factory=list)
     t_history: List[float] = field(default_factory=list)
-    data: Optional['np.ndarray'] = None
+    data: Optional["np.ndarray"] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
     last_updated: datetime = field(default_factory=datetime.utcnow)
     version: str = "2.0.0"
@@ -619,6 +627,7 @@ class ModelState:
 @dataclass
 class ModelParameters:
     """Advanced model parameters with validation."""
+
     A: float
     B: float
     C: float
@@ -648,11 +657,20 @@ class ModelParameters:
 
     def to_dict(self) -> Dict[str, float]:
         return {
-            'A': self.A, 'B': self.B, 'C': self.C, 'D': self.D,
-            'eta': self.eta, 'gamma': self.gamma, 'beta': self.beta,
-            'sigma': self.sigma, 'tau': self.tau, 'alpha': self.alpha,
-            'lambda_reg': self.lambda_reg, 'noise_level': self.noise_level
+            "A": self.A,
+            "B": self.B,
+            "C": self.C,
+            "D": self.D,
+            "eta": self.eta,
+            "gamma": self.gamma,
+            "beta": self.beta,
+            "sigma": self.sigma,
+            "tau": self.tau,
+            "alpha": self.alpha,
+            "lambda_reg": self.lambda_reg,
+            "noise_level": self.noise_level,
         }
+
 
 # ==================== VECTOR EMBEDDING SYSTEM ====================
 
@@ -662,16 +680,18 @@ class VectorEmbeddingGenius:
 
     def __init__(self, dimension: int = 128):
         self.dimension = dimension
-        self.cache: Dict[str, 'np.ndarray'] = {}
+        self.cache: Dict[str, "np.ndarray"] = {}
         self.models = {
-            'pca': self._pca_embedding,
-            'autoencoder': self._autoencoder_embedding,
-            'transformer': self._transformer_embedding
+            "pca": self._pca_embedding,
+            "autoencoder": self._autoencoder_embedding,
+            "transformer": self._transformer_embedding,
         }
         self.performance_stats: Dict[str, List[float]] = defaultdict(list)
 
     @secure_operation
-    def generate_embedding(self, data: Union[str, 'np.ndarray'], method: str = "pca") -> 'np.ndarray':
+    def generate_embedding(
+        self, data: Union[str, "np.ndarray"], method: str = "pca"
+    ) -> "np.ndarray":
         """Generate vector embedding using specified method"""
         cache_key = self._generate_cache_key(data, method)
 
@@ -708,7 +728,7 @@ class VectorEmbeddingGenius:
 
         return embedding
 
-    def _pca_embedding(self, data: 'np.ndarray') -> 'np.ndarray':
+    def _pca_embedding(self, data: "np.ndarray") -> "np.ndarray":
         """Generate PCA-based embedding"""
         if data.ndim == 1:
             data = data.reshape(1, -1)
@@ -717,8 +737,7 @@ class VectorEmbeddingGenius:
         if data.shape[0] < 2:
             if not np:
                 raise ImportError("numpy is required for this operation")
-            data = np.vstack(
-                [data, data + np.random.normal(0, 0.01, data.shape)])
+            data = np.vstack([data, data + np.random.normal(0, 0.01, data.shape)])
 
         # Center the data
         mean = np.mean(data, axis=0)
@@ -743,14 +762,13 @@ class VectorEmbeddingGenius:
 
         # Pad or truncate to desired dimension
         if len(embedding) < self.dimension:
-            embedding = np.pad(
-                embedding, (0, self.dimension - len(embedding)))
+            embedding = np.pad(embedding, (0, self.dimension - len(embedding)))
         else:
-            embedding = embedding[:self.dimension]
+            embedding = embedding[: self.dimension]
 
         return self._normalize_embedding(embedding)
 
-    def _autoencoder_embedding(self, data: 'np.ndarray') -> 'np.ndarray':
+    def _autoencoder_embedding(self, data: "np.ndarray") -> "np.ndarray":
         """Generate autoencoder-style embedding"""
         if not np:
             raise ImportError("numpy is required for this operation")
@@ -762,8 +780,7 @@ class VectorEmbeddingGenius:
 
         # Create weight matrices (simplified)
         np.random.seed(42)  # For reproducibility
-        encoder_weights = np.random.normal(
-            0, 0.1, (input_dim, self.dimension))
+        encoder_weights = np.random.normal(0, 0.1, (input_dim, self.dimension))
 
         # Forward pass through encoder
         if data.ndim == 1:
@@ -776,7 +793,7 @@ class VectorEmbeddingGenius:
 
         return self._normalize_embedding(embedding)
 
-    def _transformer_embedding(self, data: 'np.ndarray') -> 'np.ndarray':
+    def _transformer_embedding(self, data: "np.ndarray") -> "np.ndarray":
         """Generate transformer-style attention-based embedding"""
         if not np:
             raise ImportError("numpy is required for this operation")
@@ -791,11 +808,11 @@ class VectorEmbeddingGenius:
         position_encoding = np.zeros((seq_len, self.dimension))
         for pos in range(seq_len):
             for i in range(0, self.dimension, 2):
-                position_encoding[pos, i] = np.sin(
-                    pos / (10000 ** (2 * i / self.dimension)))
+                position_encoding[pos, i] = np.sin(pos / (10000 ** (2 * i / self.dimension)))
                 if i + 1 < self.dimension:
-                    position_encoding[pos, i +
-                                      1] = np.cos(pos / (10000 ** (2 * i / self.dimension)))
+                    position_encoding[pos, i + 1] = np.cos(
+                        pos / (10000 ** (2 * i / self.dimension))
+                    )
 
         # Simplified attention mechanism
         # Create query, key, value matrices
@@ -824,7 +841,7 @@ class VectorEmbeddingGenius:
 
         return self._normalize_embedding(embedding)
 
-    def _text_to_array(self, text: str) -> 'np.ndarray':
+    def _text_to_array(self, text: str) -> "np.ndarray":
         """Convert text to numerical array"""
         # Simple character-based encoding
         char_values = [ord(c) for c in text[:1000]]  # Limit length
@@ -839,14 +856,14 @@ class VectorEmbeddingGenius:
             return np.array(char_values, dtype=np.float32) / 255.0  # Normalize
         raise ImportError("Numpy is required to process text data.")
 
-    def _softmax(self, x: 'np.ndarray') -> 'np.ndarray':
+    def _softmax(self, x: "np.ndarray") -> "np.ndarray":
         """Compute softmax function"""
         if not np:
             return x
         exp_x = np.exp(x - np.max(x, axis=-1, keepdims=True))
         return exp_x / np.sum(exp_x, axis=-1, keepdims=True)
 
-    def _normalize_embedding(self, embedding: 'np.ndarray') -> 'np.ndarray':
+    def _normalize_embedding(self, embedding: "np.ndarray") -> "np.ndarray":
         """Normalize embedding to unit length"""
         if not np:
             return embedding
@@ -861,7 +878,9 @@ class VectorEmbeddingGenius:
         return f"{method}_{data_str}"
 
     @performance_monitor
-    def compute_similarity(self, embedding1: 'np.ndarray', embedding2: 'np.ndarray', metric: str = "cosine") -> float:
+    def compute_similarity(
+        self, embedding1: "np.ndarray", embedding2: "np.ndarray", metric: str = "cosine"
+    ) -> float:
         """Compute similarity between embeddings"""
         if len(embedding1) != len(embedding2):
             raise ValueError("Embeddings must have same dimension")
@@ -875,7 +894,7 @@ class VectorEmbeddingGenius:
         else:
             raise ValueError(f"Unknown similarity metric: {metric}")
 
-    def _cosine_similarity(self, a: 'np.ndarray', b: 'np.ndarray') -> float:
+    def _cosine_similarity(self, a: "np.ndarray", b: "np.ndarray") -> float:
         """Compute cosine similarity"""
         if not np:
             return 0.0
@@ -888,19 +907,20 @@ class VectorEmbeddingGenius:
 
         return dot_product / (norm_a * norm_b)
 
-    def _euclidean_similarity(self, a: 'np.ndarray', b: 'np.ndarray') -> float:
+    def _euclidean_similarity(self, a: "np.ndarray", b: "np.ndarray") -> float:
         """Compute euclidean similarity (inverse of distance)"""
         if not np:
             return 0.0
         distance = np.linalg.norm(a - b)
         return float(1.0 / (1.0 + distance))
 
-    def _manhattan_similarity(self, a: 'np.ndarray', b: 'np.ndarray') -> float:
+    def _manhattan_similarity(self, a: "np.ndarray", b: "np.ndarray") -> float:
         """Compute Manhattan similarity"""
         if not np:
             return 0.0
         distance = np.sum(np.abs(a - b))
         return float(1.0 / (1.0 + distance))
+
 
 # ==================== BLOCKCHAIN CONNECTOR ====================
 
@@ -919,16 +939,16 @@ class BlockchainConnector:
     def create_genesis_block(self) -> Dict[str, Any]:
         """Create the genesis block"""
         genesis_block = {
-            'index': 0,
-            'timestamp': time.time(),
-            'transactions': [],
-            'previous_hash': '0',
-            'nonce': 0,
-            'merkle_root': '',
-            'difficulty': self.mining_difficulty
+            "index": 0,
+            "timestamp": time.time(),
+            "transactions": [],
+            "previous_hash": "0",
+            "nonce": 0,
+            "merkle_root": "",
+            "difficulty": self.mining_difficulty,
         }
 
-        genesis_block['hash'] = self._calculate_hash(genesis_block)
+        genesis_block["hash"] = self._calculate_hash(genesis_block)
         return genesis_block
 
     @secure_operation
@@ -938,14 +958,14 @@ class BlockchainConnector:
             self.chain.append(self.create_genesis_block())
 
         new_block = {
-            'index': len(self.chain),
-            'timestamp': time.time(),
-            'data': data,
-            'transactions': self.pending_transactions.copy(),
-            'previous_hash': self.chain[-1]['hash'] if self.chain else '0',
-            'nonce': 0,
-            'difficulty': self.mining_difficulty,
-            'merkle_root': self._calculate_merkle_root(self.pending_transactions)
+            "index": len(self.chain),
+            "timestamp": time.time(),
+            "data": data,
+            "transactions": self.pending_transactions.copy(),
+            "previous_hash": self.chain[-1]["hash"] if self.chain else "0",
+            "nonce": 0,
+            "difficulty": self.mining_difficulty,
+            "merkle_root": self._calculate_merkle_root(self.pending_transactions),
         }
 
         # Mine the block
@@ -955,8 +975,7 @@ class BlockchainConnector:
         self.chain.append(new_block)
         self.pending_transactions = []
 
-        logger.info(
-            f"Block {new_block['index']} created with hash {new_block['hash'][:16]}...")
+        logger.info(f"Block {new_block['index']} created with hash {new_block['hash'][:16]}...")
 
         return new_block
 
@@ -965,11 +984,11 @@ class BlockchainConnector:
         target = "0" * self.mining_difficulty
 
         while True:
-            block['nonce'] += 1
+            block["nonce"] += 1
             block_hash = self._calculate_hash(block)
 
             if block_hash.startswith(target):
-                block['hash'] = block_hash
+                block["hash"] = block_hash
                 logger.info(f"Block mined with nonce {block['nonce']}")
         return block
 
@@ -978,11 +997,10 @@ class BlockchainConnector:
         if not hashlib or not json:
             return ""
         block_copy = block.copy()
-        if 'hash' in block_copy:
-            del block_copy['hash']
+        if "hash" in block_copy:
+            del block_copy["hash"]
 
-        block_string = json.dumps(
-            block_copy, sort_keys=True).encode('utf-8')
+        block_string = json.dumps(block_copy, sort_keys=True).encode("utf-8")
         return hashlib.sha256(block_string).hexdigest()
 
     def _calculate_merkle_root(self, transactions: List[Dict]) -> str:
@@ -1021,18 +1039,18 @@ class BlockchainConnector:
             previous_block = self.chain[i - 1]
 
             # Verify hash
-            if current_block['hash'] != self._calculate_hash(current_block):
+            if current_block["hash"] != self._calculate_hash(current_block):
                 logger.error(f"Invalid hash at block {i}")
                 return False
 
             # Verify previous hash
-            if current_block['previous_hash'] != previous_block['hash']:
+            if current_block["previous_hash"] != previous_block["hash"]:
                 logger.error(f"Invalid previous hash at block {i}")
                 return False
 
             # Verify proof of work
-            target = "0" * current_block['difficulty']
-            if not current_block['hash'].startswith(target):
+            target = "0" * current_block["difficulty"]
+            if not current_block["hash"].startswith(target):
                 logger.error(f"Invalid proof of work at block {i}")
                 return False
 
@@ -1046,13 +1064,14 @@ class BlockchainConnector:
             json.dumps(transaction, sort_keys=True).encode()
         ).hexdigest()
 
-        transaction['id'] = transaction_id
-        transaction['timestamp'] = time.time()
+        transaction["id"] = transaction_id
+        transaction["timestamp"] = time.time()
 
         self.pending_transactions.append(transaction)
 
         logger.info(f"Transaction {transaction_id[:16]}... added to pool")
         return transaction_id
+
 
 # ==================== HMODEL MANAGER ====================
 
@@ -1070,10 +1089,10 @@ class HModelManager:
 
         # Performance tracking
         self.performance_metrics: Dict[str, Any] = {
-            'operations_count': 0,
-            'total_execution_time': 0.0,
-            'error_count': 0,
-            'last_operation_time': None
+            "operations_count": 0,
+            "total_execution_time": 0.0,
+            "error_count": 0,
+            "last_operation_time": None,
         }
 
         # Database setup
@@ -1087,8 +1106,7 @@ class HModelManager:
     def _setup_database(self):
         """Set up SQLite database for persistent storage"""
         self.db_path = "h_model_data.db"
-        self.connection = sqlite3.connect(
-            self.db_path, check_same_thread=False)
+        self.connection = sqlite3.connect(self.db_path, check_same_thread=False)
         self.connection.execute("PRAGMA foreign_keys = ON")
 
         # Create tables
@@ -1099,7 +1117,8 @@ class HModelManager:
         cursor = self.connection.cursor()
 
         # Simulation results table
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS simulations (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                 timestamp REAL,
@@ -1109,10 +1128,12 @@ class HModelManager:
                 method TEXT,
                 execution_time REAL
                 )
-            """)
+            """
+        )
 
         # Performance metrics table
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS performance_metrics (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                 timestamp REAL,
@@ -1121,17 +1142,20 @@ class HModelManager:
                 success BOOLEAN,
                 error_message TEXT
                 )
-            """)
+            """
+        )
 
         # Model state snapshots
-        cursor.execute("""
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS model_snapshots (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 timestamp REAL,
                 state_data TEXT,
                 checksum TEXT
             )
-        """)
+        """
+        )
 
         self.connection.commit()
 
@@ -1144,14 +1168,13 @@ class HModelManager:
         cursor = self.connection.cursor()
         cursor.execute(
             "INSERT INTO model_snapshots (timestamp, state_data, checksum) VALUES (?, ?, ?)",
-            (timestamp, base64.b64encode(state_data).decode('utf-8'), checksum)
+            (timestamp, base64.b64encode(state_data).decode("utf-8"), checksum),
         )
         self.connection.commit()
 
     def _record_simulation(self, t_value, h_value, method, execution_time):
         """Record a simulation result in the database."""
-        params_str = json.dumps(
-            self.parameters.to_dict()) if json else "{}"
+        params_str = json.dumps(self.parameters.to_dict()) if json else "{}"
         timestamp = time.time()
 
         cursor = self.connection.cursor()
@@ -1160,7 +1183,7 @@ class HModelManager:
             INSERT INTO simulations (timestamp, t_value, h_value, parameters, method, execution_time)
             VALUES (?, ?, ?, ?, ?, ?)
             """,
-            (timestamp, t_value, h_value, params_str, method, execution_time)
+            (timestamp, t_value, h_value, params_str, method, execution_time),
         )
         self.connection.commit()
 
@@ -1168,9 +1191,9 @@ class HModelManager:
         """Initialize all system components"""
         # Create genesis block
         genesis_data = {
-            'event': 'system_initialization',
-            'parameters': self.parameters.to_dict(),
-            'timestamp': time.time()
+            "event": "system_initialization",
+            "parameters": self.parameters.to_dict(),
+            "timestamp": time.time(),
         }
         self.blockchain.create_block(genesis_data)
 
@@ -1192,13 +1215,15 @@ class HModelManager:
 
         finally:
             execution_time = time.perf_counter() - start_time
-            logger.info(
-                f"[{operation_id}] Exiting secure context after {execution_time:.4f}s")
+            logger.info(f"[{operation_id}] Exiting secure context after {execution_time:.4f}s")
 
     @secure_operation
     @performance_monitor
-    def load_data(self, series: Union[List, 'np.ndarray', 'pd.DataFrame'],
-                  preprocess_fn: Optional[Callable] = None) -> None:
+    def load_data(
+        self,
+        series: Union[List, "np.ndarray", "pd.DataFrame"],
+        preprocess_fn: Optional[Callable] = None,
+    ) -> None:
         """Load and preprocess data with comprehensive validation"""
 
         # Convert to numpy array
@@ -1221,7 +1246,7 @@ class HModelManager:
             logger.warning("Data contains non-finite values, cleaning...")
             data = data[np.isfinite(data)]
 
-        # Preprocessing
+            # Preprocessing
             if preprocess_fn:
                 data = preprocess_fn(data)
 
@@ -1237,14 +1262,14 @@ class HModelManager:
         # Create blockchain record
         if np:
             blockchain_data = {
-                'event': 'data_loaded',
-                'data_size': len(data),
-                'data_stats': {
-                    'mean': float(np.mean(data)),
-                    'std': float(np.std(data)),
-                    'min': float(np.min(data)),
-                    'max': float(np.max(data))
-                }
+                "event": "data_loaded",
+                "data_size": len(data),
+                "data_stats": {
+                    "mean": float(np.mean(data)),
+                    "std": float(np.std(data)),
+                    "min": float(np.min(data)),
+                    "max": float(np.max(data)),
+                },
             }
             self.blockchain.create_block(blockchain_data)
 
@@ -1252,8 +1277,9 @@ class HModelManager:
 
     @secure_operation
     @performance_monitor
-    def simulate(self, t: float, control_input: Optional[float] = None,
-                 method: str = "euler") -> float:
+    def simulate(
+        self, t: float, control_input: Optional[float] = None, method: str = "euler"
+    ) -> float:
         """Simulate H-model with advanced numerical methods"""
 
         start_time = time.perf_counter()
@@ -1277,14 +1303,14 @@ class HModelManager:
             self._record_simulation(t, result, method, execution_time)
 
             # Update performance metrics
-            self.performance_metrics['operations_count'] += 1
-            self.performance_metrics['total_execution_time'] += execution_time
-            self.performance_metrics['last_operation_time'] = time.time()
+            self.performance_metrics["operations_count"] += 1
+            self.performance_metrics["total_execution_time"] += execution_time
+            self.performance_metrics["last_operation_time"] = time.time()
 
             return result
 
         except Exception as e:
-            self.performance_metrics['error_count'] += 1
+            self.performance_metrics["error_count"] += 1
             logger.error(f"Simulation failed: {e}")
             raise ModelError(f"Simulation failed: {str(e)}")
 
@@ -1300,8 +1326,12 @@ class HModelManager:
             if not np:
                 return 0.0
 
-            return (p.A * h_val + p.B * np.sin(p.C * t_val) +
-                    p.D * control + p.eta * np.random.normal(0, p.sigma))
+            return (
+                p.A * h_val
+                + p.B * np.sin(p.C * t_val)
+                + p.D * control
+                + p.eta * np.random.normal(0, p.sigma)
+            )
 
         # Euler step
         h_new = h + dt * dH_dt(h, t, u)
@@ -1319,8 +1349,12 @@ class HModelManager:
             if not np:
                 return 0.0
 
-            return (p.A * H_val + p.B * np.sin(p.C * t_val) +
-                    p.D * control + p.eta * np.random.normal(0, p.sigma))
+            return (
+                p.A * H_val
+                + p.B * np.sin(p.C * t_val)
+                + p.D * control
+                + p.eta * np.random.normal(0, p.sigma)
+            )
 
         # RK4 steps
         k1 = dt * dH_dt_func(t, h)
@@ -1343,8 +1377,12 @@ class HModelManager:
             control = u if u is not None else 0.0
             if not np:
                 return 0.0
-            return (p.A * H_val + p.B * np.sin(p.C * t_val) +
-                    p.D * control + p.eta * np.random.normal(0, p.sigma))
+            return (
+                p.A * H_val
+                + p.B * np.sin(p.C * t_val)
+                + p.D * control
+                + p.eta * np.random.normal(0, p.sigma)
+            )
 
         # Adaptive step with error control
         tolerance = 1e-6
@@ -1373,10 +1411,8 @@ class HModelManager:
 
             # Second half step
             k1_2 = dt_half * dH_dt_func(t + dt_half, h_half)
-            k2_2 = dt_half * \
-                dH_dt_func(t + dt_half + dt_half / 2, h_half + k1_2 / 2)
-            k3_2 = dt_half * \
-                dH_dt_func(t + dt_half + dt_half / 2, h_half + k2_2 / 2)
+            k2_2 = dt_half * dH_dt_func(t + dt_half + dt_half / 2, h_half + k1_2 / 2)
+            k3_2 = dt_half * dH_dt_func(t + dt_half + dt_half / 2, h_half + k2_2 / 2)
             k4_2 = dt_half * dH_dt_func(t + dt, h_half + k3_2)
 
             h_double = h_half + (k1_2 + 2 * k2_2 + 2 * k3_2 + k4_2) / 6
@@ -1404,7 +1440,7 @@ class HModelManager:
         if len(self.state.H_history) < 2 * window:
             return {"drift_detected": False, "message": "Not enough data for drift detection."}
 
-        series1 = np.array(self.state.H_history[-2 * window:-window])
+        series1 = np.array(self.state.H_history[-2 * window : -window])
         series2 = np.array(self.state.H_history[-window:])
 
         mean1, mean2 = np.mean(series1), np.mean(series2)
@@ -1413,10 +1449,10 @@ class HModelManager:
         p_value: float = 1.0
         try:
             from scipy.stats import ttest_ind
+
             _, p_value = ttest_ind(series1, series2, equal_var=False)
         except ImportError:
-            logger.warning(
-                "scipy not found, using simple mean comparison for drift detection.")
+            logger.warning("scipy not found, using simple mean comparison for drift detection.")
             # Fallback to a simpler test if scipy is not available
             if abs(mean1 - mean2) > threshold * (std1 + std2) / 2:
                 p_value = 0.01  # a value below the threshold
@@ -1441,7 +1477,7 @@ class HModelManager:
         # For now, we'll just return the current parameters.
         return {
             "status": "completed_placeholder",
-            "optimized_parameters": self.parameters.to_dict()
+            "optimized_parameters": self.parameters.to_dict(),
         }
 
     def export_results(self, format: str = "json") -> Union[str, bytes]:
@@ -1449,20 +1485,20 @@ class HModelManager:
         if format == "json":
             if not json:
                 raise ImportError("json module not available")
-            return json.dumps({
-                "parameters": self.parameters.to_dict(),
-                "state": self.state.H_history,
-                "timestamps": self.state.t_history
-            }, indent=2)
+            return json.dumps(
+                {
+                    "parameters": self.parameters.to_dict(),
+                    "state": self.state.H_history,
+                    "timestamps": self.state.t_history,
+                },
+                indent=2,
+            )
         elif format == "csv":
             if not PANDAS_AVAILABLE:
                 raise ImportError("pandas is required for CSV export.")
-            df = pd.DataFrame({
-                'timestamp': self.state.t_history,
-                'H_value': self.state.H_history
-            })
+            df = pd.DataFrame({"timestamp": self.state.t_history, "H_value": self.state.H_history})
             return df.to_csv(index=False)
-            else:
+        else:
             raise ValueError("Unsupported format. Choose 'json' or 'csv'.")
 
 
@@ -1484,7 +1520,7 @@ class HModelTester:
             self.test_security_features,
             self.test_performance,
             self.test_blockchain_integrity,
-            self.test_vector_embeddings
+            self.test_vector_embeddings,
         ]
 
         results = {}
@@ -1505,9 +1541,15 @@ class HModelTester:
         """Test parameter validation logic."""
         # Test valid parameters
         valid_params = {
-            "A": 1.0, "B": 0.5, "C": 0.3, "D": 0.2,
-            "eta": 0.1, "gamma": 1.5, "beta": 0.8,
-            "sigma": 0.05, "tau": 1.0
+            "A": 1.0,
+            "B": 0.5,
+            "C": 0.3,
+            "D": 0.2,
+            "eta": 0.1,
+            "gamma": 1.5,
+            "beta": 0.8,
+            "sigma": 0.05,
+            "tau": 1.0,
         }
 
         try:
@@ -1532,8 +1574,7 @@ class HModelTester:
         if not np:
             raise ImportError("numpy is required for this test.")
         # Generate test data
-        test_data = np.sin(np.linspace(0, 10, 100)) + \
-            np.random.normal(0, 0.1, 100)
+        test_data = np.sin(np.linspace(0, 10, 100)) + np.random.normal(0, 0.1, 100)
         self.model_manager.load_data(test_data)
 
         # Run simulations
@@ -1551,8 +1592,7 @@ class HModelTester:
         # Check consistency
         variance = np.var(results)
         if variance > 1000:  # Arbitrary threshold
-            raise AssertionError(
-                f"Simulation results too variable: {variance}")
+            raise AssertionError(f"Simulation results too variable: {variance}")
 
         return {"simulation_results": results, "variance": variance}
 
@@ -1572,8 +1612,7 @@ class HModelTester:
             self.model_manager.simulate(i * 0.1)
 
         # Test drift detection
-        drift_result = self.model_manager.detect_drift(
-            window=50, threshold=0.1)
+        drift_result = self.model_manager.detect_drift(window=50, threshold=0.1)
 
         if not drift_result["drift_detected"]:
             raise AssertionError("Failed to detect synthetic drift")
@@ -1614,13 +1653,12 @@ class HModelTester:
         avg_time_per_simulation = elapsed_time / 100
 
         if avg_time_per_simulation > 0.1:  # 100ms threshold
-            raise AssertionError(
-                f"Simulation too slow: {avg_time_per_simulation:.4f}s per call")
+            raise AssertionError(f"Simulation too slow: {avg_time_per_simulation:.4f}s per call")
 
         return {
             "total_time": elapsed_time,
             "avg_time_per_simulation": avg_time_per_simulation,
-            "simulations_per_second": 100 / elapsed_time
+            "simulations_per_second": 100 / elapsed_time,
         }
 
     def test_blockchain_integrity(self) -> Dict[str, Any]:
@@ -1637,16 +1675,16 @@ class HModelTester:
         # Test tampering detection
         if len(self.model_manager.blockchain.chain) > 0:
             # Tamper with a block
-            original_data = self.model_manager.blockchain.chain[1]['data']
-            self.model_manager.blockchain.chain[1]['data'] = "tampered_data"
+            original_data = self.model_manager.blockchain.chain[1]["data"]
+            self.model_manager.blockchain.chain[1]["data"] = "tampered_data"
 
             if self.model_manager.blockchain.verify_chain():
                 # Restore for subsequent tests
-                self.model_manager.blockchain.chain[1]['data'] = original_data
+                self.model_manager.blockchain.chain[1]["data"] = original_data
                 raise AssertionError("Failed to detect blockchain tampering")
 
             # Restore original data
-            self.model_manager.blockchain.chain[1]['data'] = original_data
+            self.model_manager.blockchain.chain[1]["data"] = original_data
 
         return {"blockchain_blocks": len(self.model_manager.blockchain.chain)}
 
@@ -1666,20 +1704,18 @@ class HModelTester:
             raise AssertionError("Embedding dimension mismatch")
 
         # Test similarity computation
-        sim_12 = self.model_manager.vector_engine.compute_similarity(
-            embedding1, embedding2)
-        sim_13 = self.model_manager.vector_engine.compute_similarity(
-            embedding1, embedding3)
+        sim_12 = self.model_manager.vector_engine.compute_similarity(embedding1, embedding2)
+        sim_13 = self.model_manager.vector_engine.compute_similarity(embedding1, embedding3)
 
         if sim_12 <= sim_13:
-            logger.warning(
-                "Similarity ordering unexpected but not necessarily wrong")
+            logger.warning("Similarity ordering unexpected but not necessarily wrong")
 
         return {
             "embedding_dimension": len(embedding1),
             "similarity_12": sim_12,
-            "similarity_13": sim_13
+            "similarity_13": sim_13,
         }
+
 
 # ==================== HTML INTERFACE GENERATOR ====================
 
@@ -2080,6 +2116,7 @@ class HTMLOmnisolver:
 """
         return html_content.strip()
 
+
 # ==================== EXAMPLE USAGE ====================
 
 
@@ -2088,25 +2125,30 @@ async def main():
     try:
         # Initialize the model manager with enhanced parameters
         initial_params = {
-            'A': 1.0, 'B': 0.5, 'C': 0.3, 'D': 0.2,
-            'eta': 0.1, 'gamma': 1.5, 'beta': 0.8,
-            'sigma': 0.05, 'tau': 1.0
+            "A": 1.0,
+            "B": 0.5,
+            "C": 0.3,
+            "D": 0.2,
+            "eta": 0.1,
+            "gamma": 1.5,
+            "beta": 0.8,
+            "sigma": 0.05,
+            "tau": 1.0,
         }
 
         manager = HModelManager(initial_params)
 
         # Load synthetic data
         if np:
-            synthetic_data = np.sin(np.linspace(0, 10, 100)) + \
-                0.1 * np.random.randn(100)
+            synthetic_data = np.sin(np.linspace(0, 10, 100)) + 0.1 * np.random.randn(100)
         manager.load_data(synthetic_data)
 
         # Run simulations
         results = []
         if np:
-        for t in np.linspace(0, 5, 50):
-            result = manager.simulate(t)
-            results.append(result)
+            for t in np.linspace(0, 5, 50):
+                result = manager.simulate(t)
+                results.append(result)
 
         # Detect drift
         drift_result = manager.detect_drift(window=20, threshold=0.1)
@@ -2135,7 +2177,7 @@ async def main():
             "simulation_results": results,
             "drift_detection": drift_result,
             "optimization": optimization_result,
-            "test_results": test_results
+            "test_results": test_results,
         }
 
     except Exception as e:
@@ -2149,9 +2191,7 @@ if __name__ == "__main__":
         if asyncio:
             # Run the main function
             result = asyncio.run(main())
-            logger.info(
-                "System execution completed successfully"
-            )
+            logger.info("System execution completed successfully")
         else:
             logger.error("asyncio module not available, cannot run main.")
             print("❌ Error: asyncio is required to run this script.")
@@ -2163,8 +2203,7 @@ if __name__ == "__main__":
     except ImportError as e:
         logger.error(f"Missing dependency: {e}")
         print(f"❌ Error: {e}")
-        print(
-            "Please install required dependencies with: pip install -r requirements.txt")
+        print("Please install required dependencies with: pip install -r requirements.txt")
 
     except Exception as e:
         logger.error(f"System execution failed: {e}")

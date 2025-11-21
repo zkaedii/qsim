@@ -16,7 +16,8 @@ import time
 import tracemalloc
 from typing import Dict, List, Tuple, Optional, Union
 import warnings
-warnings.filterwarnings('ignore')
+
+warnings.filterwarnings("ignore")
 
 # Performance monitoring
 
@@ -43,11 +44,11 @@ class PerformanceMonitor:
         current, peak = tracemalloc.get_traced_memory()
 
         metrics = {
-            'execution_time': execution_time,
-            'memory_used': current / 1024 / 1024,  # MB
-            'peak_memory': peak / 1024 / 1024,     # MB
-            'cpu_percent': psutil.cpu_percent(),
-            'memory_percent': psutil.virtual_memory().percent
+            "execution_time": execution_time,
+            "memory_used": current / 1024 / 1024,  # MB
+            "peak_memory": peak / 1024 / 1024,  # MB
+            "cpu_percent": psutil.cpu_percent(),
+            "memory_percent": psutil.virtual_memory().percent,
         }
 
         self.metrics[operation_name] = metrics
@@ -55,6 +56,7 @@ class PerformanceMonitor:
         self.start_time = None
 
         return metrics
+
 
 # Memory pool for efficient allocation
 
@@ -86,6 +88,7 @@ class MemoryPool:
             arrays.clear()
         gc.collect()
 
+
 # Optimized mathematical functions
 
 
@@ -112,6 +115,7 @@ def fast_trig_functions(t: float) -> Tuple[float, float, float]:
 
 # GPU-accelerated computation (if available)
 try:
+
     @cuda.jit
     def gpu_hamiltonian_kernel(t_array, H_array, dH_dt_array, params):
         """GPU kernel for Hamiltonian computation."""
@@ -133,12 +137,14 @@ try:
             B2 = 1.5 + 0.05 * t
             B3 = 2.5 + 0.15 * t
 
-            oscillatory = (A1 * cuda.sin(B1 * t) + A2 * cuda.sin(B2 * t + 3.14159/3) +
-                           A3 * cuda.sin(B3 * t + 3.14159/6))
+            oscillatory = (
+                A1 * cuda.sin(B1 * t)
+                + A2 * cuda.sin(B2 * t + 3.14159 / 3)
+                + A3 * cuda.sin(B3 * t + 3.14159 / 6)
+            )
 
             # Optimized drift terms
-            drift = 0.01 * t * t + alpha1 * \
-                cuda.sin(2 * 3.14159 * t) + 0.05 * cuda.log(1 + t)
+            drift = 0.01 * t * t + alpha1 * cuda.sin(2 * 3.14159 * t) + 0.05 * cuda.log(1 + t)
 
             # Optimized feedback
             feedback = eta * H * fast_sigmoid(gamma * H)
@@ -164,8 +170,9 @@ except:
 
 
 @jit(nopython=True, parallel=True, cache=True)
-def cpu_hamiltonian_computation(t_array: np.ndarray, H_array: np.ndarray,
-                                dH_dt_array: np.ndarray, params: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+def cpu_hamiltonian_computation(
+    t_array: np.ndarray, H_array: np.ndarray, dH_dt_array: np.ndarray, params: np.ndarray
+) -> Tuple[np.ndarray, np.ndarray]:
     """Highly optimized CPU computation of Hamiltonian system."""
     eta, sigma, alpha1, tau, gamma, delta = params
 
@@ -187,8 +194,9 @@ def cpu_hamiltonian_computation(t_array: np.ndarray, H_array: np.ndarray,
         B3 = 2.5 + 0.15 * t
 
         # Vectorized trigonometric computations
-        oscillatory = (A1 * np.sin(B1 * t) + A2 * np.sin(B2 * t + 1.0472) +
-                       A3 * np.sin(B3 * t + 0.5236))
+        oscillatory = (
+            A1 * np.sin(B1 * t) + A2 * np.sin(B2 * t + 1.0472) + A3 * np.sin(B3 * t + 0.5236)
+        )
 
         # Optimized drift terms
         drift = 0.01 * t * t + alpha1 * sin_2pi_t + 0.05 * np.log(1 + t)
@@ -239,18 +247,19 @@ class OptimizedHamiltonianSystem:
         required_memory = n_points * memory_per_point
 
         allocation = {
-            'memory_limit': min(required_memory * 1.5, available_memory * 0.8),
-            'cpu_threads': min(self.num_threads, cpu_count),
+            "memory_limit": min(required_memory * 1.5, available_memory * 0.8),
+            "cpu_threads": min(self.num_threads, cpu_count),
             # Optimal batch size
-            'batch_size': max(1, n_points // (cpu_count * 4)),
-            'use_gpu': self.use_gpu and required_memory < 1000,  # GPU for large datasets
-            'cache_size': min(1000, n_points // 10)  # Cache size optimization
+            "batch_size": max(1, n_points // (cpu_count * 4)),
+            "use_gpu": self.use_gpu and required_memory < 1000,  # GPU for large datasets
+            "cache_size": min(1000, n_points // 10),  # Cache size optimization
         }
 
         return allocation
 
-    def run_optimized_simulation(self, params: Dict, t_span: Tuple = (0, 20),
-                                 n_points: int = 2000) -> Tuple[np.ndarray, np.ndarray, np.ndarray, Dict]:
+    def run_optimized_simulation(
+        self, params: Dict, t_span: Tuple = (0, 20), n_points: int = 2000
+    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray, Dict]:
         """Run highly optimized simulation with dynamic resource allocation."""
 
         self.monitor.start_monitoring("simulation_setup")
@@ -269,27 +278,43 @@ class OptimizedHamiltonianSystem:
         dH_dt_array.fill(0.0)
 
         # Convert parameters to numpy array for optimization
-        param_array = np.array([params['eta'], params['sigma'], params['alpha1'],
-                               params['tau'], params['gamma'], params['delta']], dtype=np.float64)
+        param_array = np.array(
+            [
+                params["eta"],
+                params["sigma"],
+                params["alpha1"],
+                params["tau"],
+                params["gamma"],
+                params["delta"],
+            ],
+            dtype=np.float64,
+        )
 
         setup_metrics = self.monitor.end_monitoring("simulation_setup")
 
         # Choose computation method based on allocation
-        if allocation['use_gpu'] and GPU_AVAILABLE:
+        if allocation["use_gpu"] and GPU_AVAILABLE:
             computation_metrics = self._run_gpu_computation(
-                t_array, H_array, dH_dt_array, param_array, allocation)
+                t_array, H_array, dH_dt_array, param_array, allocation
+            )
         else:
             computation_metrics = self._run_cpu_computation(
-                t_array, H_array, dH_dt_array, param_array, allocation)
+                t_array, H_array, dH_dt_array, param_array, allocation
+            )
 
         # Cleanup and return arrays to pool
         self.memory_pool.cleanup()
 
         return t_array, H_array, dH_dt_array, {**setup_metrics, **computation_metrics}
 
-    def _run_gpu_computation(self, t_array: np.ndarray, H_array: np.ndarray,
-                             dH_dt_array: np.ndarray, params: np.ndarray,
-                             allocation: Dict) -> Dict:
+    def _run_gpu_computation(
+        self,
+        t_array: np.ndarray,
+        H_array: np.ndarray,
+        dH_dt_array: np.ndarray,
+        params: np.ndarray,
+        allocation: Dict,
+    ) -> Dict:
         """GPU-accelerated computation."""
         self.monitor.start_monitoring("gpu_computation")
 
@@ -301,12 +326,10 @@ class OptimizedHamiltonianSystem:
 
         # Configure grid
         threadsperblock = 256
-        blockspergrid = (t_array.size + (threadsperblock - 1)
-                         ) // threadsperblock
+        blockspergrid = (t_array.size + (threadsperblock - 1)) // threadsperblock
 
         # Launch kernel
-        gpu_hamiltonian_kernel[blockspergrid, threadsperblock](
-            t_gpu, H_gpu, dH_dt_gpu, params_gpu)
+        gpu_hamiltonian_kernel[blockspergrid, threadsperblock](t_gpu, H_gpu, dH_dt_gpu, params_gpu)
 
         # Copy results back
         H_array[:] = H_gpu.copy_to_host()
@@ -314,15 +337,19 @@ class OptimizedHamiltonianSystem:
 
         return self.monitor.end_monitoring("gpu_computation")
 
-    def _run_cpu_computation(self, t_array: np.ndarray, H_array: np.ndarray,
-                             dH_dt_array: np.ndarray, params: np.ndarray,
-                             allocation: Dict) -> Dict:
+    def _run_cpu_computation(
+        self,
+        t_array: np.ndarray,
+        H_array: np.ndarray,
+        dH_dt_array: np.ndarray,
+        params: np.ndarray,
+        allocation: Dict,
+    ) -> Dict:
         """CPU-optimized computation with parallel processing."""
         self.monitor.start_monitoring("cpu_computation")
 
         # Use optimized CPU computation
-        H_array, dH_dt_array = cpu_hamiltonian_computation(
-            t_array, H_array, dH_dt_array, params)
+        H_array, dH_dt_array = cpu_hamiltonian_computation(t_array, H_array, dH_dt_array, params)
 
         return self.monitor.end_monitoring("cpu_computation")
 
@@ -331,15 +358,13 @@ class OptimizedHamiltonianSystem:
         self.monitor.start_monitoring("parameter_sweep")
 
         # Generate parameter combinations
-        param_combinations = self._generate_parameter_combinations(
-            param_ranges)
+        param_combinations = self._generate_parameter_combinations(param_ranges)
 
         # Use ProcessPoolExecutor for CPU-intensive tasks
         with ProcessPoolExecutor(max_workers=self.num_threads) as executor:
             futures = []
             for params in param_combinations:
-                future = executor.submit(
-                    self._single_simulation, params, n_points)
+                future = executor.submit(self._single_simulation, params, n_points)
                 futures.append(future)
 
             # Collect results
@@ -370,38 +395,37 @@ class OptimizedHamiltonianSystem:
     def _single_simulation(self, params: Dict, n_points: int) -> Dict:
         """Single simulation for parallel processing."""
         try:
-            t, H, dH_dt, metrics = self.run_optimized_simulation(
-                params, (0, 10), n_points)
+            t, H, dH_dt, metrics = self.run_optimized_simulation(params, (0, 10), n_points)
 
             # Calculate basic statistics
             stats = {
-                'mean': float(np.mean(H)),
-                'std': float(np.std(H)),
-                'min': float(np.min(H)),
-                'max': float(np.max(H)),
-                'params': params,
-                'metrics': metrics
+                "mean": float(np.mean(H)),
+                "std": float(np.std(H)),
+                "min": float(np.min(H)),
+                "max": float(np.max(H)),
+                "params": params,
+                "metrics": metrics,
             }
 
             return stats
         except Exception as e:
-            return {'error': str(e), 'params': params}
+            return {"error": str(e), "params": params}
 
     def get_performance_summary(self) -> Dict:
         """Get comprehensive performance summary."""
         return {
-            'monitor_metrics': self.monitor.metrics,
-            'memory_pool_stats': {
-                'pool_size': len(self.memory_pool.pool),
-                'total_arrays': sum(len(arrays) for arrays in self.memory_pool.pool.values())
+            "monitor_metrics": self.monitor.metrics,
+            "memory_pool_stats": {
+                "pool_size": len(self.memory_pool.pool),
+                "total_arrays": sum(len(arrays) for arrays in self.memory_pool.pool.values()),
             },
-            'system_info': {
-                'cpu_count': psutil.cpu_count(),
-                'memory_total': psutil.virtual_memory().total / 1024 / 1024 / 1024,  # GB
-                'memory_available': psutil.virtual_memory().available / 1024 / 1024 / 1024,  # GB
-                'cpu_percent': psutil.cpu_percent(),
-                'memory_percent': psutil.virtual_memory().percent
-            }
+            "system_info": {
+                "cpu_count": psutil.cpu_count(),
+                "memory_total": psutil.virtual_memory().total / 1024 / 1024 / 1024,  # GB
+                "memory_available": psutil.virtual_memory().available / 1024 / 1024 / 1024,  # GB
+                "cpu_percent": psutil.cpu_percent(),
+                "memory_percent": psutil.virtual_memory().percent,
+            },
         }
 
 
@@ -414,25 +438,17 @@ def run_optimization_demo():
     system = OptimizedHamiltonianSystem(use_gpu=False, num_threads=4)
 
     # Test parameters
-    params = {
-        'eta': 0.3,
-        'sigma': 0.1,
-        'alpha1': 0.2,
-        'tau': 0.5,
-        'gamma': 0.5,
-        'delta': 0.1
-    }
+    params = {"eta": 0.3, "sigma": 0.1, "alpha1": 0.2, "tau": 0.5, "gamma": 0.5, "delta": 0.1}
 
     print("\n📊 Running Optimized Simulation...")
-    t, H, dH_dt, metrics = system.run_optimized_simulation(
-        params, (0, 20), 5000)
+    t, H, dH_dt, metrics = system.run_optimized_simulation(params, (0, 20), 5000)
 
     print(f"✅ Simulation Complete!")
 
     # Get metrics safely
-    cpu_metrics = metrics.get('cpu_computation', {})
-    exec_time = cpu_metrics.get('execution_time', 0)
-    memory_used = cpu_metrics.get('memory_used', 0)
+    cpu_metrics = metrics.get("cpu_computation", {})
+    exec_time = cpu_metrics.get("execution_time", 0)
+    memory_used = cpu_metrics.get("memory_used", 0)
 
     print(f"   - Execution Time: {exec_time:.4f}s")
     print(f"   - Memory Used: {memory_used:.2f}MB")
@@ -440,28 +456,21 @@ def run_optimization_demo():
 
     # Parameter sweep test
     print("\n🔄 Running Parallel Parameter Sweep...")
-    param_ranges = {
-        'eta': [0.1, 0.3, 0.5],
-        'sigma': [0.05, 0.1, 0.15],
-        'alpha1': [0.1, 0.2, 0.3]
-    }
+    param_ranges = {"eta": [0.1, 0.3, 0.5], "sigma": [0.05, 0.1, 0.15], "alpha1": [0.1, 0.2, 0.3]}
 
-    results, sweep_metrics = system.parallel_parameter_sweep(
-        param_ranges, 1000)
+    results, sweep_metrics = system.parallel_parameter_sweep(param_ranges, 1000)
 
     print(f"✅ Parameter Sweep Complete!")
     print(f"   - Combinations Tested: {len(results)}")
-    sweep_time = sweep_metrics.get('execution_time', 0)
+    sweep_time = sweep_metrics.get("execution_time", 0)
     print(f"   - Sweep Time: {sweep_time:.4f}s")
 
     # Performance summary
     summary = system.get_performance_summary()
     print(f"\n📈 Performance Summary:")
     print(f"   - CPU Usage: {summary['system_info']['cpu_percent']:.1f}%")
-    print(
-        f"   - Memory Usage: {summary['system_info']['memory_percent']:.1f}%")
-    print(
-        f"   - Available Memory: {summary['system_info']['memory_available']:.1f}GB")
+    print(f"   - Memory Usage: {summary['system_info']['memory_percent']:.1f}%")
+    print(f"   - Available Memory: {summary['system_info']['memory_available']:.1f}GB")
 
     return system, results, summary
 

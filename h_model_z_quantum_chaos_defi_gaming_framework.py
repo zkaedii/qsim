@@ -23,10 +23,11 @@ import random
 
 # Setup logging for full operational intelligence
 logging.basicConfig(
-    filename='h_model_z_diagnostics.log',
+    filename="h_model_z_diagnostics.log",
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    format="%(asctime)s - %(levelname)s - %(message)s",
 )
+
 
 # === BLACK VAULT OPCODE SIMULATION LAYER ===
 class BlackVaultOpcodeSimulator:
@@ -78,6 +79,7 @@ class BlackVaultOpcodeSimulator:
     def dump_log(self):
         return "\n".join(self.log)
 
+
 # === EXTENDED OPCODE EMULATOR: 100+ Functions Dynamically Bound ===
 class ExtendedBlackVaultOpcodes:
     def __init__(self):
@@ -90,6 +92,7 @@ class ExtendedBlackVaultOpcodes:
             entry = f"OPCODE_{index} executed with args: {args}"
             self.log.append(entry)
             return f"Result from OPCODE_{index}"
+
         return emulator
 
     def run_all(self):
@@ -99,26 +102,31 @@ class ExtendedBlackVaultOpcodes:
     def dump_log(self):
         return "\n".join(self.log)
 
+
 # === CREATIVE BONUS MODULE: Quantum Chaos Generator ===
 class QuantumChaosGenerator:
     """
     YOUR BRILLIANT QUANTUM CHAOS INNOVATION!
     Generates random beneficial events for the DeFi ecosystem
     """
+
     def __init__(self):
         self.history = []
 
     def trigger_event(self):
         events = [
-            "Token meteor drops", "Flash reward storm",
-            "XP doubling gate", "Phantom gas sync", "Logic mirror burst"
+            "Token meteor drops",
+            "Flash reward storm",
+            "XP doubling gate",
+            "Phantom gas sync",
+            "Logic mirror burst",
         ]
         effects = [
-            lambda: f"+{random.randint(10, 100)} H_MODEL_T", 
-            lambda: f"-Gas cost by {random.uniform(0.01, 0.05)*100:.2f}%", 
-            lambda: "XP Surge Activated!", 
+            lambda: f"+{random.randint(10, 100)} H_MODEL_T",
+            lambda: f"-Gas cost by {random.uniform(0.01, 0.05)*100:.2f}%",
+            lambda: "XP Surge Activated!",
             lambda: "State Randomization Executed",
-            lambda: "Anomaly Wave Reflected"
+            lambda: "Anomaly Wave Reflected",
         ]
         event = random.choice(events)
         effect = random.choice(effects)()
@@ -129,19 +137,23 @@ class QuantumChaosGenerator:
     def chaos_log(self):
         return "\n".join(self.history)
 
+
 # === DEFI GAMING LAYER: H_MODEL_T MINING ===
 class GameTier:
     """Game tier system with rewards, XP, and gas discounts"""
+
     TIERS = {
         "basic": {"reward": 1, "xp": 10, "gas_discount": 0.01},
         "rare": {"reward": 2, "xp": 25, "gas_discount": 0.02},
         "advanced": {"reward": 4, "xp": 50, "gas_discount": 0.03},
         "elite": {"reward": 7, "xp": 100, "gas_discount": 0.05},
-        "mastery": {"reward": 12, "xp": 200, "gas_discount": 0.08}
+        "mastery": {"reward": 12, "xp": 200, "gas_discount": 0.08},
     }
+
 
 class HModelTLeaderboard:
     """Competitive leaderboard for H_MODEL_T miners"""
+
     def __init__(self):
         self.leaderboard = {}
 
@@ -160,10 +172,17 @@ class HModelTLeaderboard:
 
     def display(self):
         board = self.get_top_players()
-        return "\n".join([f"{i+1}. {pid} | Games: {d['games']} | XP: {d['xp']} | Rewards: {d['rewards']} H_MODEL_T" for i, (pid, d) in enumerate(board)])
+        return "\n".join(
+            [
+                f"{i+1}. {pid} | Games: {d['games']} | XP: {d['xp']} | Rewards: {d['rewards']} H_MODEL_T"
+                for i, (pid, d) in enumerate(board)
+            ]
+        )
+
 
 class HModelTGameMiner:
     """Base game miner for H_MODEL_T token mining"""
+
     def __init__(self):
         self.games_played = 0
         self.total_rewards = 0
@@ -190,8 +209,10 @@ class HModelTGameMiner:
             f"Match Log:\n" + "\n".join(self.match_history)
         )
 
+
 class EnhancedHModelTGameMiner(HModelTGameMiner):
     """Enhanced miner with leaderboard integration"""
+
     def __init__(self, player_id, leaderboard):
         super().__init__()
         self.player_id = player_id
@@ -212,71 +233,101 @@ class EnhancedHModelTGameMiner(HModelTGameMiner):
         self.leaderboard.update_player(self.player_id, mined, xp)
         return self.match_history[-1]
 
+
 # === MATHEMATICAL MODEL ===
 
 # Sophisticated parameters for mathematical excellence
 params = {
-    'n': 5,
-    'sigma': 0.2,
-    'gamma': 2.0,
-    'alpha': 0.15,
-    'beta': 0.08,
-    'kappa': 1.5,
-    'theta': 0.3,
-    'mu': 0.1,
-    'rho': 0.95,
-    'lambda': 0.02,
-    'xi': 0.05,
-    'omega': 0.4
+    "n": 5,
+    "sigma": 0.2,
+    "gamma": 2.0,
+    "alpha": 0.15,
+    "beta": 0.08,
+    "kappa": 1.5,
+    "theta": 0.3,
+    "mu": 0.1,
+    "rho": 0.95,
+    "lambda": 0.02,
+    "xi": 0.05,
+    "omega": 0.4,
 }
 
+
 # Placeholder functions for dynamic token behavior
-def A_i(i, t): return 1.0 + 0.1 * np.sin(0.5 * t)
-def B_i(i, t): return 1.0 + 0.1 * i
-def phi_i(i): return np.pi / (i + 1)
-def C_i(i): return 0.3
-def D_i(i): return 0.05 + 0.01 * i
-def f(x): return np.cos(x)
-def g_prime(x): return -np.sin(x)
-def u(t): return 0.1 * np.sin(0.2 * t)
-def normal(mean, std): return np.random.normal(mean, std)
+def A_i(i, t):
+    return 1.0 + 0.1 * np.sin(0.5 * t)
+
+
+def B_i(i, t):
+    return 1.0 + 0.1 * i
+
+
+def phi_i(i):
+    return np.pi / (i + 1)
+
+
+def C_i(i):
+    return 0.3
+
+
+def D_i(i):
+    return 0.05 + 0.01 * i
+
+
+def f(x):
+    return np.cos(x)
+
+
+def g_prime(x):
+    return -np.sin(x)
+
+
+def u(t):
+    return 0.1 * np.sin(0.2 * t)
+
+
+def normal(mean, std):
+    return np.random.normal(mean, std)
+
 
 # Enhanced H_hat function with scipy integration
 def H_hat(t):
     """Enhanced H_hat computation with sophisticated mathematical framework"""
     try:
         # Multi-component H_hat calculation
-        base_component = params['alpha'] * np.sin(params['omega'] * t)
-        stochastic_component = params['sigma'] * np.random.normal(0, 1)
-        memory_feedback = params['rho'] * np.tanh(params['kappa'] * t / (t + 1))
-        
+        base_component = params["alpha"] * np.sin(params["omega"] * t)
+        stochastic_component = params["sigma"] * np.random.normal(0, 1)
+        memory_feedback = params["rho"] * np.tanh(params["kappa"] * t / (t + 1))
+
         # Scipy integration component
         def integrand(x):
-            return params['gamma'] * np.exp(-params['lambda'] * x) * np.cos(params['theta'] * x)
-        
+            return params["gamma"] * np.exp(-params["lambda"] * x) * np.cos(params["theta"] * x)
+
         # Bounded integration for stability
         integration_bound = min(5.0, t + 1)
         integral_component, _ = quad(integrand, 0, integration_bound)
-        
+
         # Sigmoid activation
-        activation = expit(params['xi'] * (base_component + memory_feedback))
-        
+        activation = expit(params["xi"] * (base_component + memory_feedback))
+
         # Final H_hat calculation
         h_value = (
-            base_component + 
-            stochastic_component + 
-            memory_feedback + 
-            0.1 * integral_component + 
-            activation
+            base_component
+            + stochastic_component
+            + memory_feedback
+            + 0.1 * integral_component
+            + activation
         )
-        
+
         return h_value
-        
+
     except Exception as e:
         logging.error(f"H_hat computation error at t={t}: {e}")
         return 0.0
 
+
 # === LEVEL LOGIC FUNCTIONS ===
+
 
 def basic_level():
     """Basic level logic with operational status"""
@@ -291,6 +342,7 @@ def basic_level():
     except Exception as e:
         return f"Error at basic level: {e}"
 
+
 def rare_level():
     """Rare level with precision analysis"""
     try:
@@ -303,6 +355,7 @@ def rare_level():
             return "Standard Precision"
     except Exception as e:
         return f"Error at rare level: {e}"
+
 
 def advanced_level():
     """Advanced level with performance metrics"""
@@ -317,6 +370,7 @@ def advanced_level():
     except Exception as e:
         return f"Error at advanced level: {e}"
 
+
 def elite_level():
     """Elite level with stability assessment"""
     try:
@@ -329,6 +383,7 @@ def elite_level():
             return "Unstable"
     except Exception as e:
         return f"Error at elite level: {e}"
+
 
 def mastery_level():
     """Mastery level with validation status"""
@@ -343,38 +398,49 @@ def mastery_level():
     except Exception as e:
         return f"Error at mastery level: {e}"
 
+
 # Parameter tuning functions
 def basic_param_level():
     return f"n={params['n']}, sigma={params['sigma']:.3f}"
 
+
 def rare_param_level():
     return f"gamma={params['gamma']:.1f}, alpha={params['alpha']:.3f}"
+
 
 def advanced_param_level():
     return f"beta={params['beta']:.3f}, kappa={params['kappa']:.1f}"
 
+
 def elite_param_level():
     return f"theta={params['theta']:.1f}, mu={params['mu']:.3f}"
+
 
 def mastery_param_level():
     return f"rho={params['rho']:.2f}, lambda={params['lambda']:.3f}, xi={params['xi']:.3f}, omega={params['omega']:.1f}"
 
+
 # === TOKEN UTILITY SCORING ===
+
 
 def compute_token_utility_score():
     """Compute comprehensive token utility score based on logic levels and H_hat dynamics"""
     try:
         # Weight logic tiers and H_hat dynamics
         level_weights = {
-            "Operational": 1, "High Precision": 2, "Nominal": 4, "Stable": 6, "Validated": 10
+            "Operational": 1,
+            "High Precision": 2,
+            "Nominal": 4,
+            "Stable": 6,
+            "Validated": 10,
         }
-        
+
         logic_score = (
-            level_weights.get(basic_level(), 0) +
-            level_weights.get(rare_level(), 0) +
-            level_weights.get(advanced_level(), 0) +
-            level_weights.get(elite_level(), 0) +
-            level_weights.get(mastery_level(), 0)
+            level_weights.get(basic_level(), 0)
+            + level_weights.get(rare_level(), 0)
+            + level_weights.get(advanced_level(), 0)
+            + level_weights.get(elite_level(), 0)
+            + level_weights.get(mastery_level(), 0)
         )
 
         H_values = [H_hat(t) for t in range(50)]
@@ -394,7 +460,9 @@ def compute_token_utility_score():
         logging.error("Error computing token utility score: %s", e)
         return 0
 
+
 # === H_LOGIC INTELLIGENCE LAYER BONUS ===
+
 
 def level_logic_bonuses():
     """Enhanced level logic performance report with your brilliant improvements"""
@@ -404,7 +472,7 @@ def level_logic_bonuses():
         std = np.std(H_values)
         h_min = min(H_values)
         h_max = max(H_values)
-        
+
         # Your enhanced logging format
         logging.info("\n📊 H_hat EVALUATION SUMMARY")
         logging.info("Average H_hat: %.4f", avg)
@@ -424,24 +492,25 @@ def level_logic_bonuses():
         logging.info("Elite Param Tuning: %s", elite_param_level())
         logging.info("Mastery Param Tuning: %s", mastery_param_level())
         logging.info("Execution Logic Achievements: ✅ ALL LEVELS INTEGRATED\n")
-        
+
         return {
             "h_hat_stats": {"avg": avg, "std": std, "min": h_min, "max": h_max},
-            "all_levels_operational": True
+            "all_levels_operational": True,
         }
-        
+
     except Exception as e:
         logging.error("Error during level logic bonuses report: %s", e)
         return None
 
+
 # === MAIN EXECUTION SEQUENCE ===
 if __name__ == "__main__":
     try:
-        print("🌌" + "="*95 + "🌌")
+        print("🌌" + "=" * 95 + "🌌")
         print("    H_MODEL_Z QUANTUM CHAOS DEFI GAMING FRAMEWORK EXECUTION")
         print("🚀 Advanced Flash Loan Impact Analysis with Quantum Chaos & DeFi Gaming 🚀")
-        print("="*104)
-        
+        print("=" * 104)
+
         print("\n⚫ Initializing Black Vault Opcode Simulation Layer...")
         # Run black vault extended opcode logic
         ext_vault = ExtendedBlackVaultOpcodes()
@@ -462,7 +531,7 @@ if __name__ == "__main__":
         print("\n🎮 Starting DeFi Gaming Layer with H_MODEL_T Mining...")
         # Enhanced gaming with leaderboard
         board = HModelTLeaderboard()
-        
+
         # Create multiple players
         players = ["VaultKnight", "ChaosAlchemist", "QuantumMiner"]
         for player_name in players:
@@ -470,7 +539,7 @@ if __name__ == "__main__":
             print(f"   {player.play_game(basic_level())}")
             print(f"   {player.play_game(advanced_level())}")
             print(f"   {player.play_game(mastery_level())}")
-        
+
         print("\n🏆 H_MODEL_T MINING LEADERBOARD:")
         print(board.display())
 
