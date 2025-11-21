@@ -54,7 +54,7 @@ class TestPerformanceData:
         assert expected_keys == set(mock_performance_data.keys())
 
     def test_performance_ordering(self, mock_performance_data):
-        """Test that JIT compiled is fastest."""
+        """Test that JIT compiled has highest throughput (operations per second)."""
         assert mock_performance_data["jit_compiled"] > mock_performance_data["vectorized_numpy"]
         assert mock_performance_data["vectorized_numpy"] > mock_performance_data["basic_sequential"]
 
