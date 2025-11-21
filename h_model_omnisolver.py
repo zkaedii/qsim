@@ -1462,7 +1462,7 @@ class HModelManager:
                 'H_value': self.state.H_history
             })
             return df.to_csv(index=False)
-            else:
+        else:
             raise ValueError("Unsupported format. Choose 'json' or 'csv'.")
 
 
@@ -2104,9 +2104,9 @@ async def main():
         # Run simulations
         results = []
         if np:
-        for t in np.linspace(0, 5, 50):
-            result = manager.simulate(t)
-            results.append(result)
+            for t in np.linspace(0, 5, 50):
+                result = manager.simulate(t)
+                results.append(result)
 
         # Detect drift
         drift_result = manager.detect_drift(window=20, threshold=0.1)
