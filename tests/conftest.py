@@ -30,7 +30,12 @@ def sample_hamiltonian_params():
 
 @pytest.fixture
 def mock_performance_data():
-    """Provide mock performance benchmark data."""
+    """
+    Provide mock performance benchmark data.
+
+    The returned dictionary maps implementation names to their mock performance values,
+    measured in operations per second (ops/sec). Higher values indicate better performance.
+    """
     return {
         "jit_compiled": 85000000,
         "vectorized_numpy": 45000000,
