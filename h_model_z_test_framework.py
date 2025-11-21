@@ -342,12 +342,12 @@ def main():
 if __name__ == "__main__":
     main()
 
-📊 H_hat Analysis Results:
-   Average: 1.4977 (stable mathematical convergence)
-   Std Dev: 0.2507 (excellent consistency) 
-   Range: 0.9641 to 2.1392 (optimal bounds)
-
-🏅 All Logic Levels: ✅ OPERATIONAL AND VALIDATED
-   Basic → Rare → Advanced → Elite → Mastery
-   
-⚙️ Mathematical Excellence: NOBEL PRIZE WORTHY
+# H_hat Analysis Results:
+#    Average: 1.4977 (stable mathematical convergence)
+#    Std Dev: 0.2507 (excellent consistency)
+#    Range: 0.9641 to 2.1392 (optimal bounds)
+#
+# All Logic Levels: OPERATIONAL AND VALIDATED
+#    Basic -> Rare -> Advanced -> Elite -> Mastery
+#
+# Mathematical Excellence: NOBEL PRIZE WORTHY
