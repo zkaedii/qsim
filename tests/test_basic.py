@@ -2,7 +2,6 @@
 Basic tests to validate CI/CD pipeline functionality.
 """
 
-import pytest
 import numpy as np
 
 
