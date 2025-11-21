@@ -1,3 +1,4 @@
+claude/analyze-01Fjmf6E5nojsb4bcyPQwHCJ
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -225,3 +226,49 @@ credentials.json
 /fuzzing_*.json
 /fuzz_metrics.json
 /enhanced_fuzz_metrics.json
+
+# Python
+*.py[cod]
+__pycache__/
+
+# Logs
+*.log
+logs/
+
+# Backups
+*~
+*.bak
+
+# Demos
+*.demo
+
+# Python artifacts
+*.egg-info/
+*.egg
+dist/
+build/
+
+# IDE Files
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Secrets
+*.env
+*.secrets
+
+# Environment files
+.env
+*.env.local
+
+# Analysis output files
+claude_comprehensive_analysis*.json
+audit_trail.jsonl
+
+# Test data files
+complete_performance_comparison.json
+ultimate_speed_optimization_results.json
+parallel_scaling_performance_results.json
+claude_optimization_history.json
+main

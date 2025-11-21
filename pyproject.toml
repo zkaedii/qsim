@@ -125,7 +125,7 @@ omit = [
 
 [tool.coverage.report]
 exclude_lines = [
-    "pragma: no cover",
+    "pragma: no covhttps://github.com/zkaedii/qsim/pull/2/conflict?name=pyproject.toml&base_oid=7ef70806c010403241d876b2442fa6665f0da512&head_oid=9f92fdc5f39c7ce404ce45cf23146d9bbc7bc647er",
     "def __repr__",
     "raise AssertionError",
     "raise NotImplementedError",
@@ -147,3 +147,18 @@ exclude = [
     "*.egg",
 ]
 max-complexity = 10
+[tool.poetry]
+name = "qsim"
+version = "0.1.0"
+description = "Quantum simulation tools."
+authors = ["zkedii <your_email@example.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.pytest.ini_options]
+addopts = "-v --maxfail=1 --disable-warnings"
+testpaths = ["tests"]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
