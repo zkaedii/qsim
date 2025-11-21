@@ -11,7 +11,8 @@ from scipy.integrate import solve_ivp
 import seaborn as sns
 from typing import Dict, List, Tuple, Any
 import warnings
-warnings.filterwarnings('ignore')
+
+warnings.filterwarnings("ignore")
 
 
 class HamiltonianBenchmarkSuite:
@@ -60,12 +61,14 @@ class HamiltonianBenchmarkSuite:
             B2 = 1.5 + 0.05 * t
             B3 = 2.5 + 0.15 * t
 
-            oscillatory = (A1 * np.sin(B1 * t) + A2 * np.sin(B2 * t + np.pi/3) +
-                           A3 * np.sin(B3 * t + np.pi/6))
+            oscillatory = (
+                A1 * np.sin(B1 * t)
+                + A2 * np.sin(B2 * t + np.pi / 3)
+                + A3 * np.sin(B3 * t + np.pi / 6)
+            )
 
             # Drift terms
-            drift = 0.01 * t**2 + alpha1 * \
-                np.sin(2 * np.pi * t) + 0.05 * np.log(1 + t)
+            drift = 0.01 * t**2 + alpha1 * np.sin(2 * np.pi * t) + 0.05 * np.log(1 + t)
 
             # Delayed feedback
             delayed_feedback = eta * H * self.sigmoid(gamma * H)
@@ -99,9 +102,9 @@ class HamiltonianBenchmarkSuite:
             t_span,
             [0.0, 0.0],
             t_eval=t_eval,
-            method='RK45',
+            method="RK45",
             rtol=1e-8,
-            atol=1e-10
+            atol=1e-10,
         )
 
         end_time = time.time()
@@ -115,29 +118,27 @@ class HamiltonianBenchmarkSuite:
         # CPU profiling results
         profiler.disable()
         s = StringIO()
-        stats = pstats.Stats(profiler, stream=s).sort_stats('cumulative')
+        stats = pstats.Stats(profiler, stream=s).sort_stats("cumulative")
         stats.print_stats(10)  # Top 10 functions
 
         # Performance metrics
         performance_metrics = {
-            'execution_time': execution_time,
-            'memory_used_mb': memory_used,
-            'peak_memory_mb': peak / 1024 / 1024,
-            'points_per_second': n_points / execution_time,
-            'memory_per_point': memory_used / n_points,
-            'cpu_profile': s.getvalue()
+            "execution_time": execution_time,
+            "memory_used_mb": memory_used,
+            "peak_memory_mb": peak / 1024 / 1024,
+            "points_per_second": n_points / execution_time,
+            "memory_per_point": memory_used / n_points,
+            "cpu_profile": s.getvalue(),
         }
 
         tracemalloc.stop()
 
         print(f"⏱️  Execution Time: {execution_time:.4f} seconds")
         print(f"💾 Memory Used: {memory_used:.2f} MB")
-        print(
-            f"📊 Points per Second: {performance_metrics['points_per_second']:.0f}")
-        print(
-            f"🔍 Memory per Point: {performance_metrics['memory_per_point']:.4f} MB")
+        print(f"📊 Points per Second: {performance_metrics['points_per_second']:.0f}")
+        print(f"🔍 Memory per Point: {performance_metrics['memory_per_point']:.4f} MB")
 
-        self.performance_metrics['hamiltonian_system'] = performance_metrics
+        self.performance_metrics["hamiltonian_system"] = performance_metrics
         return performance_metrics
 
     def benchmark_complexity_scaling(self, max_points=5000, step=500):
@@ -165,7 +166,7 @@ class HamiltonianBenchmarkSuite:
                 (0, 10),
                 [0.0, 0.0],
                 t_eval=t_eval,
-                method='RK45'
+                method="RK45",
             )
 
             end_time = time.time()
@@ -180,10 +181,10 @@ class HamiltonianBenchmarkSuite:
 
         # Fit different complexity models
         models = {
-            'O(n)': point_counts_array,
-            'O(n log n)': point_counts_array * np.log(point_counts_array),
-            'O(n²)': point_counts_array ** 2,
-            'O(n³)': point_counts_array ** 3
+            "O(n)": point_counts_array,
+            "O(n log n)": point_counts_array * np.log(point_counts_array),
+            "O(n²)": point_counts_array**2,
+            "O(n³)": point_counts_array**3,
         }
 
         best_fit = None
@@ -196,18 +197,18 @@ class HamiltonianBenchmarkSuite:
 
             # Calculate R-squared
             correlation = np.corrcoef(normalized_model, normalized_times)[0, 1]
-            r_squared = correlation ** 2
+            r_squared = correlation**2
 
             if r_squared > best_r_squared:
                 best_r_squared = r_squared
                 best_fit = model_name
 
         complexity_analysis = {
-            'point_counts': point_counts,
-            'execution_times': execution_times,
-            'memory_usage': memory_usage,
-            'best_fit_complexity': best_fit,
-            'r_squared': best_r_squared
+            "point_counts": point_counts,
+            "execution_times": execution_times,
+            "memory_usage": memory_usage,
+            "best_fit_complexity": best_fit,
+            "r_squared": best_r_squared,
         }
 
         print(f"🎯 Best Fit Complexity: {best_fit}")
@@ -243,7 +244,7 @@ class HamiltonianBenchmarkSuite:
                 (0, 10),
                 [0.0, 0.0],
                 t_eval=t_eval,
-                method='RK45'
+                method="RK45",
             )
 
             final_memory = process.memory_info().rss / 1024 / 1024
@@ -258,20 +259,18 @@ class HamiltonianBenchmarkSuite:
         memory_trend = np.polyfit(range(len(memory_array)), memory_array, 1)[0]
 
         memory_analysis = {
-            'memory_traces': memory_traces,
-            'average_memory': np.mean(memory_traces),
-            'memory_std': np.std(memory_traces),
-            'memory_trend': memory_trend,
-            'potential_leak': memory_trend > 0.1  # MB per run
+            "memory_traces": memory_traces,
+            "average_memory": np.mean(memory_traces),
+            "memory_std": np.std(memory_traces),
+            "memory_trend": memory_trend,
+            "potential_leak": memory_trend > 0.1,  # MB per run
         }
 
-        print(
-            f"💾 Average Memory Usage: {memory_analysis['average_memory']:.2f} MB")
-        print(
-            f"📊 Memory Standard Deviation: {memory_analysis['memory_std']:.2f} MB")
+        print(f"💾 Average Memory Usage: {memory_analysis['average_memory']:.2f} MB")
+        print(f"📊 Memory Standard Deviation: {memory_analysis['memory_std']:.2f} MB")
         print(f"📈 Memory Trend: {memory_analysis['memory_trend']:.4f} MB/run")
 
-        if memory_analysis['potential_leak']:
+        if memory_analysis["potential_leak"]:
             print("⚠️  Potential memory leak detected!")
         else:
             print("✅ No significant memory leak detected")
@@ -284,7 +283,7 @@ class HamiltonianBenchmarkSuite:
         print("\n⚡ Algorithm Comparison Benchmark")
         print("=" * 40)
 
-        methods = ['RK45', 'RK23', 'DOP853', 'Radau', 'BDF', 'LSODA']
+        methods = ["RK45", "RK23", "DOP853", "Radau", "BDF", "LSODA"]
         comparison_results = {}
 
         for method in methods:
@@ -300,50 +299,46 @@ class HamiltonianBenchmarkSuite:
                     t_eval=np.linspace(0, 10, 1000),
                     method=method,
                     rtol=1e-8,
-                    atol=1e-10
+                    atol=1e-10,
                 )
 
                 end_time = time.time()
                 execution_time = end_time - start_time
 
                 # Calculate accuracy (using RK45 as reference)
-                if method == 'RK45':
+                if method == "RK45":
                     reference_solution = solution
                     accuracy = 1.0
                 else:
                     # Compare with reference
-                    max_diff = np.max(
-                        np.abs(solution.y - reference_solution.y))
+                    max_diff = np.max(np.abs(solution.y - reference_solution.y))
                     accuracy = 1.0 / (1.0 + max_diff)
 
                 comparison_results[method] = {
-                    'execution_time': execution_time,
-                    'accuracy': accuracy,
-                    'success': True
+                    "execution_time": execution_time,
+                    "accuracy": accuracy,
+                    "success": True,
                 }
 
             except Exception as e:
                 comparison_results[method] = {
-                    'execution_time': float('inf'),
-                    'accuracy': 0.0,
-                    'success': False,
-                    'error': str(e)
+                    "execution_time": float("inf"),
+                    "accuracy": 0.0,
+                    "success": False,
+                    "error": str(e),
                 }
 
         # Find best method
-        successful_methods = {k: v for k,
-                              v in comparison_results.items() if v['success']}
+        successful_methods = {k: v for k, v in comparison_results.items() if v["success"]}
 
         if successful_methods:
-            best_method = min(successful_methods.items(),
-                              key=lambda x: x[1]['execution_time'])
+            best_method = min(successful_methods.items(), key=lambda x: x[1]["execution_time"])
 
             print(f"🏆 Best Method: {best_method[0]}")
-            print(
-                f"⏱️  Execution Time: {best_method[1]['execution_time']:.4f}s")
+            print(f"⏱️  Execution Time: {best_method[1]['execution_time']:.4f}s")
             print(f"🎯 Accuracy: {best_method[1]['accuracy']:.4f}")
 
-        self.benchmark_results['algorithm_comparison'] = comparison_results
+        self.benchmark_results["algorithm_comparison"] = comparison_results
         return comparison_results
 
     def _complex_hamiltonian(self, t, state):
@@ -389,9 +384,9 @@ class HamiltonianBenchmarkSuite:
 ### Algorithm Comparison
 """
 
-        if 'algorithm_comparison' in self.benchmark_results:
-            for method, results in self.benchmark_results['algorithm_comparison'].items():
-                if results['success']:
+        if "algorithm_comparison" in self.benchmark_results:
+            for method, results in self.benchmark_results["algorithm_comparison"].items():
+                if results["success"]:
                     report += f"- {method}: {results['execution_time']:.4f}s, Accuracy: {results['accuracy']:.4f}\n"
                 else:
                     report += f"- {method}: Failed ({results.get('error', 'Unknown error')})\n"
@@ -419,7 +414,7 @@ class HamiltonianBenchmarkSuite:
 *Generated by Hamiltonian Benchmark Suite*
 """
 
-        with open('hamiltonian_benchmark_report.md', 'w') as f:
+        with open("hamiltonian_benchmark_report.md", "w") as f:
             f.write(report)
 
         print("📄 Benchmark report saved as 'hamiltonian_benchmark_report.md'")
@@ -434,69 +429,75 @@ class HamiltonianBenchmarkSuite:
         # 1. Complexity scaling
         if self.complexity_analysis:
             ax1 = axes[0, 0]
-            ax1.plot(self.complexity_analysis['point_counts'],
-                     self.complexity_analysis['execution_times'], 'bo-')
-            ax1.set_xlabel('Number of Points')
-            ax1.set_ylabel('Execution Time (s)')
-            ax1.set_title('Complexity Scaling')
+            ax1.plot(
+                self.complexity_analysis["point_counts"],
+                self.complexity_analysis["execution_times"],
+                "bo-",
+            )
+            ax1.set_xlabel("Number of Points")
+            ax1.set_ylabel("Execution Time (s)")
+            ax1.set_title("Complexity Scaling")
             ax1.grid(True, alpha=0.3)
 
         # 2. Memory usage over time
         if self.memory_usage:
             ax2 = axes[0, 1]
-            ax2.plot(self.memory_usage['memory_traces'], 'ro-')
-            ax2.set_xlabel('Run Number')
-            ax2.set_ylabel('Memory Usage (MB)')
-            ax2.set_title('Memory Efficiency')
+            ax2.plot(self.memory_usage["memory_traces"], "ro-")
+            ax2.set_xlabel("Run Number")
+            ax2.set_ylabel("Memory Usage (MB)")
+            ax2.set_title("Memory Efficiency")
             ax2.grid(True, alpha=0.3)
 
         # 3. Algorithm comparison
-        if 'algorithm_comparison' in self.benchmark_results:
+        if "algorithm_comparison" in self.benchmark_results:
             ax3 = axes[0, 2]
             methods = []
             times = []
-            for method, results in self.benchmark_results['algorithm_comparison'].items():
-                if results['success']:
+            for method, results in self.benchmark_results["algorithm_comparison"].items():
+                if results["success"]:
                     methods.append(method)
-                    times.append(results['execution_time'])
+                    times.append(results["execution_time"])
 
             if methods:
                 bars = ax3.bar(methods, times)
-                ax3.set_ylabel('Execution Time (s)')
-                ax3.set_title('Algorithm Performance')
-                ax3.tick_params(axis='x', rotation=45)
+                ax3.set_ylabel("Execution Time (s)")
+                ax3.set_title("Algorithm Performance")
+                ax3.tick_params(axis="x", rotation=45)
 
         # 4. Performance metrics
-        if self.performance_metrics.get('hamiltonian_system'):
+        if self.performance_metrics.get("hamiltonian_system"):
             ax4 = axes[1, 0]
-            metrics = self.performance_metrics['hamiltonian_system']
-            labels = ['Time (s)', 'Memory (MB)', 'Points/s']
-            values = [metrics['execution_time'], metrics['memory_used_mb'],
-                      metrics['points_per_second'] / 1000]  # Scale for visualization
+            metrics = self.performance_metrics["hamiltonian_system"]
+            labels = ["Time (s)", "Memory (MB)", "Points/s"]
+            values = [
+                metrics["execution_time"],
+                metrics["memory_used_mb"],
+                metrics["points_per_second"] / 1000,
+            ]  # Scale for visualization
 
             bars = ax4.bar(labels, values)
-            ax4.set_title('Performance Metrics')
-            ax4.tick_params(axis='x', rotation=45)
+            ax4.set_title("Performance Metrics")
+            ax4.tick_params(axis="x", rotation=45)
 
         # 5. Memory trend analysis
         if self.memory_usage:
             ax5 = axes[1, 1]
-            x = np.arange(len(self.memory_usage['memory_traces']))
-            ax5.scatter(x, self.memory_usage['memory_traces'], alpha=0.6)
+            x = np.arange(len(self.memory_usage["memory_traces"]))
+            ax5.scatter(x, self.memory_usage["memory_traces"], alpha=0.6)
 
             # Trend line
-            z = np.polyfit(x, self.memory_usage['memory_traces'], 1)
+            z = np.polyfit(x, self.memory_usage["memory_traces"], 1)
             p = np.poly1d(z)
             ax5.plot(x, p(x), "r--", alpha=0.8)
 
-            ax5.set_xlabel('Run Number')
-            ax5.set_ylabel('Memory Usage (MB)')
-            ax5.set_title('Memory Trend Analysis')
+            ax5.set_xlabel("Run Number")
+            ax5.set_ylabel("Memory Usage (MB)")
+            ax5.set_title("Memory Trend Analysis")
             ax5.grid(True, alpha=0.3)
 
         # 6. Summary statistics
         ax6 = axes[1, 2]
-        ax6.axis('off')
+        ax6.axis("off")
 
         summary_text = f"""
 Benchmark Summary
@@ -515,17 +516,21 @@ Memory:
 • Leak: {'Yes' if self.memory_usage.get('potential_leak', False) else 'No'}
         """
 
-        ax6.text(0.1, 0.9, summary_text, transform=ax6.transAxes,
-                 fontsize=10, verticalalignment='top',
-                 bbox=dict(boxstyle='round', facecolor='lightblue', alpha=0.8))
+        ax6.text(
+            0.1,
+            0.9,
+            summary_text,
+            transform=ax6.transAxes,
+            fontsize=10,
+            verticalalignment="top",
+            bbox=dict(boxstyle="round", facecolor="lightblue", alpha=0.8),
+        )
 
         plt.tight_layout()
-        plt.savefig('hamiltonian_benchmark_visualizations.png',
-                    dpi=300, bbox_inches='tight')
+        plt.savefig("hamiltonian_benchmark_visualizations.png", dpi=300, bbox_inches="tight")
         plt.show()
 
-        print(
-            "📊 Benchmark visualizations saved as 'hamiltonian_benchmark_visualizations.png'")
+        print("📊 Benchmark visualizations saved as 'hamiltonian_benchmark_visualizations.png'")
 
 
 def run_comprehensive_benchmark():

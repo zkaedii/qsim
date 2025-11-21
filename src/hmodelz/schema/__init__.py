@@ -9,8 +9,8 @@ JSON Schema management and validation:
 """
 
 __all__ = [
-    'schema_manager',
-    'schema_oneliner',
-    'quick_schema_overview',
-    'schema_summary_display',
+    "schema_manager",
+    "schema_oneliner",
+    "quick_schema_overview",
+    "schema_summary_display",
 ]
