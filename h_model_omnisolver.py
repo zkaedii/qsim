@@ -22,43 +22,43 @@ import threading
 import logging
 import logging.handlers
 try:
-import json
+    import json
 except ImportError:
     print("Warning: json module not available")
     json = None  # type: ignore
 
 try:
-import numpy as np
+    import numpy as np
 except ImportError:
     print("Warning: numpy module not available")
     np = None  # type: ignore
 
 try:
-import pandas as pd
+    import pandas as pd
 except ImportError:
     print("Warning: pandas module not available")
     pd = None  # type: ignore
 
 try:
-import asyncio
+    import asyncio
 except ImportError:
     print("Warning: asyncio module not available")
     asyncio = None  # type: ignore
 
 try:
-import functools
+    import functools
 except ImportError:
     print("Warning: functools module not available")
     functools = None  # type: ignore
 
 try:
-import hashlib
+    import hashlib
 except ImportError:
     print("Warning: hashlib module not available")
     hashlib = None  # type: ignore
 
 try:
-import secrets
+    import secrets
 except ImportError:
     print("Warning: secrets module not available")
     secrets = None  # type: ignore
@@ -608,7 +608,7 @@ class ModelState:
         """Calculate state checksum for integrity verification."""
         state_str = f"{self.H_history}{self.t_history}{self.version}"
         if hashlib:
-        return hashlib.md5(state_str.encode()).hexdigest()
+            return hashlib.md5(state_str.encode()).hexdigest()
         return ""
 
     def validate_integrity(self) -> bool:
@@ -688,7 +688,7 @@ class VectorEmbeddingGenius:
             processed_data = self._text_to_array(data)
         elif np and isinstance(data, np.ndarray):
             processed_data = data
-            else:
+        else:
             if not np:
                 raise ImportError("numpy is required for this operation")
             processed_data = np.array(data)
@@ -1201,15 +1201,15 @@ class HModelManager:
                   preprocess_fn: Optional[Callable] = None) -> None:
         """Load and preprocess data with comprehensive validation"""
 
-           # Convert to numpy array
+        # Convert to numpy array
         if PANDAS_AVAILABLE and isinstance(series, pd.DataFrame):
             data = series.values.flatten()
-            elif isinstance(series, list):
+        elif isinstance(series, list):
             if not np:
                 raise ImportError("Numpy is required to process list data.")
-                data = np.array(series)
-            else:
-                data = series
+            data = np.array(series)
+        else:
+            data = series
 
         # Validation
         if data is None or len(data) == 0:
@@ -1258,17 +1258,17 @@ class HModelManager:
 
         start_time = time.perf_counter()
 
-           try:
-                if method == "euler":
+        try:
+            if method == "euler":
                 result = self._euler_integration(t, control_input)
-                elif method == "runge_kutta":
+            elif method == "runge_kutta":
                 result = self._runge_kutta_integration(t, control_input)
-                elif method == "adaptive":
+            elif method == "adaptive":
                 result = self._adaptive_integration(t, control_input)
-                else:
-                    raise ValueError(f"Unknown integration method: {method}")
+            else:
+                raise ValueError(f"Unknown integration method: {method}")
 
-                # Update state
+            # Update state
             self.state.H_history.append(result)
             self.state.t_history.append(t)
 
@@ -1283,7 +1283,7 @@ class HModelManager:
 
             return result
 
-            except Exception as e:
+        except Exception as e:
             self.performance_metrics['error_count'] += 1
             logger.error(f"Simulation failed: {e}")
             raise ModelError(f"Simulation failed: {str(e)}")
@@ -1295,8 +1295,8 @@ class HModelManager:
 
         # H-model differential equation: dH/dt = f(H, t, u, params)
         def dH_dt(h_val, t_val, u_val):
-        p = self.parameters
-           control = u_val if u_val is not None else 0.0
+            p = self.parameters
+            control = u_val if u_val is not None else 0.0
             if not np:
                 return 0.0
 
@@ -1314,8 +1314,8 @@ class HModelManager:
         h = self.state.H_history[-1] if self.state.H_history else 1.0
 
         def dH_dt_func(t_val, H_val):
-        p = self.parameters
-           control = u if u is not None else 0.0
+            p = self.parameters
+            control = u if u is not None else 0.0
             if not np:
                 return 0.0
 

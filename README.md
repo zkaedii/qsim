@@ -2,6 +2,8 @@
 
 > Enterprise-grade performance optimization framework combining quantum simulation, blockchain integration, and AI-powered optimization.
 
+[![Build Status](https://github.com/zkaedii/qsim/actions/workflows/python-package.yml/badge.svg)](https://github.com/zkaedii/qsim/actions/workflows/python-package.yml)
+[![codecov](https://codecov.io/gh/zkaedii/qsim/branch/main/graph/badge.svg)](https://codecov.io/gh/zkaedii/qsim)
 [![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](docs/LICENSE)
 [![Status](https://img.shields.io/badge/status-beta-yellow.svg)](https://github.com/zkaedii/qsim)

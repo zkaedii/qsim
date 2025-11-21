@@ -86,6 +86,54 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(name)s - %(message)s'
 )
 
+
+# Stub classes for Oracle endpoints (defined fully in other modules)
+class QuantumChaosGenerator:
+    """Stub class for quantum chaos generation."""
+    def trigger(self, intensity: str = 'medium') -> dict:
+        return {'event': 'chaos_triggered', 'intensity': intensity, 'value': random.random()}
+
+
+class HModelTLeaderboard:
+    """Stub class for game leaderboard."""
+    def __init__(self):
+        self.scores = {}
+
+    def top(self, n: int = 10) -> list:
+        return [{'rank': i + 1, 'score': random.randint(100, 10000)} for i in range(n)]
+
+
+class HModelTGameMiner:
+    """Stub class for game miner."""
+    def __init__(self, player_id: str, board: HModelTLeaderboard):
+        self.player_id = player_id
+        self.board = board
+
+    def play_game(self, tier: str = 'basic') -> dict:
+        return {'player': self.player_id, 'tier': tier, 'score': random.randint(1, 1000)}
+
+
+class EnvironmentSynthesizer:
+    """Stub class for environment simulation."""
+    def gas_spike(self) -> float:
+        return random.uniform(1.0, 5.0)
+
+    def mev_run(self) -> bool:
+        return random.choice([True, False])
+
+    def partition(self) -> bool:
+        return random.choice([True, False])
+
+    def latency(self) -> float:
+        return random.uniform(10, 500)
+
+    def network_congestion(self) -> float:
+        return random.uniform(0.0, 1.0)
+
+    def validator_health(self) -> str:
+        return random.choice(['healthy', 'degraded', 'offline'])
+
+
 # Configuration Management
 config = configparser.ConfigParser()
 config.read_dict({
