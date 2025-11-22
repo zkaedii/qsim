@@ -462,6 +462,9 @@ class TestStrategyBehavior:
 
     def test_arbitrage_strategy_profit_range(self, analyzer):
         """Test arbitrage has expected profit characteristics"""
+        # Use fixed random seed for deterministic testing
+        np.random.seed(42)
+        
         # Run multiple simulations
         profits = []
         for _ in range(20):
@@ -471,8 +474,8 @@ class TestStrategyBehavior:
             if event.success:
                 profits.append(event.profit)
 
-        # Should have some successful trades
-        assert len(profits) > 0 or True  # Allow for all failures due to randomness
+        # With 80% success rate and 20 iterations, should have successful trades
+        assert len(profits) > 0, "Expected at least one successful arbitrage trade with fixed seed"
 
     def test_liquidation_strategy_higher_risk(self, analyzer):
         """Test liquidation has higher potential profit"""
