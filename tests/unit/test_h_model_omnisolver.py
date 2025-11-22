@@ -35,10 +35,7 @@ from hmodelz.core.h_model_omnisolver import (
     ModelParameters,
     VectorEmbeddingGenius,
     BlockchainConnector,
-    HModelManager,
-    HModelTester,
     HTMLOmnisolver,
-    secure_operation,
     performance_monitor,
 )
 

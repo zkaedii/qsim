@@ -460,18 +460,24 @@ class TestStrategyBehavior:
 
     def test_arbitrage_strategy_profit_range(self, analyzer):
         """Test arbitrage has expected profit characteristics"""
+copilot/sub-pr-14-another-one
+        # Set seed for deterministic testing
+=======
         # Use fixed random seed for deterministic testing
+claude/improve-code-coverage-017PqHPcGqbUXFbJDaJrPamK
         np.random.seed(42)
         
         # Run multiple simulations
         profits = []
-        for _ in range(20):
+        for _ in range(50):  # Increased iterations to ensure success with 80% rate
             event = analyzer.simulate_flash_loan(
                 t=1.0, borrower="test", asset="HMLZ", amount=1000.0, strategy="arbitrage"
             )
             if event.success:
                 profits.append(event.profit)
 
+        # Should have some successful trades (50 trials with 80% success rate)
+        assert len(profits) > 0
         # With fixed seed and 80% success rate over 20 trials, should have successful trades
         assert len(profits) > 0, "Expected at least one successful trade with arbitrage strategy"
 
