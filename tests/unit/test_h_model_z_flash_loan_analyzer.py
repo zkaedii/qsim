@@ -461,8 +461,13 @@ class TestStrategyBehavior:
         return H_MODEL_Z_FlashLoanImpactAnalyzer()
 
     def test_arbitrage_strategy_profit_range(self, analyzer):
-        """Test arbitrage has expected profit characteristics"""
+        """Test arbitrage has expected profit characteristics
+        
+        Note: Arbitrage strategy has 80% success rate (see simulate_flash_loan implementation).
+        Using fixed seed ensures deterministic test behavior.
+        """
         # Use fixed random seed for deterministic testing
+        # Note: Sets global state, but acceptable for isolated test execution
         np.random.seed(42)
         
         # Run multiple simulations
@@ -474,7 +479,7 @@ class TestStrategyBehavior:
             if event.success:
                 profits.append(event.profit)
 
-        # With 80% success rate and 20 iterations, should have successful trades
+        # With fixed seed and 80% expected success rate, should have successful trades
         assert len(profits) > 0, "Expected at least one successful arbitrage trade with fixed seed"
 
     def test_liquidation_strategy_higher_risk(self, analyzer):
