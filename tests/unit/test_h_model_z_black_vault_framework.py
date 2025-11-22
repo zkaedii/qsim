@@ -221,7 +221,7 @@ class TestMathematicalHelperFunctions:
         result_0 = A_i(0, 0.0)
         result_pi = A_i(0, np.pi)
         # Should be different due to sin component
-        assert result_0 != result_pi or abs(result_0 - result_pi) < 0.01
+        assert abs(result_0 - result_pi) > 0.01
 
     def test_B_i_index_scaling(self):
         """Test B_i scales with index"""
