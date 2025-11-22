@@ -5,7 +5,7 @@ Comprehensive tests for enterprise_scaling_framework.py
 Tests cover:
 - EnterpriseConfig dataclass
 - EnterpriseMetrics class
-- AutoScaler class
+- Auto-scaling configuration
 - ClusterManager class
 - RealWorldDomainManager class
 - RealWorldDomainProcessor class
@@ -13,13 +13,9 @@ Tests cover:
 """
 
 import pytest
-import numpy as np
 import sys
-import asyncio
 from pathlib import Path
-from unittest.mock import patch, MagicMock, AsyncMock
-from datetime import datetime, timedelta
-from dataclasses import asdict
+from unittest.mock import patch
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
@@ -31,7 +27,6 @@ prometheus_client.REGISTRY = prometheus_client.CollectorRegistry(auto_describe=T
 from hmodelz.engines.enterprise_scaling_framework import (
     EnterpriseConfig,
     EnterpriseMetrics,
-    AutoScaler,
     ClusterManager,
     RealWorldDomainManager,
     RealWorldDomainProcessor,
@@ -168,7 +163,7 @@ class TestEnterpriseMetrics:
 
 
 class TestAutoScaler:
-    """Tests for AutoScaler class - using mocked metrics"""
+    """Tests for auto-scaling configuration parameters"""
 
     def test_autoscaler_config_setup(self):
         """Test AutoScaler can be configured"""
@@ -582,6 +577,7 @@ class TestFinancialTradingRiskScores:
         }
         result = await trading_processor.process_event(event_data)
 
+        inner_result = result["result"]
         # High value trade should have higher risk score
 
 
