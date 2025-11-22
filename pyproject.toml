@@ -59,6 +59,7 @@ dependencies = [
 dev = [
     "pytest>=6.0.0",
     "pytest-cov>=2.12.0",
+    "pytest-asyncio>=0.21.0",
     "black>=21.0.0",
     "flake8>=3.9.0",
     "pre-commit>=2.15.0",
@@ -114,6 +115,7 @@ testpaths = [
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+asyncio_mode = "auto"
 
 [tool.coverage.run]
 source = ["src/hmodelz"]
