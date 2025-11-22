@@ -16,7 +16,6 @@ import pytest
 import numpy as np
 import sys
 from pathlib import Path
-from unittest.mock import patch, MagicMock
 import os
 
 # Add src to path for imports
