@@ -385,7 +385,6 @@ class TestMathematicalIntegrity:
         from hmodelz.core.h_model_z_mathematical_framework import params
 
         # Store original value
-        original_sigma = params["sigma"]
 
         # Get baseline
         baseline = H_hat(5.0)
