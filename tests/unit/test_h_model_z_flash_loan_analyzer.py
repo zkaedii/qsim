@@ -301,8 +301,6 @@ class TestFlashLoanSimulation:
 
     def test_flash_loan_updates_market_state(self, analyzer):
         """Test that successful flash loan updates market state"""
-        initial_price = analyzer.current_price
-
         # Simulate a successful loan (may need multiple tries due to randomness)
         for _ in range(10):
             event = analyzer.simulate_flash_loan(
@@ -462,17 +460,20 @@ class TestStrategyBehavior:
 
     def test_arbitrage_strategy_profit_range(self, analyzer):
         """Test arbitrage has expected profit characteristics"""
+        # Set seed for deterministic testing
+        np.random.seed(42)
+        
         # Run multiple simulations
         profits = []
-        for _ in range(20):
+        for _ in range(50):  # Increased iterations to ensure success with 80% rate
             event = analyzer.simulate_flash_loan(
                 t=1.0, borrower="test", asset="HMLZ", amount=1000.0, strategy="arbitrage"
             )
             if event.success:
                 profits.append(event.profit)
 
-        # Should have some successful trades
-        assert len(profits) > 0 or True  # Allow for all failures due to randomness
+        # Should have some successful trades (50 trials with 80% success rate)
+        assert len(profits) > 0
 
     def test_liquidation_strategy_higher_risk(self, analyzer):
         """Test liquidation has higher potential profit"""

@@ -13,13 +13,9 @@ Tests cover:
 """
 
 import pytest
-import numpy as np
 import sys
-import asyncio
 from pathlib import Path
-from unittest.mock import patch, MagicMock, AsyncMock
-from datetime import datetime, timedelta
-from dataclasses import asdict
+from unittest.mock import patch
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
@@ -31,7 +27,6 @@ prometheus_client.REGISTRY = prometheus_client.CollectorRegistry(auto_describe=T
 from hmodelz.engines.enterprise_scaling_framework import (
     EnterpriseConfig,
     EnterpriseMetrics,
-    AutoScaler,
     ClusterManager,
     RealWorldDomainManager,
     RealWorldDomainProcessor,
