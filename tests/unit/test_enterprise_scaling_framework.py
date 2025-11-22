@@ -5,7 +5,7 @@ Comprehensive tests for enterprise_scaling_framework.py
 Tests cover:
 - EnterpriseConfig dataclass
 - EnterpriseMetrics class
-- AutoScaler class
+- Auto-scaling configuration
 - ClusterManager class
 - RealWorldDomainManager class
 - RealWorldDomainProcessor class
@@ -163,7 +163,7 @@ class TestEnterpriseMetrics:
 
 
 class TestAutoScaler:
-    """Tests for AutoScaler class - using mocked metrics"""
+    """Tests for auto-scaling configuration parameters"""
 
     def test_autoscaler_config_setup(self):
         """Test AutoScaler can be configured"""
