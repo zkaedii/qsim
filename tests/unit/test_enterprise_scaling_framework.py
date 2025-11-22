@@ -13,13 +13,9 @@ Tests cover:
 """
 
 import pytest
-import numpy as np
 import sys
-import asyncio
 from pathlib import Path
-from unittest.mock import patch, MagicMock, AsyncMock
-from datetime import datetime, timedelta
-from dataclasses import asdict
+from unittest.mock import patch
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent / "src"))
@@ -582,10 +578,7 @@ class TestFinancialTradingRiskScores:
         }
         result = await trading_processor.process_event(event_data)
 
-claude/improve-code-coverage-017PqHPcGqbUXFbJDaJrPamK
-=======
         inner_result = result["result"]
-main
         # High value trade should have higher risk score
 
 
