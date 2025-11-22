@@ -460,9 +460,9 @@ class TestStrategyBehavior:
 
     def test_arbitrage_strategy_profit_range(self, analyzer):
         """Test arbitrage has expected profit characteristics"""
+        # Use fixed random seed for deterministic testing
 copilot/sub-pr-14-another-one
         # Set seed for deterministic testing
-=======
         # Use fixed random seed for deterministic testing
 claude/improve-code-coverage-017PqHPcGqbUXFbJDaJrPamK
         np.random.seed(42)
@@ -476,6 +476,8 @@ claude/improve-code-coverage-017PqHPcGqbUXFbJDaJrPamK
             if event.success:
                 profits.append(event.profit)
 
+        # With seed 42, arbitrage strategy has 80% success rate, so we expect at least 10 successes
+        assert len(profits) >= 10, f"Expected at least 10 successful trades, got {len(profits)}"
         # Should have some successful trades (50 trials with 80% success rate)
         assert len(profits) > 0
         # With fixed seed and 80% success rate over 20 trials, should have successful trades
