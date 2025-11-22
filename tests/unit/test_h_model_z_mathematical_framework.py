@@ -67,7 +67,7 @@ class TestHelperFunctions:
         result_t0 = A_i(0, 0.0)
         result_t1 = A_i(0, np.pi)
         # Should vary with time due to sin component
-        assert result_t0 != result_t1 or abs(result_t0 - result_t1) < 0.01
+        assert abs(result_t0 - result_t1) > 0.01
 
     def test_B_i_index_variation(self):
         """Test B_i varies with index"""
