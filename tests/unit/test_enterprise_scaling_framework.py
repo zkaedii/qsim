@@ -582,6 +582,10 @@ class TestFinancialTradingRiskScores:
         }
         result = await trading_processor.process_event(event_data)
 
+claude/improve-code-coverage-017PqHPcGqbUXFbJDaJrPamK
+=======
+        inner_result = result["result"]
+main
         # High value trade should have higher risk score
 
 
