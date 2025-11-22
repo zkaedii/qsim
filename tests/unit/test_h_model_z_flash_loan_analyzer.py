@@ -301,8 +301,6 @@ class TestFlashLoanSimulation:
 
     def test_flash_loan_updates_market_state(self, analyzer):
         """Test that successful flash loan updates market state"""
-        initial_price = analyzer.current_price
-
         # Simulate a successful loan (may need multiple tries due to randomness)
         for _ in range(10):
             event = analyzer.simulate_flash_loan(
