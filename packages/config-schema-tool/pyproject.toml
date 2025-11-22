@@ -1,0 +1,77 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "config-schema-tool"
+version = "0.1.0"
+description = "JSON Schema validation and config generation for any project"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.8"
+authors = [
+    {name = "qsim contributors"}
+]
+keywords = [
+    "json-schema",
+    "configuration",
+    "validation",
+    "config-management",
+    "schema"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Quality Assurance",
+]
+
+dependencies = [
+    "jsonschema>=4.0.0",
+]
+
+[project.optional-dependencies]
+yaml = ["pyyaml>=6.0"]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "black>=23.0",
+    "ruff>=0.1.0",
+]
+all = [
+    "config-schema-tool[yaml,dev]",
+]
+
+[project.scripts]
+config-schema-tool = "config_schema_tool.cli:main"
+cst = "config_schema_tool.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/zkaedii/qsim"
+Documentation = "https://github.com/zkaedii/qsim/tree/main/packages/config-schema-tool"
+Repository = "https://github.com/zkaedii/qsim"
+Issues = "https://github.com/zkaedii/qsim/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short"
+
+[tool.black]
+line-length = 88
+target-version = ["py38"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py38"
+select = ["E", "F", "I", "N", "W"]

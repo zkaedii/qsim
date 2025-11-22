@@ -577,6 +577,7 @@ class TestFinancialTradingRiskScores:
         }
         result = await trading_processor.process_event(event_data)
 
+        inner_result = result["result"]
         # High value trade should have higher risk score
 
 
