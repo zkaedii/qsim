@@ -77,17 +77,29 @@ class TestStochasticOscillator:
         assert isinstance(result, (float, np.floating))
 
     def test_evaluate_stores_history(self, oscillator):
-        """Test that evaluate stores values in history."""
-        oscillator.evaluate(1.0)
-        oscillator.evaluate(2.0)
+        """Test that evaluate stores values in history.
+        
+        Note: The history dict uses exact time values as keys (the same values
+        passed to evaluate()). Since no floating-point arithmetic is performed
+        on the time values before storage, exact equality checks are safe here.
+        For computed time values (e.g., from arange), use approximate matching.
+        """
+        t1, t2 = 1.0, 2.0
+        oscillator.evaluate(t1)
+        oscillator.evaluate(t2)
 
-        assert 1.0 in oscillator.history
-        assert 2.0 in oscillator.history
+        # Check that exact time values are stored as keys
+        assert t1 in oscillator.history
+        assert t2 in oscillator.history
 
     def test_evaluate_no_history(self, oscillator):
-        """Test evaluate with store_history=False."""
-        oscillator.evaluate(1.0, store_history=False)
-        assert 1.0 not in oscillator.history
+        """Test evaluate with store_history=False.
+        
+        Uses exact time value for key check (see test_evaluate_stores_history).
+        """
+        t = 1.0
+        oscillator.evaluate(t, store_history=False)
+        assert t not in oscillator.history
 
     def test_simulate_returns_dict(self, oscillator):
         """Test simulate returns correct structure."""
