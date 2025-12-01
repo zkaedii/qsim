@@ -1,0 +1,143 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcso"
+version = "0.1.0"
+description = "Multi-Component Stochastic Oscillator - A library for simulating and analyzing stochastic oscillatory systems"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "QSIM Project"}
+]
+maintainers = [
+    {name = "QSIM Project"}
+]
+keywords = [
+    "stochastic",
+    "oscillator",
+    "differential equations",
+    "simulation",
+    "time series",
+    "dynamical systems",
+    "scientific computing",
+    "financial modeling"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Typing :: Typed",
+]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy>=1.20.0",
+    "scipy>=1.7.0",
+]
+
+[project.optional-dependencies]
+viz = [
+    "matplotlib>=3.5.0",
+]
+stats = [
+    "statsmodels>=0.13.0",
+]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "mypy>=1.0.0",
+    "ruff>=0.1.0",
+]
+all = [
+    "matplotlib>=3.5.0",
+    "statsmodels>=0.13.0",
+]
+docs = [
+    "sphinx>=5.0.0",
+    "sphinx-rtd-theme>=1.0.0",
+    "myst-parser>=0.18.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/zkaedii/qsim"
+Documentation = "https://github.com/zkaedii/qsim/tree/main/packages/mcso"
+Repository = "https://github.com/zkaedii/qsim"
+Issues = "https://github.com/zkaedii/qsim/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["mcso*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-ra -q --strict-markers"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks integration tests",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py38", "py39", "py310", "py311"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.mypy_cache
+  | \.pytest_cache
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+]
+ignore = [
+    "E501",  # line too long (handled by black)
+    "B008",  # do not perform function calls in argument defaults
+]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.coverage.run]
+source = ["mcso"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+]
