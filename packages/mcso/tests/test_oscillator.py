@@ -38,6 +38,11 @@ class TestOscillatorConfig:
         with pytest.raises(ValueError, match="noise_scale must be non-negative"):
             OscillatorConfig(noise_scale=-0.1)
 
+    def test_invalid_memory_delay(self):
+        """Test validation of memory_delay."""
+        with pytest.raises(ValueError, match="memory_delay must be non-negative"):
+            OscillatorConfig(memory_delay=-0.1)
+
 
 class TestStochasticOscillator:
     """Tests for StochasticOscillator class."""
