@@ -216,6 +216,8 @@ class TestGelu:
         x = np.linspace(-3, 3, 100)
         result = gelu(x)
         # Check no large jumps in values
+        # Max gradient of GELU is approximately 1.5, so for dx ≈ 0.06,
+        # max expected diff is about 0.1. Using 0.5 as a conservative threshold.
         diff = np.abs(np.diff(result))
         assert np.all(diff < 0.5)
 
@@ -230,7 +232,8 @@ class TestIntegrateActivation:
 
     def test_integrate_simple_case(self):
         """Test integration with simple functions."""
-        # Integrate softplus(ax² + b) * cos(x) * sin(x) from 0 to 1
+        # Integrate softplus(a*(x-x₀)² + b) * cos(x) * sin(x) from 0 to 1
+        # where params = (a, b, x₀) = (0.8, 0.3, 0.5)
         result, error = integrate_activation(
             activation=softplus,
             f=np.cos,
@@ -267,7 +270,11 @@ class TestIntegrateActivation:
         )
 
         assert error > 0
-        assert error < abs(result) * 0.1 or error < 1e-6
+        # Error should be either less than 10% of result (relative) or
+        # less than 1e-6 (absolute) for well-behaved integrands
+        relative_tolerance = 0.1  # 10% relative error
+        absolute_tolerance = 1e-6
+        assert error < abs(result) * relative_tolerance or error < absolute_tolerance
 
     def test_integrate_custom_params(self):
         """Test integration with different parameters."""
@@ -650,9 +657,12 @@ class TestComputeConvergenceRate:
             n_samples=50,
         )
 
-        # Errors should generally decrease with smaller dt
-        # (allowing some variation due to Monte Carlo noise)
-        assert result["errors"][0] >= result["errors"][-1] * 0.5
+        # Errors should generally decrease with smaller dt.
+        # The factor 0.5 accounts for Monte Carlo variability in the convergence
+        # estimation - we allow the first error to be up to 2x larger than the
+        # last error, which is a conservative bound for stochastic testing.
+        monte_carlo_tolerance = 0.5
+        assert result["errors"][0] >= result["errors"][-1] * monte_carlo_tolerance
 
     def test_convergence_rate_is_finite(self, euler_integrator):
         """Test that estimated rate is finite."""
