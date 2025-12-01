@@ -28,7 +28,7 @@ from __future__ import annotations
 
 import numpy as np
 from numpy.typing import NDArray
-from scipy.integrate import quad, quad_vec, solve_ivp
+from scipy.integrate import quad, quad_vec, solve_ivp, IntegrationWarning
 from scipy.special import expit
 from dataclasses import dataclass
 from typing import Callable, Optional, Tuple, Dict, Any
@@ -207,13 +207,33 @@ def integrate_activation(
         return activation(arg) * f(x) * g_prime(x)
 
     try:
-        result, error = quad(
-            integrand, lower, upper,
-            limit=limit, epsabs=epsabs, epsrel=epsrel
-        )
+        with warnings.catch_warnings():
+            warnings.filterwarnings('error', category=IntegrationWarning)
+            result, error = quad(
+                integrand, lower, upper,
+                limit=limit, epsabs=epsabs, epsrel=epsrel
+            )
         return result, error
-    except Exception as e:
-        warnings.warn(f"Integration failed: {e}. Returning 0.")
+    except IntegrationWarning as w:
+        warnings.warn(
+            f"Integration did not converge in [{lower}, {upper}]: {w}. Returning 0.",
+            RuntimeWarning,
+            stacklevel=2
+        )
+        return 0.0, float('inf')
+    except ValueError as e:
+        warnings.warn(
+            f"Invalid value in integration [{lower}, {upper}]: {e}. Returning 0.",
+            RuntimeWarning,
+            stacklevel=2
+        )
+        return 0.0, float('inf')
+    except (FloatingPointError, OverflowError) as e:
+        warnings.warn(
+            f"Numerical error in integration [{lower}, {upper}]: {e}. Returning 0.",
+            RuntimeWarning,
+            stacklevel=2
+        )
         return 0.0, float('inf')
 
 

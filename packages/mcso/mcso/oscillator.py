@@ -26,11 +26,97 @@ from __future__ import annotations
 
 import numpy as np
 from numpy.typing import NDArray
-from scipy.integrate import quad
+from scipy.integrate import quad, IntegrationWarning
 from scipy.special import expit
+import warnings
 from dataclasses import dataclass
-from typing import Callable, Optional, Dict, List, Tuple, Any
+from typing import Callable, Optional, Dict, List, Tuple, Any, Union
 from collections import defaultdict
+
+
+class CircularBuffer:
+    """
+    Memory-efficient circular buffer for storing history.
+
+    For long simulations, this limits memory usage by only keeping
+    the most recent `max_size` entries. Lookups beyond the buffer
+    will return the default value.
+
+    Parameters
+    ----------
+    max_size : int
+        Maximum number of entries to store.
+    default : float
+        Default value for missing entries (default: 0.0).
+
+    Examples
+    --------
+    >>> buf = CircularBuffer(max_size=100)
+    >>> buf[0] = 1.0
+    >>> buf[50] = 2.0
+    >>> buf[0]  # Still available
+    1.0
+    >>> buf[150] = 3.0  # Entry 0 may be evicted if full
+    """
+
+    def __init__(self, max_size: int, default: float = 0.0):
+        if max_size < 1:
+            raise ValueError("max_size must be at least 1")
+        self.max_size = max_size
+        self.default = default
+        self._buffer: Dict[int, float] = {}
+        self._min_idx: int = 0
+
+    def __setitem__(self, idx: int, value: float) -> None:
+        """Store a value at the given index."""
+        self._buffer[idx] = value
+
+        # Evict old entries if buffer is full
+        if len(self._buffer) > self.max_size:
+            # Remove oldest entries
+            keys_to_remove = sorted(self._buffer.keys())[:-self.max_size]
+            for key in keys_to_remove:
+                del self._buffer[key]
+
+            if self._buffer:
+                self._min_idx = min(self._buffer.keys())
+
+    def __getitem__(self, idx: int) -> float:
+        """Get value at index, returning default if not found."""
+        return self._buffer.get(idx, self.default)
+
+    def get(self, idx: int, default: Optional[float] = None) -> float:
+        """Get value with optional custom default."""
+        if default is None:
+            default = self.default
+        return self._buffer.get(idx, default)
+
+    def clear(self) -> None:
+        """Clear all entries."""
+        self._buffer.clear()
+        self._min_idx = 0
+
+    def __len__(self) -> int:
+        """Return number of stored entries."""
+        return len(self._buffer)
+
+    def __contains__(self, idx: int) -> bool:
+        """Check if index is in buffer."""
+        return idx in self._buffer
+
+    @property
+    def oldest_index(self) -> Optional[int]:
+        """Return the oldest index in the buffer, or None if empty."""
+        if self._buffer:
+            return min(self._buffer.keys())
+        return None
+
+    @property
+    def newest_index(self) -> Optional[int]:
+        """Return the newest index in the buffer, or None if empty."""
+        if self._buffer:
+            return max(self._buffer.keys())
+        return None
 
 
 @dataclass
@@ -123,6 +209,19 @@ class OscillatorConfig:
     clip_bounds: Tuple[float, float] = (-1000.0, 1000.0)
     t_max_safety: float = 20.0
 
+    # Memory optimization
+    history_buffer_size: Optional[int] = None
+    """
+    Maximum history buffer size for memory optimization.
+
+    If None (default), unlimited history is stored.
+    For long simulations (t_max > 10000), consider setting this to
+    limit memory usage. The buffer should be large enough to accommodate
+    the memory delay (memory_delay / dt steps).
+
+    Recommended: max(1000, int(2 * memory_delay / dt))
+    """
+
     # Random state
     seed: Optional[int] = None
 
@@ -188,7 +287,13 @@ class StochasticOscillator:
 
         self.config = config
         # History uses integer indices to avoid floating-point key mismatches
-        self.history: Dict[int, float] = defaultdict(float)
+        # Use CircularBuffer for memory optimization when history_buffer_size is set
+        if config.history_buffer_size is not None:
+            self.history: Union[Dict[int, float], CircularBuffer] = CircularBuffer(
+                max_size=config.history_buffer_size
+            )
+        else:
+            self.history = defaultdict(float)
         self._dt: Optional[float] = None  # Time step, set during simulate()
         self.rng = np.random.default_rng(config.seed)
 
@@ -386,9 +491,30 @@ class StochasticOscillator:
             return activation * np.cos(x) * (-np.sin(x))
 
         try:
-            result, _ = quad(integrand, 0, t_bounded, limit=20)
+            with warnings.catch_warnings():
+                warnings.filterwarnings('error', category=IntegrationWarning)
+                result, _ = quad(integrand, 0, t_bounded, limit=20)
             return result
-        except Exception:
+        except IntegrationWarning as w:
+            warnings.warn(
+                f"Integration did not converge at t={t}: {w}. Returning 0.0",
+                RuntimeWarning,
+                stacklevel=2
+            )
+            return 0.0
+        except ValueError as e:
+            warnings.warn(
+                f"Invalid value in integral_term at t={t}: {e}. Returning 0.0",
+                RuntimeWarning,
+                stacklevel=2
+            )
+            return 0.0
+        except (FloatingPointError, OverflowError) as e:
+            warnings.warn(
+                f"Numerical error in integral_term at t={t}: {e}. Returning 0.0",
+                RuntimeWarning,
+                stacklevel=2
+            )
             return 0.0
 
     def drift_term(self, t: float) -> float:
