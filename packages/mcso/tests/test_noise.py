@@ -17,6 +17,12 @@ from mcso.noise import (
     create_noise_generator,
 )
 
+# Statistical test tolerances - these values account for sampling variance
+# with 1000 samples while maintaining a high probability of test success
+MEAN_TOLERANCE = 0.5  # Tolerance for mean estimation tests
+JUMP_DETECTION_THRESHOLD = 0.3  # Threshold for detecting jump occurrences
+PROBABILISTIC_TEST_TOLERANCE = 0.5  # Tolerance factor for probabilistic comparisons
+
 
 class TestGaussianNoise:
     """Tests for GaussianNoise generator."""
@@ -68,7 +74,7 @@ class TestGaussianNoise:
         sample_mean = np.mean(samples)
 
         # Mean should be close to 10.0
-        assert np.abs(sample_mean - 10.0) < 0.5
+        assert np.abs(sample_mean - 10.0) < MEAN_TOLERANCE
 
     def test_scale_affects_variance(self):
         """Test that scale affects sample variance."""
@@ -76,7 +82,8 @@ class TestGaussianNoise:
         noise_large = GaussianNoise(scale=2.0, seed=42)
 
         samples_small = [noise_small.sample(1.0) for _ in range(1000)]
-        noise_large.reset(42)  # Reset to ensure different samples
+        # Reset to start a fresh sequence for the large scale generator
+        noise_large.reset(42)
         samples_large = [noise_large.sample(1.0) for _ in range(1000)]
 
         # Larger scale should give larger variance
@@ -140,13 +147,14 @@ class TestStateDependentNoise:
         noise = StateDependentNoise(state_coupling=1.0, seed=42)
 
         # Sample many times with different state values
+        # Each iteration uses a unique seed to generate independent samples
         samples_low = []
         samples_high = []
 
-        for _ in range(1000):
-            noise.reset(42 + _)
+        for i in range(1000):
+            noise.reset(42 + i)
             samples_low.append(noise.sample(1.0, state=0.1))
-            noise.reset(42 + _)
+            noise.reset(42 + i)
             samples_high.append(noise.sample(1.0, state=5.0))
 
         # Higher state should give higher variance
@@ -507,13 +515,14 @@ class TestJumpDiffusionNoise:
         )
 
         # With longer dt, expect more jumps on average
-        short_jumps = sum(1 for _ in range(100) if abs(noise_short.sample(1.0)) > 0.3)
+        # Use threshold to detect samples with significant jump contribution
+        short_jumps = sum(1 for _ in range(100) if abs(noise_short.sample(1.0)) > JUMP_DETECTION_THRESHOLD)
         noise_long.reset(42)
-        long_jumps = sum(1 for _ in range(100) if abs(noise_long.sample(1.0)) > 0.3)
+        long_jumps = sum(1 for _ in range(100) if abs(noise_long.sample(1.0)) > JUMP_DETECTION_THRESHOLD)
 
         # Longer dt should generally have more jumps
-        # Note: This is probabilistic, so we allow for some variance
-        assert long_jumps >= short_jumps * 0.5
+        # Use tolerance factor to account for probabilistic nature of jumps
+        assert long_jumps >= short_jumps * PROBABILISTIC_TEST_TOLERANCE
 
     def test_reset(self):
         """Test reset functionality."""
