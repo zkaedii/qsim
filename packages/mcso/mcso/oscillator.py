@@ -31,7 +31,6 @@ from scipy.special import expit
 from dataclasses import dataclass, field
 from typing import Callable, Optional, Dict, List, Tuple, Any
 from collections import defaultdict
-import warnings
 
 
 @dataclass
