@@ -214,9 +214,11 @@ class TestIntegrateActivation:
             g_prime=lambda x: 1.0,
             lower=0.0,
             upper=1.0,
-            params=(0.0, 0.0, 0.0)  # softplus(0) = ln(2)
+            # params (a, b, x0) = (0, 0, 0) means activation arg = 0*(x-0)^2 + 0 = 0
+            # This creates a constant activation value: softplus(0) = ln(2)
+            params=(0.0, 0.0, 0.0)
         )
-        # With constant functions and softplus(0)=ln(2), integral = ln(2) * 1 * 1 * 1 = ln(2)
+        # Integral = ln(2) * 1 * 1 integrated from 0 to 1 = ln(2) * 1 = ln(2)
         expected = np.log(2)
         assert_allclose(result, expected, rtol=1e-4)
 
