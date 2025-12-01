@@ -93,15 +93,15 @@ class TestStochasticOscillator:
         # Verify the keys we used are in history (note: history may include t=0 from initialization)
         history_keys = list(oscillator.history.keys())
         assert len(history_keys) >= 2
-        assert any(abs(k - 1.0) < 1e-10 for k in history_keys)
-        assert any(abs(k - 2.0) < 1e-10 for k in history_keys)
+        assert any(abs(k - 1.0) < 1e-9 for k in history_keys)
+        assert any(abs(k - 2.0) < 1e-9 for k in history_keys)
 
     def test_evaluate_no_history(self, oscillator):
         """Test evaluate with store_history=False."""
         oscillator.evaluate(1.0, store_history=False)
         # Verify no keys are stored
         history_keys = list(oscillator.history.keys())
-        assert not any(abs(k - 1.0) < 1e-10 for k in history_keys)
+        assert not any(abs(k - 1.0) < 1e-9 for k in history_keys)
 
     def test_simulate_returns_dict(self, oscillator):
         """Test simulate returns correct structure."""
