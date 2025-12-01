@@ -242,3 +242,95 @@ class TestOscillatorEdgeCases:
         osc = StochasticOscillator(config=config, n_components=3)
 
         assert osc.config.n_components == 3
+
+
+class TestRegressions:
+    """Regression tests for fixed bugs."""
+
+    def test_fractional_dt_memory_feedback(self):
+        """Test memory term works correctly with fractional dt.
+
+        Regression test for floating-point key mismatch issue where
+        memory_term and noise_term read zeros for non-unit dt due to
+        floating-point arithmetic making t - delay not match stored keys.
+        """
+        # Use a fractional dt that would cause floating-point issues
+        osc = StochasticOscillator(
+            memory_strength=2.0,
+            memory_delay=0.2,
+            noise_scale=0.0,  # Disable noise to isolate memory effect
+            seed=42
+        )
+        result = osc.simulate(t_max=2.0, dt=0.1)
+
+        # After sufficient time, memory feedback should influence values
+        # If memory lookup was broken (returning 0), values would differ
+        assert np.all(np.isfinite(result['values']))
+        # Memory term should contribute to non-trivial dynamics
+        assert result['values'].std() > 0
+
+    def test_fractional_dt_noise_feedback(self):
+        """Test noise term state-dependent variance works with fractional dt.
+
+        Regression test for floating-point key mismatch in noise_term
+        where x_prev lookup failed for non-unit dt.
+        """
+        osc = StochasticOscillator(
+            noise_scale=1.0,
+            noise_state_coupling=0.5,  # State-dependent noise
+            memory_strength=0.0,  # Disable memory
+            seed=42
+        )
+        result = osc.simulate(t_max=2.0, dt=0.1)
+
+        # Simulation should complete without errors
+        assert np.all(np.isfinite(result['values']))
+        # Noise should produce varying values
+        assert result['values'].std() > 0
+
+    def test_short_simulation_progress(self):
+        """Test simulate with show_progress=True and fewer than 10 steps.
+
+        Regression test for ZeroDivisionError when len(times) // 10 == 0.
+        """
+        osc = StochasticOscillator(seed=42)
+
+        # Simulation with only 5 steps should not raise ZeroDivisionError
+        result = osc.simulate(t_max=5, dt=1.0, show_progress=True)
+        assert len(result['values']) == 5
+
+        # Edge case: single step
+        result_single = osc.simulate(t_max=1, dt=1.0, show_progress=True)
+        assert len(result_single['values']) == 1
+
+    def test_memory_term_correct_delay_lookup(self):
+        """Test that memory term looks up the correctly delayed value.
+
+        Verifies that with fractional dt, memory_term retrieves the value
+        from the correct past timestep, not zero.
+        """
+        osc = StochasticOscillator(
+            memory_strength=1.0,
+            memory_delay=0.5,
+            noise_scale=0.0,
+            seed=42
+        )
+        # Simulate with dt=0.1, so delay of 0.5 = 5 steps back
+        osc._dt = 0.1
+        osc.history.clear()
+
+        # Store some history values
+        for i in range(10):
+            osc.history[i] = float(i + 1)  # Values 1.0 to 10.0
+
+        # At t=0.9 (idx 9), looking back 0.5 time units should get idx 4
+        # History[4] = 5.0
+        memory_val = osc.memory_term(0.9)
+
+        # memory_term = strength * x_delayed * sigmoid(sensitivity * x_delayed)
+        # With x_delayed = 5.0 and default sensitivity = 2.0
+        expected_x = 5.0
+        expected_sigmoid = 1.0 / (1 + np.exp(-2.0 * 5.0))  # ~1.0
+        expected = 1.0 * expected_x * expected_sigmoid
+
+        assert np.isclose(memory_val, expected, rtol=0.01)

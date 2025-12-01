@@ -187,7 +187,9 @@ class StochasticOscillator:
             config = OscillatorConfig(**config_dict)
 
         self.config = config
-        self.history: Dict[float, float] = defaultdict(float)
+        # History uses integer indices to avoid floating-point key mismatches
+        self.history: Dict[int, float] = defaultdict(float)
+        self._dt: Optional[float] = None  # Time step, set during simulate()
         self.rng = np.random.default_rng(config.seed)
 
         # Pre-compute phase offsets
@@ -205,6 +207,7 @@ class StochasticOscillator:
             New random seed.
         """
         self.history.clear()
+        self._dt = None
         if seed is not None:
             self.rng = np.random.default_rng(seed)
 
@@ -426,8 +429,16 @@ class StochasticOscillator:
             Memory contribution.
         """
         c = self.config
-        t_delayed = max(0, t - c.memory_delay)
-        x_delayed = self.history[t_delayed]
+
+        # Use integer index to avoid floating-point key mismatches
+        if self._dt is not None and self._dt > 0:
+            current_idx = int(round(t / self._dt))
+            delay_steps = int(round(c.memory_delay / self._dt))
+            delayed_idx = max(0, current_idx - delay_steps)
+            x_delayed = self.history[delayed_idx]
+        else:
+            # Fallback for direct evaluate() calls without simulate()
+            x_delayed = 0.0
 
         gated = self.sigmoid(c.memory_sensitivity * x_delayed)
         return c.memory_strength * x_delayed * gated
@@ -451,7 +462,17 @@ class StochasticOscillator:
             Noise contribution.
         """
         c = self.config
-        x_prev = self.history[max(0, t - 1)]
+
+        # Use integer index to avoid floating-point key mismatches
+        if self._dt is not None and self._dt > 0:
+            current_idx = int(round(t / self._dt))
+            # Look back 1 time unit (not 1 step)
+            prev_steps = int(round(1.0 / self._dt))
+            prev_idx = max(0, current_idx - prev_steps)
+            x_prev = self.history[prev_idx]
+        else:
+            # Fallback for direct evaluate() calls without simulate()
+            x_prev = 0.0
 
         # State-dependent variance
         variance = 1 + c.noise_state_coupling * min(abs(x_prev), 10.0)
@@ -496,7 +517,8 @@ class StochasticOscillator:
         self,
         t: float,
         control_fn: Optional[Callable[[float], float]] = None,
-        store_history: bool = True
+        store_history: bool = True,
+        idx: Optional[int] = None
     ) -> float:
         """
         Evaluate oscillator state X(t).
@@ -511,6 +533,8 @@ class StochasticOscillator:
             Custom control function.
         store_history : bool
             Whether to store result in history.
+        idx : int, optional
+            Step index for history storage. If None, computed from t and _dt.
 
         Returns
         -------
@@ -536,7 +560,14 @@ class StochasticOscillator:
         x = np.clip(x, c.clip_bounds[0], c.clip_bounds[1])
 
         if store_history:
-            self.history[t] = x
+            # Use provided index or compute from time
+            if idx is not None:
+                history_idx = idx
+            elif self._dt is not None and self._dt > 0:
+                history_idx = int(round(t / self._dt))
+            else:
+                history_idx = int(round(t))  # Fallback for direct calls
+            self.history[history_idx] = x
 
         return x
 
@@ -570,15 +601,19 @@ class StochasticOscillator:
             - 'config': Configuration used
         """
         self.reset(self.config.seed)
+        self._dt = dt  # Store dt for memory/noise term index calculations
 
         times = np.arange(0, t_max, dt)
         values = np.zeros(len(times))
 
+        # Guard against division by zero for short runs
+        progress_interval = max(1, len(times) // 10)
+
         for idx, t in enumerate(times):
-            if show_progress and idx % (len(times) // 10) == 0:
+            if show_progress and idx % progress_interval == 0:
                 print(f"  Simulating: {100 * idx / len(times):.0f}%")
 
-            values[idx] = self.evaluate(t, control_fn)
+            values[idx] = self.evaluate(t, control_fn, idx=idx)
 
         return {
             'times': times,
@@ -626,8 +661,9 @@ class StochasticOscillator:
 
         for i, seed in enumerate(seeds):
             self.reset(seed)
+            self._dt = dt  # Store dt for memory/noise term index calculations
             for j, t in enumerate(times):
-                ensemble[i, j] = self.evaluate(t)
+                ensemble[i, j] = self.evaluate(t, idx=j)
 
         return {
             'times': times,
