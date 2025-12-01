@@ -31,7 +31,7 @@ from numpy.typing import NDArray
 from scipy.special import expit
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Dict, Optional, Callable, List
+from typing import Dict, Optional, List
 from collections import defaultdict
 
 
