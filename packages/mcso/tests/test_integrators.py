@@ -94,9 +94,11 @@ class TestSigmoid:
         assert result < 0.01
 
     def test_bounded_output(self):
-        """Test sigmoid output is always in (0, 1)."""
+        """Test sigmoid output is always in [0, 1]."""
         for x in [-1000, -10, -1, 0, 1, 10, 1000]:
             result = sigmoid(x)
+            # Sigmoid asymptotically approaches 0 and 1 but for extreme values
+            # numerical precision causes it to round to exactly 0 or 1
             assert 0 <= result <= 1
 
     def test_array_input(self):
@@ -469,7 +471,7 @@ class TestEulerMaruyama:
     def test_deterministic_case(self):
         """Test with zero diffusion gives deterministic solution."""
         result = euler_maruyama(
-            drift=lambda x, t: -x,  # dX = -X dt
+            drift=lambda x, t: -x,  # dX = -X dt + 0 dW (deterministic case)
             diffusion=lambda x, t: 0.0,
             x0=1.0,
             t_span=(0, 1),
@@ -572,7 +574,9 @@ class TestSDEIntegratorSchemes:
     def test_schemes_give_different_results(self):
         """Test that different schemes give different paths."""
         drift = lambda x, t: -x
-        # Use state-dependent diffusion so Milstein correction is non-zero
+        # Use state-dependent diffusion (σ(x) = 0.3x) so Milstein correction is non-zero.
+        # The Milstein scheme includes a term proportional to σ(x)·σ'(x), which is
+        # zero for constant diffusion but non-zero here since σ'(x) = 0.3.
         diffusion = lambda x, t: 0.3 * x
 
         euler = SDEIntegrator(drift, diffusion, scheme='euler', seed=42)
