@@ -374,22 +374,6 @@ class TestOrnsteinUhlenbeckNoise:
         noise_slow.current_value = 5.0
         noise_fast.current_value = 5.0
 
-        samples_slow = [noise_slow.sample(t=0.0) for _ in range(10)]
-        noise_slow.current_value = 5.0
-        noise_fast.current_value = 5.0
-
-        noise_slow.reset(seed=42)
-        noise_fast.reset(seed=42)
-        noise_slow.current_value = 5.0
-        noise_fast.current_value = 5.0
-
-        samples_slow = [noise_slow.sample(t=0.0) for _ in range(10)]
-
-        noise_slow.reset(seed=42)
-        noise_fast.reset(seed=42)
-        noise_slow.current_value = 5.0
-        noise_fast.current_value = 5.0
-
         sample_slow = noise_slow.sample(t=0.0)
         sample_fast = noise_fast.sample(t=0.0)
 
