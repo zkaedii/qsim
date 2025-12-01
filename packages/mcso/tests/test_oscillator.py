@@ -87,10 +87,9 @@ class TestStochasticOscillator:
         oscillator.evaluate(2.0)
 
         # Check that entries for 1.0 and 2.0 are stored
-        # Note: defaultdict may create additional entries (e.g., for memory lookups)
-        history_keys = list(oscillator.history.keys())
-        assert any(np.isclose(key, 1.0) for key in history_keys)
-        assert any(np.isclose(key, 2.0) for key in history_keys)
+        # Note: additional entries may exist from memory term lookups during evaluation
+        assert any(np.isclose(key, 1.0) for key in oscillator.history.keys())
+        assert any(np.isclose(key, 2.0) for key in oscillator.history.keys())
 
     def test_evaluate_no_history(self, oscillator):
         """Test evaluate with store_history=False.
