@@ -2,7 +2,6 @@
 Unit tests for the analysis module.
 """
 
-import pytest
 import numpy as np
 from mcso.analysis import create_summary_report, compute_statistics, spectral_analysis
 
