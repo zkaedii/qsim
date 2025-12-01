@@ -77,17 +77,31 @@ class TestStochasticOscillator:
         assert isinstance(result, (float, np.floating))
 
     def test_evaluate_stores_history(self, oscillator):
-        """Test that evaluate stores values in history."""
+        """Test that evaluate stores values in history.
+        
+        Note: The history dictionary uses exact time values as keys.
+        This test uses np.isclose to handle potential floating-point 
+        precision issues when checking for key existence.
+        """
         oscillator.evaluate(1.0)
         oscillator.evaluate(2.0)
 
-        assert 1.0 in oscillator.history
-        assert 2.0 in oscillator.history
+        # Check that entries for 1.0 and 2.0 are stored
+        # Note: defaultdict may create additional entries (e.g., for memory lookups)
+        history_keys = list(oscillator.history.keys())
+        assert any(np.isclose(key, 1.0) for key in history_keys)
+        assert any(np.isclose(key, 2.0) for key in history_keys)
 
     def test_evaluate_no_history(self, oscillator):
-        """Test evaluate with store_history=False."""
+        """Test evaluate with store_history=False.
+        
+        Note: Uses approximate comparison for floating-point keys.
+        """
         oscillator.evaluate(1.0, store_history=False)
-        assert 1.0 not in oscillator.history
+        
+        # Check that no key approximately equal to 1.0 exists
+        history_keys = list(oscillator.history.keys())
+        assert not any(np.isclose(key, 1.0) for key in history_keys)
 
     def test_simulate_returns_dict(self, oscillator):
         """Test simulate returns correct structure."""
