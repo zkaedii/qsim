@@ -192,7 +192,8 @@ class TestNumericalQuadrature:
             f=lambda x: 1.0,
             g_prime=lambda x: 1.0,
             lower=1.0,
-            upper=1.0
+            upper=1.0,
+            params=(0.8, 0.3, 1.0)
         )
         assert np.isclose(result, 0.0, atol=1e-10)
 
