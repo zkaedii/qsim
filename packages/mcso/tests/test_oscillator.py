@@ -41,6 +41,7 @@ class TestOscillatorConfig:
     def test_invalid_memory_delay(self):
         """Test validation of memory_delay."""
         with pytest.raises(ValueError, match="memory_delay must be non-negative"):
+            OscillatorConfig(memory_delay=-1.0)
             OscillatorConfig(memory_delay=-0.1)
 
 
@@ -84,6 +85,24 @@ class TestStochasticOscillator:
     def test_evaluate_stores_history(self, oscillator):
         """Test that evaluate stores values in history.
         
+        Note: history uses exact float keys. This test uses exact float values
+        that are passed to evaluate() to verify the keys exist in the dict.
+        """
+        oscillator.evaluate(1.0)
+        oscillator.evaluate(2.0)
+
+        # Verify the keys we used are in history (note: history may include t=0 from initialization)
+        history_keys = list(oscillator.history.keys())
+        assert len(history_keys) >= 2
+        assert any(abs(k - 1.0) < 1e-9 for k in history_keys)
+        assert any(abs(k - 2.0) < 1e-9 for k in history_keys)
+
+    def test_evaluate_no_history(self, oscillator):
+        """Test evaluate with store_history=False."""
+        oscillator.evaluate(1.0, store_history=False)
+        # Verify no keys are stored
+        history_keys = list(oscillator.history.keys())
+        assert not any(abs(k - 1.0) < 1e-9 for k in history_keys)
         Note: The history dict uses exact time values as keys (the same values
         passed to evaluate()). Since no floating-point arithmetic is performed
         on the time values before storage, exact equality checks are safe here.
