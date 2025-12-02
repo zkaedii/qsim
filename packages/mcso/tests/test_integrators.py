@@ -1497,8 +1497,6 @@ class TestSDEIntegratorMethods:
 class TestEulerMaruyama:
     """Tests for euler_maruyama convenience function."""
 
-    def test_basic_integration(self):
-        """Test basic Euler-Maruyama integration."""
     def test_euler_maruyama_basic(self):
         """Test basic euler_maruyama integration."""
         result = euler_maruyama(
