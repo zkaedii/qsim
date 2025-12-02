@@ -28,7 +28,7 @@ from __future__ import annotations
 
 import numpy as np
 from numpy.typing import NDArray
-from scipy.integrate import quad, quad_vec, solve_ivp
+from scipy.integrate import quad, quad_vec, solve_ivp, IntegrationWarning
 from scipy.special import expit
 from dataclasses import dataclass
 from typing import Callable, Optional, Tuple, Dict, Any
@@ -38,6 +38,7 @@ import warnings
 # =============================================================================
 # Activation Functions
 # =============================================================================
+
 
 def softplus(x: NDArray | float, threshold: float = 20.0) -> NDArray | float:
     """
@@ -148,6 +149,7 @@ def gelu(x: NDArray | float) -> NDArray | float:
 # Numerical Quadrature
 # =============================================================================
 
+
 def integrate_activation(
     activation: Callable[[float], float],
     f: Callable[[float], float],
@@ -157,7 +159,7 @@ def integrate_activation(
     params: Tuple[float, ...] = (0.8, 0.3, 1.0),
     limit: int = 50,
     epsabs: float = 1e-8,
-    epsrel: float = 1e-6
+    epsrel: float = 1e-6,
 ) -> Tuple[float, float]:
     """
     Integrate activation-weighted product.
@@ -207,22 +209,39 @@ def integrate_activation(
         return activation(arg) * f(x) * g_prime(x)
 
     try:
-        result, error = quad(
-            integrand, lower, upper,
-            limit=limit, epsabs=epsabs, epsrel=epsrel
-        )
+        with warnings.catch_warnings():
+            warnings.filterwarnings("error", category=IntegrationWarning)
+            result, error = quad(integrand, lower, upper, limit=limit, epsabs=epsabs, epsrel=epsrel)
         return result, error
-    except Exception as e:
-        warnings.warn(f"Integration failed: {e}. Returning 0.")
-        return 0.0, float('inf')
+    except IntegrationWarning as w:
+        warnings.warn(
+            f"Integration did not converge in [{lower}, {upper}]: {w}. Returning 0.",
+            RuntimeWarning,
+            stacklevel=2,
+        )
+        return 0.0, float("inf")
+    except ValueError as e:
+        warnings.warn(
+            f"Invalid value in integration [{lower}, {upper}]: {e}. Returning 0.",
+            RuntimeWarning,
+            stacklevel=2,
+        )
+        return 0.0, float("inf")
+    except (FloatingPointError, OverflowError) as e:
+        warnings.warn(
+            f"Numerical error in integration [{lower}, {upper}]: {e}. Returning 0.",
+            RuntimeWarning,
+            stacklevel=2,
+        )
+        return 0.0, float("inf")
 
 
 def numerical_quadrature(
     f: Callable[[float], float],
     lower: float,
     upper: float,
-    method: str = 'adaptive',
-    n_points: int = 100
+    method: str = "adaptive",
+    n_points: int = 100,
 ) -> float:
     """
     General numerical quadrature with method selection.
@@ -245,25 +264,27 @@ def numerical_quadrature(
     float
         Integral approximation.
     """
-    if method == 'adaptive':
+    if method == "adaptive":
         result, _ = quad(f, lower, upper)
         return result
 
-    elif method == 'trapezoid':
+    elif method == "trapezoid":
         x = np.linspace(lower, upper, n_points)
         y = np.array([f(xi) for xi in x])
         return np.trapz(y, x)
 
-    elif method == 'simpson':
+    elif method == "simpson":
         if n_points % 2 == 0:
             n_points += 1  # Simpson needs odd number
         x = np.linspace(lower, upper, n_points)
         y = np.array([f(xi) for xi in x])
         from scipy.integrate import simpson
+
         return simpson(y, x=x)
 
-    elif method == 'gauss':
+    elif method == "gauss":
         from numpy.polynomial.legendre import leggauss
+
         nodes, weights = leggauss(n_points)
         # Transform from [-1, 1] to [lower, upper]
         mid = (upper + lower) / 2
@@ -279,6 +300,7 @@ def numerical_quadrature(
 # =============================================================================
 # SDE Integrators
 # =============================================================================
+
 
 @dataclass
 class SDEIntegrator:
@@ -304,19 +326,13 @@ class SDEIntegrator:
 
     drift: Callable[[float, float], float]
     diffusion: Callable[[float, float], float]
-    scheme: str = 'euler'
+    scheme: str = "euler"
     seed: Optional[int] = None
 
     def __post_init__(self):
         self.rng = np.random.default_rng(self.seed)
 
-    def step(
-        self,
-        x: float,
-        t: float,
-        dt: float,
-        dW: Optional[float] = None
-    ) -> float:
+    def step(self, x: float, t: float, dt: float, dW: Optional[float] = None) -> float:
         """
         Perform one integration step.
 
@@ -342,18 +358,18 @@ class SDEIntegrator:
         mu = self.drift(x, t)
         sigma = self.diffusion(x, t)
 
-        if self.scheme == 'euler':
+        if self.scheme == "euler":
             # Euler-Maruyama: O(dt) strong, O(√dt) weak
             return x + mu * dt + sigma * dW
 
-        elif self.scheme == 'milstein':
+        elif self.scheme == "milstein":
             # Milstein: O(dt) strong convergence
             # Requires diffusion derivative
             eps = 1e-6
             sigma_prime = (self.diffusion(x + eps, t) - self.diffusion(x - eps, t)) / (2 * eps)
             return x + mu * dt + sigma * dW + 0.5 * sigma * sigma_prime * (dW**2 - dt)
 
-        elif self.scheme == 'heun':
+        elif self.scheme == "heun":
             # Heun (improved Euler): Predictor-corrector
             x_pred = x + mu * dt + sigma * dW
             mu_pred = self.drift(x_pred, t + dt)
@@ -364,11 +380,7 @@ class SDEIntegrator:
             raise ValueError(f"Unknown scheme: {self.scheme}")
 
     def integrate(
-        self,
-        x0: float,
-        t_span: Tuple[float, float],
-        dt: float = 0.01,
-        n_paths: int = 1
+        self, x0: float, t_span: Tuple[float, float], dt: float = 0.01, n_paths: int = 1
     ) -> Dict[str, NDArray]:
         """
         Integrate SDE over time span.
@@ -401,13 +413,13 @@ class SDEIntegrator:
         for p in range(n_paths):
             paths[p, 0] = x0
             for i in range(1, n_times):
-                paths[p, i] = self.step(paths[p, i-1], times[i-1], dt)
+                paths[p, i] = self.step(paths[p, i - 1], times[i - 1], dt)
 
         return {
-            'times': times,
-            'paths': paths,
-            'mean': np.mean(paths, axis=0),
-            'std': np.std(paths, axis=0)
+            "times": times,
+            "paths": paths,
+            "mean": np.mean(paths, axis=0),
+            "std": np.std(paths, axis=0),
         }
 
 
@@ -417,7 +429,7 @@ def euler_maruyama(
     x0: float,
     t_span: Tuple[float, float],
     dt: float = 0.01,
-    seed: Optional[int] = None
+    seed: Optional[int] = None,
 ) -> Dict[str, NDArray]:
     """
     Euler-Maruyama integration for SDEs.
@@ -455,18 +467,16 @@ def euler_maruyama(
     ...     dt=0.001
     ... )
     """
-    integrator = SDEIntegrator(drift, diffusion, scheme='euler', seed=seed)
+    integrator = SDEIntegrator(drift, diffusion, scheme="euler", seed=seed)
     result = integrator.integrate(x0, t_span, dt, n_paths=1)
 
-    return {
-        'times': result['times'],
-        'values': result['paths'][0]
-    }
+    return {"times": result["times"], "values": result["paths"][0]}
 
 
 # =============================================================================
 # Utility Functions
 # =============================================================================
+
 
 def compute_convergence_rate(
     integrator: SDEIntegrator,
@@ -474,7 +484,7 @@ def compute_convergence_rate(
     t_span: Tuple[float, float],
     dt_values: NDArray,
     n_samples: int = 1000,
-    reference_dt: Optional[float] = None
+    reference_dt: Optional[float] = None,
 ) -> Dict[str, Any]:
     """
     Estimate convergence rate of SDE integrator.
@@ -523,8 +533,8 @@ def compute_convergence_rate(
             result_ref = integrator.integrate(x0, t_span, reference_dt, n_paths=1)
 
             # Interpolate to compare at same time point
-            x_dt = result_dt['paths'][0, -1]
-            x_ref = result_ref['paths'][0, -1]
+            x_dt = result_dt["paths"][0, -1]
+            x_ref = result_ref["paths"][0, -1]
 
             sample_errors.append(np.abs(x_dt - x_ref))
 
@@ -535,8 +545,4 @@ def compute_convergence_rate(
     log_err = np.log(errors)
     rate = np.polyfit(log_dt, log_err, 1)[0]
 
-    return {
-        'dt_values': dt_values,
-        'errors': np.array(errors),
-        'rate': rate
-    }
+    return {"dt_values": dt_values, "errors": np.array(errors), "rate": rate}
