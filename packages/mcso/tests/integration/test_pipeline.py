@@ -20,11 +20,7 @@ class TestEndToEndSimulation:
         from mcso.analysis import compute_statistics, create_summary_report
 
         # Configure
-        config = OscillatorConfig(
-            n_components=3,
-            noise_scale=0.1,
-            seed=42
-        )
+        config = OscillatorConfig(n_components=3, noise_scale=0.1, seed=42)
 
         # Create oscillator
         osc = StochasticOscillator(config)
@@ -33,17 +29,17 @@ class TestEndToEndSimulation:
         trajectory = osc.simulate(t_max=50, dt=0.5)
 
         # Verify trajectory structure
-        assert 'times' in trajectory
-        assert 'values' in trajectory
-        assert len(trajectory['times']) == len(trajectory['values'])
-        assert len(trajectory['times']) > 0
+        assert "times" in trajectory
+        assert "values" in trajectory
+        assert len(trajectory["times"]) == len(trajectory["values"])
+        assert len(trajectory["times"]) > 0
 
         # Analyze
-        stats = compute_statistics(trajectory['values'])
+        stats = compute_statistics(trajectory["values"])
 
         # Verify statistics (TrajectoryStatistics is a dataclass)
-        assert hasattr(stats, 'mean')
-        assert hasattr(stats, 'std')
+        assert hasattr(stats, "mean")
+        assert hasattr(stats, "std")
         assert np.isfinite(stats.mean)
         assert stats.std >= 0
 
@@ -57,24 +53,20 @@ class TestEndToEndSimulation:
         from mcso.oscillator import StochasticOscillator
 
         osc = StochasticOscillator(
-            n_components=2,
-            noise_scale=0.2,
-            memory_strength=1.0,
-            memory_delay=0.5,
-            seed=123
+            n_components=2, noise_scale=0.2, memory_strength=1.0, memory_delay=0.5, seed=123
         )
 
         # Use fractional dt - this previously caused history key mismatch
         trajectory = osc.simulate(t_max=10, dt=0.25)
 
         # Verify memory feedback was active (non-zero variance in later steps)
-        values = trajectory['values']
+        values = trajectory["values"]
         assert len(values) == 40  # 10 / 0.25
         assert np.std(values) > 0  # Should have variation
 
         # Verify no zeros from history lookup failures
         # (Before fix, memory_term would return 0 for non-unit dt)
-        mid_values = values[len(values)//2:]
+        mid_values = values[len(values) // 2 :]
         assert not np.allclose(mid_values, mid_values[0])  # Should vary
 
     def test_ensemble_simulation_pipeline(self):
@@ -82,42 +74,34 @@ class TestEndToEndSimulation:
         from mcso.oscillator import StochasticOscillator
         from mcso.analysis import compute_statistics
 
-        osc = StochasticOscillator(
-            n_components=3,
-            noise_scale=0.5,
-            seed=42
-        )
+        osc = StochasticOscillator(n_components=3, noise_scale=0.5, seed=42)
 
         # Simulate ensemble
-        ensemble = osc.simulate_ensemble(
-            n_realizations=20,
-            t_max=30,
-            dt=1.0
-        )
+        ensemble = osc.simulate_ensemble(n_realizations=20, t_max=30, dt=1.0)
 
         # Verify ensemble structure
-        assert 'times' in ensemble
-        assert 'ensemble' in ensemble
-        assert 'mean' in ensemble
-        assert 'std' in ensemble
-        assert 'percentiles' in ensemble
+        assert "times" in ensemble
+        assert "ensemble" in ensemble
+        assert "mean" in ensemble
+        assert "std" in ensemble
+        assert "percentiles" in ensemble
 
         # Verify dimensions
-        assert ensemble['ensemble'].shape == (20, 30)
-        assert len(ensemble['mean']) == 30
-        assert len(ensemble['std']) == 30
+        assert ensemble["ensemble"].shape == (20, 30)
+        assert len(ensemble["mean"]) == 30
+        assert len(ensemble["std"]) == 30
 
         # Verify statistical consistency
         # Mean of ensemble should be close to ensemble['mean']
-        computed_mean = np.mean(ensemble['ensemble'], axis=0)
-        assert_allclose(computed_mean, ensemble['mean'], rtol=1e-10)
+        computed_mean = np.mean(ensemble["ensemble"], axis=0)
+        assert_allclose(computed_mean, ensemble["mean"], rtol=1e-10)
 
         # Std should be non-negative
-        assert np.all(ensemble['std'] >= 0)
+        assert np.all(ensemble["std"] >= 0)
 
         # Percentiles should be ordered
-        assert np.all(ensemble['percentiles'][5] <= ensemble['percentiles'][50])
-        assert np.all(ensemble['percentiles'][50] <= ensemble['percentiles'][95])
+        assert np.all(ensemble["percentiles"][5] <= ensemble["percentiles"][50])
+        assert np.all(ensemble["percentiles"][50] <= ensemble["percentiles"][95])
 
     def test_custom_control_function_pipeline(self):
         """Test simulation with custom control input."""
@@ -127,7 +111,7 @@ class TestEndToEndSimulation:
             n_components=2,
             control_gain=1.0,
             noise_scale=0.0,  # No noise for deterministic test
-            seed=42
+            seed=42,
         )
 
         # Define step control function
@@ -136,8 +120,8 @@ class TestEndToEndSimulation:
 
         trajectory = osc.simulate(t_max=10, dt=0.5, control_fn=step_control)
 
-        values = trajectory['values']
-        times = trajectory['times']
+        values = trajectory["values"]
+        times = trajectory["times"]
 
         # Find values before and after step
         before_step = values[times < 5.0]
@@ -157,11 +141,7 @@ class TestMemoryIntegration:
         from mcso.oscillator import StochasticOscillator
         from mcso.memory import ExponentialMemory
 
-        osc = StochasticOscillator(
-            n_components=2,
-            noise_scale=0.1,
-            seed=42
-        )
+        osc = StochasticOscillator(n_components=2, noise_scale=0.1, seed=42)
 
         # Simulate
         trajectory = osc.simulate(t_max=20, dt=1.0)
@@ -170,10 +150,10 @@ class TestMemoryIntegration:
         memory = ExponentialMemory(strength=1.0, decay_time=2.0, window=10.0)
 
         # Convert history for memory evaluation
-        history = {t: v for t, v in zip(trajectory['times'], trajectory['values'])}
+        history = {t: v for t, v in zip(trajectory["times"], trajectory["values"])}
 
         # Evaluate memory at final time
-        final_t = trajectory['times'][-1]
+        final_t = trajectory["times"][-1]
         memory_contribution = memory.evaluate(final_t, history)
 
         assert np.isfinite(memory_contribution)
@@ -183,21 +163,14 @@ class TestMemoryIntegration:
         from mcso.oscillator import StochasticOscillator
         from mcso.memory import MultiScaleMemory
 
-        osc = StochasticOscillator(
-            n_components=3,
-            noise_scale=0.2,
-            seed=42
-        )
+        osc = StochasticOscillator(n_components=3, noise_scale=0.2, seed=42)
 
         trajectory = osc.simulate(t_max=50, dt=1.0)
 
         # Create multi-scale memory
-        memory = MultiScaleMemory(
-            scales=[(0.5, 1.0), (0.3, 5.0), (0.2, 20.0)],
-            window=30.0
-        )
+        memory = MultiScaleMemory(scales=[(0.5, 1.0), (0.3, 5.0), (0.2, 20.0)], window=30.0)
 
-        history = {t: v for t, v in zip(trajectory['times'], trajectory['values'])}
+        history = {t: v for t, v in zip(trajectory["times"], trajectory["values"])}
 
         # Evaluate at multiple points
         eval_times = [10.0, 25.0, 40.0]
@@ -213,11 +186,7 @@ class TestNoiseIntegration:
         """Test that same seed produces same trajectory."""
         from mcso.oscillator import StochasticOscillator
 
-        config_args = {
-            'n_components': 2,
-            'noise_scale': 0.5,
-            'seed': 12345
-        }
+        config_args = {"n_components": 2, "noise_scale": 0.5, "seed": 12345}
 
         osc1 = StochasticOscillator(**config_args)
         traj1 = osc1.simulate(t_max=20, dt=1.0)
@@ -225,7 +194,7 @@ class TestNoiseIntegration:
         osc2 = StochasticOscillator(**config_args)
         traj2 = osc2.simulate(t_max=20, dt=1.0)
 
-        assert_allclose(traj1['values'], traj2['values'])
+        assert_allclose(traj1["values"], traj2["values"])
 
     def test_state_dependent_noise_effect(self):
         """Test that state-dependent noise coupling affects variance."""
@@ -233,22 +202,14 @@ class TestNoiseIntegration:
         from mcso.analysis import compute_statistics
 
         # Low coupling
-        osc_low = StochasticOscillator(
-            noise_scale=0.5,
-            noise_state_coupling=0.0,
-            seed=42
-        )
+        osc_low = StochasticOscillator(noise_scale=0.5, noise_state_coupling=0.0, seed=42)
         traj_low = osc_low.simulate(t_max=100, dt=1.0)
-        stats_low = compute_statistics(traj_low['values'])
+        stats_low = compute_statistics(traj_low["values"])
 
         # High coupling
-        osc_high = StochasticOscillator(
-            noise_scale=0.5,
-            noise_state_coupling=1.0,
-            seed=42
-        )
+        osc_high = StochasticOscillator(noise_scale=0.5, noise_state_coupling=1.0, seed=42)
         traj_high = osc_high.simulate(t_max=100, dt=1.0)
-        stats_high = compute_statistics(traj_high['values'])
+        stats_high = compute_statistics(traj_high["values"])
 
         # Both should have finite statistics
         assert np.isfinite(stats_low.std)
@@ -282,7 +243,7 @@ class TestIntegratorsIntegration:
             g_prime=lambda x: -np.sin(x),
             lower=0,
             upper=5,
-            params=(0.8, 0.3, 1.0)
+            params=(0.8, 0.3, 1.0),
         )
 
         assert np.isfinite(result)
@@ -301,24 +262,19 @@ class TestIntegratorsIntegration:
 
         # Euler-Maruyama
         result = euler_maruyama(
-            drift=drift,
-            diffusion=diffusion,
-            x0=1.0,
-            t_span=(0, 10),
-            dt=0.01,
-            seed=42
+            drift=drift, diffusion=diffusion, x0=1.0, t_span=(0, 10), dt=0.01, seed=42
         )
 
-        assert len(result['times']) > 0
-        assert len(result['values']) == len(result['times'])
-        assert np.all(np.isfinite(result['values']))
+        assert len(result["times"]) > 0
+        assert len(result["values"]) == len(result["times"])
+        assert np.all(np.isfinite(result["values"]))
 
         # Heun scheme
-        integrator_heun = SDEIntegrator(drift, diffusion, scheme='heun', seed=42)
+        integrator_heun = SDEIntegrator(drift, diffusion, scheme="heun", seed=42)
         heun_result = integrator_heun.integrate(1.0, (0, 10), dt=0.01, n_paths=1)
 
-        assert heun_result['paths'].shape == (1, 1001)
-        assert np.all(np.isfinite(heun_result['paths']))
+        assert heun_result["paths"].shape == (1, 1001)
+        assert np.all(np.isfinite(heun_result["paths"]))
 
 
 class TestAnalysisIntegration:
@@ -331,23 +287,19 @@ class TestAnalysisIntegration:
             compute_statistics,
             autocorrelation,
             spectral_analysis,
-            create_summary_report
+            create_summary_report,
         )
 
-        osc = StochasticOscillator(
-            n_components=4,
-            noise_scale=0.3,
-            seed=42
-        )
+        osc = StochasticOscillator(n_components=4, noise_scale=0.3, seed=42)
 
         trajectory = osc.simulate(t_max=200, dt=1.0)
-        values = trajectory['values']
-        times = trajectory['times']
+        values = trajectory["values"]
+        times = trajectory["times"]
 
         # Statistics (TrajectoryStatistics is a dataclass)
         stats = compute_statistics(values)
-        assert hasattr(stats, 'mean')
-        assert hasattr(stats, 'std')
+        assert hasattr(stats, "mean")
+        assert hasattr(stats, "std")
         assert np.isfinite(stats.mean)
         assert np.isfinite(stats.std)
 
@@ -359,15 +311,15 @@ class TestAnalysisIntegration:
 
         # Power spectrum
         spectrum = spectral_analysis(values, dt=1.0)
-        assert hasattr(spectrum, 'frequencies')
-        assert hasattr(spectrum, 'power')
+        assert hasattr(spectrum, "frequencies")
+        assert hasattr(spectrum, "power")
         assert len(spectrum.frequencies) == len(spectrum.power)
         assert np.all(spectrum.power >= 0)  # PSD non-negative
 
         # Summary report (takes full trajectory dict)
         report = create_summary_report(trajectory)
         assert isinstance(report, str)
-        assert 'Mean' in report or 'mean' in report.lower()
+        assert "Mean" in report or "mean" in report.lower()
 
     def test_short_trajectory_analysis(self):
         """Test analysis handles short trajectories gracefully."""
@@ -378,7 +330,7 @@ class TestAnalysisIntegration:
 
         # Very short trajectory
         trajectory = osc.simulate(t_max=5, dt=1.0)
-        values = trajectory['values']
+        values = trajectory["values"]
 
         assert len(values) == 5
 
@@ -399,7 +351,7 @@ class TestAnalysisIntegration:
 
         # Single point trajectory
         trajectory = osc.simulate(t_max=0.5, dt=1.0)
-        values = trajectory['values']
+        values = trajectory["values"]
 
         # Should have at least 1 sample
         assert len(values) >= 1
@@ -452,62 +404,46 @@ class TestEdgeCases:
         """Test deterministic simulation (no noise)."""
         from mcso.oscillator import StochasticOscillator
 
-        osc = StochasticOscillator(
-            n_components=2,
-            noise_scale=0.0,
-            seed=42
-        )
+        osc = StochasticOscillator(n_components=2, noise_scale=0.0, seed=42)
 
         traj1 = osc.simulate(t_max=10, dt=1.0)
         osc.reset()
         traj2 = osc.simulate(t_max=10, dt=1.0)
 
         # With zero noise, trajectories should be identical
-        assert_allclose(traj1['values'], traj2['values'])
+        assert_allclose(traj1["values"], traj2["values"])
 
     def test_high_noise(self):
         """Test simulation with high noise level."""
         from mcso.oscillator import StochasticOscillator
 
-        osc = StochasticOscillator(
-            n_components=2,
-            noise_scale=10.0,  # Very high noise
-            seed=42
-        )
+        osc = StochasticOscillator(n_components=2, noise_scale=10.0, seed=42)  # Very high noise
 
         trajectory = osc.simulate(t_max=50, dt=1.0)
 
         # Should complete without numerical issues
-        assert np.all(np.isfinite(trajectory['values']))
+        assert np.all(np.isfinite(trajectory["values"]))
 
     def test_many_components(self):
         """Test simulation with many oscillatory components."""
         from mcso.oscillator import StochasticOscillator
 
-        osc = StochasticOscillator(
-            n_components=20,  # Many components
-            noise_scale=0.1,
-            seed=42
-        )
+        osc = StochasticOscillator(n_components=20, noise_scale=0.1, seed=42)  # Many components
 
         trajectory = osc.simulate(t_max=30, dt=1.0)
 
-        assert np.all(np.isfinite(trajectory['values']))
+        assert np.all(np.isfinite(trajectory["values"]))
 
     def test_small_timestep(self):
         """Test simulation with very small timestep."""
         from mcso.oscillator import StochasticOscillator
 
-        osc = StochasticOscillator(
-            n_components=2,
-            noise_scale=0.1,
-            seed=42
-        )
+        osc = StochasticOscillator(n_components=2, noise_scale=0.1, seed=42)
 
         trajectory = osc.simulate(t_max=5, dt=0.01)
 
-        assert len(trajectory['values']) == 500
-        assert np.all(np.isfinite(trajectory['values']))
+        assert len(trajectory["values"]) == 500
+        assert np.all(np.isfinite(trajectory["values"]))
 
 
 class TestCircularBuffer:
@@ -543,15 +479,15 @@ class TestCircularBuffer:
             memory_strength=1.0,
             memory_delay=1.0,
             history_buffer_size=100,  # Limit history
-            seed=42
+            seed=42,
         )
 
         # Simulate
         trajectory = osc.simulate(t_max=50, dt=0.5)
 
         # Should complete successfully
-        assert len(trajectory['values']) == 100
-        assert np.all(np.isfinite(trajectory['values']))
+        assert len(trajectory["values"]) == 100
+        assert np.all(np.isfinite(trajectory["values"]))
 
         # History buffer should be limited
         assert len(osc.history) <= 100
@@ -562,10 +498,7 @@ class TestCircularBuffer:
 
         # With buffer
         osc_buffered = StochasticOscillator(
-            n_components=2,
-            noise_scale=0.1,
-            history_buffer_size=500,
-            seed=42
+            n_components=2, noise_scale=0.1, history_buffer_size=500, seed=42
         )
 
         trajectory = osc_buffered.simulate(t_max=1000, dt=1.0)
@@ -574,8 +507,8 @@ class TestCircularBuffer:
         assert len(osc_buffered.history) <= 500
 
         # Results should still be valid
-        assert len(trajectory['values']) == 1000
-        assert np.all(np.isfinite(trajectory['values']))
+        assert len(trajectory["values"]) == 1000
+        assert np.all(np.isfinite(trajectory["values"]))
 
     def test_circular_buffer_memory_term(self):
         """Test that memory term works correctly with circular buffer."""
@@ -588,13 +521,13 @@ class TestCircularBuffer:
             memory_strength=2.0,
             memory_delay=5.0,  # 5 second delay
             history_buffer_size=50,  # 50 step buffer (enough for delay)
-            seed=42
+            seed=42,
         )
 
         trajectory = osc.simulate(t_max=30, dt=1.0)
 
         # Should have non-trivial variation from memory feedback
-        values = trajectory['values']
+        values = trajectory["values"]
         mid_values = values[10:]  # After memory kicks in
         assert np.std(mid_values) > 0
 
@@ -604,11 +537,7 @@ class TestCircularBuffer:
 
         # Unlimited history
         osc_unlimited = StochasticOscillator(
-            n_components=2,
-            noise_scale=0.1,
-            memory_strength=1.0,
-            memory_delay=2.0,
-            seed=42
+            n_components=2, noise_scale=0.1, memory_strength=1.0, memory_delay=2.0, seed=42
         )
 
         # With buffer (large enough to not affect results)
@@ -618,14 +547,14 @@ class TestCircularBuffer:
             memory_strength=1.0,
             memory_delay=2.0,
             history_buffer_size=100,  # Large enough for delay
-            seed=42
+            seed=42,
         )
 
         traj_unlimited = osc_unlimited.simulate(t_max=20, dt=1.0)
         traj_buffered = osc_buffered.simulate(t_max=20, dt=1.0)
 
         # Results should be identical when buffer is large enough
-        assert_allclose(traj_unlimited['values'], traj_buffered['values'])
+        assert_allclose(traj_unlimited["values"], traj_buffered["values"])
 
 
 class TestWarningsAndErrors:
@@ -644,9 +573,9 @@ class TestWarningsAndErrors:
 
             # Filter for RuntimeWarnings from our module
             integration_warnings = [
-                x for x in w
-                if issubclass(x.category, RuntimeWarning)
-                and 'integral' in str(x.message).lower()
+                x
+                for x in w
+                if issubclass(x.category, RuntimeWarning) and "integral" in str(x.message).lower()
             ]
             # Should have no integration warnings under normal conditions
             assert len(integration_warnings) == 0

@@ -26,6 +26,7 @@ except ImportError:
 
 try:
     import pandas as pd
+
     PANDAS_AVAILABLE = True
 except ImportError:
     PANDAS_AVAILABLE = False
@@ -384,6 +385,7 @@ class HModelManager:
         p_value: float = 1.0
         try:
             from scipy.stats import ttest_ind
+
             _, p_value = ttest_ind(series1, series2, equal_var=False)
         except ImportError:
             logger.warning("scipy not found, using simple mean comparison for drift detection.")

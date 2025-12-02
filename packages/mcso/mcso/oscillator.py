@@ -74,7 +74,7 @@ class CircularBuffer:
         # Evict old entries if buffer is full
         if len(self._buffer) > self.max_size:
             # Remove oldest entries
-            keys_to_remove = sorted(self._buffer.keys())[:-self.max_size]
+            keys_to_remove = sorted(self._buffer.keys())[: -self.max_size]
             for key in keys_to_remove:
                 del self._buffer[key]
 
@@ -270,18 +270,13 @@ class StochasticOscillator:
     >>> trajectory = osc.simulate(t_max=100, control_fn=control)
     """
 
-    def __init__(
-        self,
-        config: Optional[OscillatorConfig] = None,
-        **kwargs
-    ):
+    def __init__(self, config: Optional[OscillatorConfig] = None, **kwargs):
         if config is None:
             config = OscillatorConfig(**kwargs)
         elif kwargs:
             # Override config with kwargs
             config_dict = {
-                k: kwargs.get(k, getattr(config, k))
-                for k in config.__dataclass_fields__
+                k: kwargs.get(k, getattr(config, k)) for k in config.__dataclass_fields__
             }
             config = OscillatorConfig(**config_dict)
 
@@ -298,9 +293,7 @@ class StochasticOscillator:
         self.rng = np.random.default_rng(config.seed)
 
         # Pre-compute phase offsets
-        self._phases = np.array([
-            np.pi / (i + 1) for i in range(config.n_components)
-        ])
+        self._phases = np.array([np.pi / (i + 1) for i in range(config.n_components)])
 
     def reset(self, seed: Optional[int] = None) -> None:
         """
@@ -492,28 +485,28 @@ class StochasticOscillator:
 
         try:
             with warnings.catch_warnings():
-                warnings.filterwarnings('error', category=IntegrationWarning)
+                warnings.filterwarnings("error", category=IntegrationWarning)
                 result, _ = quad(integrand, 0, t_bounded, limit=20)
             return result
         except IntegrationWarning as w:
             warnings.warn(
                 f"Integration did not converge at t={t}: {w}. Returning 0.0",
                 RuntimeWarning,
-                stacklevel=2
+                stacklevel=2,
             )
             return 0.0
         except ValueError as e:
             warnings.warn(
                 f"Invalid value in integral_term at t={t}: {e}. Returning 0.0",
                 RuntimeWarning,
-                stacklevel=2
+                stacklevel=2,
             )
             return 0.0
         except (FloatingPointError, OverflowError) as e:
             warnings.warn(
                 f"Numerical error in integral_term at t={t}: {e}. Returning 0.0",
                 RuntimeWarning,
-                stacklevel=2
+                stacklevel=2,
             )
             return 0.0
 
@@ -606,7 +599,9 @@ class StochasticOscillator:
 
         return c.noise_scale * self.rng.normal(0, std)
 
-    def control_term(self, t: float, control_fn: Optional[Callable[[float], float]] = None) -> float:
+    def control_term(
+        self, t: float, control_fn: Optional[Callable[[float], float]] = None
+    ) -> float:
         """
         Compute control input U(t).
 
@@ -644,7 +639,7 @@ class StochasticOscillator:
         t: float,
         control_fn: Optional[Callable[[float], float]] = None,
         store_history: bool = True,
-        idx: Optional[int] = None
+        idx: Optional[int] = None,
     ) -> float:
         """
         Evaluate oscillator state X(t).
@@ -674,12 +669,12 @@ class StochasticOscillator:
 
         # Compute all components
         x = (
-            self.oscillatory_term(t_safe) +
-            self.integral_term(t_safe) +
-            self.drift_term(t_safe) +
-            self.memory_term(t_safe) +
-            self.noise_term(t_safe) +
-            self.control_term(t_safe, control_fn)
+            self.oscillatory_term(t_safe)
+            + self.integral_term(t_safe)
+            + self.drift_term(t_safe)
+            + self.memory_term(t_safe)
+            + self.noise_term(t_safe)
+            + self.control_term(t_safe, control_fn)
         )
 
         # Clip for numerical stability
@@ -702,7 +697,7 @@ class StochasticOscillator:
         t_max: float = 100.0,
         dt: float = 1.0,
         control_fn: Optional[Callable[[float], float]] = None,
-        show_progress: bool = False
+        show_progress: bool = False,
     ) -> Dict[str, NDArray]:
         """
         Simulate oscillator trajectory.
@@ -741,18 +736,14 @@ class StochasticOscillator:
 
             values[idx] = self.evaluate(t, control_fn, idx=idx)
 
-        return {
-            'times': times,
-            'values': values,
-            'config': self.config
-        }
+        return {"times": times, "values": values, "config": self.config}
 
     def simulate_ensemble(
         self,
         n_realizations: int = 100,
         t_max: float = 100.0,
         dt: float = 1.0,
-        seeds: Optional[List[int]] = None
+        seeds: Optional[List[int]] = None,
     ) -> Dict[str, Any]:
         """
         Simulate ensemble of trajectories for statistical analysis.
@@ -792,17 +783,17 @@ class StochasticOscillator:
                 ensemble[i, j] = self.evaluate(t, idx=j)
 
         return {
-            'times': times,
-            'ensemble': ensemble,
-            'mean': np.mean(ensemble, axis=0),
-            'std': np.std(ensemble, axis=0),
-            'percentiles': {
+            "times": times,
+            "ensemble": ensemble,
+            "mean": np.mean(ensemble, axis=0),
+            "std": np.std(ensemble, axis=0),
+            "percentiles": {
                 5: np.percentile(ensemble, 5, axis=0),
                 25: np.percentile(ensemble, 25, axis=0),
                 50: np.percentile(ensemble, 50, axis=0),
                 75: np.percentile(ensemble, 75, axis=0),
                 95: np.percentile(ensemble, 95, axis=0),
-            }
+            },
         }
 
     def __repr__(self) -> str:

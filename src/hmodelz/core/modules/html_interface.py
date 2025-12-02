@@ -12,7 +12,7 @@ class HTMLOmnisolver:
     @staticmethod
     def generate_interface() -> str:
         """Generate comprehensive HTML interface."""
-        html_content = '''<!DOCTYPE html>
+        html_content = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -310,5 +310,5 @@ class HTMLOmnisolver:
         </div>
     </div>
 </body>
-</html>'''
+</html>"""
         return html_content.strip()
