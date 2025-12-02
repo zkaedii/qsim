@@ -1,5 +1,5 @@
 """
-Unit tests for the numerical integration module.
+Unit tests for the integrators module.
 
 This module tests:
 1. Activation functions (softplus, sigmoid, swish, gelu)
@@ -244,13 +244,14 @@ class TestIntegrateActivation:
 
     def test_integration_with_trigonometric(self):
         """Test integration with trigonometric functions."""
+        # params (a, b, x0) where integral is: σ(a(x-x0)² + b) · f(x) · g'(x)
         result, error = integrate_activation(
             activation=softplus,
             f=np.cos,
             g_prime=np.sin,
             lower=0.0,
             upper=1.0,
-            params=(0.8, 0.3, 0.5),
+            params=(0.8, 0.3, 0.5),  # a=0.8, b=0.3, x0=0.5
         )
         assert np.isfinite(result)
         assert error < 1e-6
@@ -853,7 +854,7 @@ class TestNumericalStability:
     def test_numerical_quadrature_wide_interval(self):
         """Test quadrature over wide interval."""
         result = numerical_quadrature(
-            f=lambda x: np.exp(-(x**2)), lower=-100, upper=100, method="adaptive"
+            f=lambda x: np.exp(-x**2), lower=-100, upper=100, method="adaptive"
         )
         # Integral of exp(-x²) from -∞ to ∞ = √π ≈ 1.7725
         expected = np.sqrt(np.pi)
