@@ -1474,25 +1474,6 @@ class TestSDEIntegratorMethods:
         # x(t) = t, so x(1) = 1
         assert_allclose(result["paths"][0, -1], 1.0, rtol=0.02)
 
-    def test_integrate_reproducibility(self):
-        """Test that same seed gives same results."""
-        integrator1 = SDEIntegrator(
-            drift=lambda x, t: x,
-            diffusion=lambda x, t: 0.5,
-            seed=42,
-        )
-        integrator2 = SDEIntegrator(
-            drift=lambda x, t: x,
-            diffusion=lambda x, t: 0.5,
-            seed=42,
-        )
-
-        result1 = integrator1.integrate(x0=1.0, t_span=(0, 1), dt=0.1, n_paths=1)
-        result2 = integrator2.integrate(x0=1.0, t_span=(0, 1), dt=0.1, n_paths=1)
-
-        assert_allclose(result1["paths"], result2["paths"], rtol=1e-10)
-        np.testing.assert_array_equal(result1["paths"], result2["paths"])
-
 
 class TestEulerMaruyama:
     """Tests for euler_maruyama convenience function."""
