@@ -96,8 +96,8 @@ class TestStochasticOscillator:
 
         # Check that entries for 1.0 and 2.0 are stored
         # Note: additional entries may exist from memory term lookups during evaluation
-        assert any(np.isclose(key, 1.0) for key in oscillator.history.keys())
-        assert any(np.isclose(key, 2.0) for key in oscillator.history.keys())
+        assert any(np.isclose(key, 1.0, atol=1e-9, rtol=0) for key in oscillator.history.keys())
+        assert any(np.isclose(key, 2.0, atol=1e-9, rtol=0) for key in oscillator.history.keys())
         # Verify the keys we used are in history (note: history may include t=0 from initialization)
         history_keys = list(oscillator.history.keys())
         assert len(history_keys) >= 2
