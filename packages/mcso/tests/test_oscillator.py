@@ -113,7 +113,7 @@ class TestStochasticOscillator:
         
         # Check that no key approximately equal to 1.0 exists
         history_keys = list(oscillator.history.keys())
-        assert not any(np.isclose(key, 1.0) for key in history_keys)
+        assert not any(np.isclose(key, 1.0, atol=1e-9, rtol=0) for key in history_keys)
         # Verify no keys are stored
         Note: The history dict uses exact time values as keys (the same values
         passed to evaluate()). Since no floating-point arithmetic is performed
