@@ -1103,12 +1103,11 @@ class TestConvergenceRate:
         errors = result['errors']
         assert errors[0] >= errors[-1] * 0.5  # Allow some tolerance
 
-    @pytest.mark.slow
-    def test_convergence_rate_positive(self):
-        """Test convergence rate is positive (errors decrease with dt)."""
-        integrator = SDEIntegrator(
-            drift=lambda x, t: -x,
-            diffusion=lambda x, t: 0.1,  # Lower diffusion for more stable test
+
+class TestSDEIntegratorMethods:
+    """Tests for SDEIntegrator methods."""
+
+    @pytest.fixture
     def simple_drift(self):
         """Simple linear drift."""
         return lambda x, t: -0.5 * x
@@ -1231,11 +1230,18 @@ class TestConvergenceRate:
         result1 = integrator1.integrate(x0=1.0, t_span=(0, 1), dt=0.1)
         result2 = integrator2.integrate(x0=1.0, t_span=(0, 1), dt=0.1)
         np.testing.assert_array_almost_equal(result1['paths'], result2['paths'])
+
+    @pytest.fixture
     def simple_integrator(self):
         """Create a simple SDE integrator for testing."""
         return SDEIntegrator(
             drift=lambda x, t: -x,  # Mean-reverting
             diffusion=lambda x, t: 0.1,  # Constant diffusion
+            scheme="euler",
+            seed=42,
+        )
+
+    @pytest.fixture
     def constant_sde(self):
         """Create SDE integrator for deterministic ODE (no diffusion)."""
         return SDEIntegrator(
@@ -1445,7 +1451,11 @@ class TestConvergenceRate:
             diffusion=lambda x, t: 0.1,
             scheme="euler",
             seed=123,
-        assert result["paths"].shape == (1, len(result["times"]))
+        )
+
+        result1 = integrator1.integrate(x0=1.0, t_span=(0, 1), dt=0.1, n_paths=1)
+        result2 = integrator2.integrate(x0=1.0, t_span=(0, 1), dt=0.1, n_paths=1)
+        np.testing.assert_array_equal(result1["paths"], result2["paths"])
 
     def test_integrate_multiple_paths(self, geometric_brownian):
         """Test multiple path integration."""
@@ -1548,7 +1558,7 @@ class TestEulerMaruyama:
             seed=123
         )
         np.testing.assert_array_equal(result1['values'], result2['values'])
-            seed=42,
+
     def test_basic_integration(self):
         """Test basic Euler-Maruyama integration."""
         result = euler_maruyama(
