@@ -85,12 +85,17 @@ class TestStochasticOscillator:
     def test_evaluate_stores_history(self, oscillator):
         """Test that evaluate stores values in history.
         
-        Note: history uses exact float keys. This test uses exact float values
-        that are passed to evaluate() to verify the keys exist in the dict.
+        Note: The history dictionary uses exact time values as keys.
+        This test uses np.isclose to handle potential floating-point 
+        precision issues when checking for key existence.
         """
         oscillator.evaluate(1.0)
         oscillator.evaluate(2.0)
 
+        # Check that entries for 1.0 and 2.0 are stored
+        # Note: additional entries may exist from memory term lookups during evaluation
+        assert any(np.isclose(key, 1.0, atol=1e-9, rtol=0) for key in oscillator.history.keys())
+        assert any(np.isclose(key, 2.0, atol=1e-9, rtol=0) for key in oscillator.history.keys())
         # Verify the keys we used are in history (note: history may include t=0 from initialization)
         history_keys = list(oscillator.history.keys())
         assert len(history_keys) >= 2
@@ -98,11 +103,16 @@ class TestStochasticOscillator:
         assert any(abs(k - 2.0) < 1e-9 for k in history_keys)
 
     def test_evaluate_no_history(self, oscillator):
-        """Test evaluate with store_history=False."""
+        """Test evaluate with store_history=False.
+        
+        Note: Uses approximate comparison for floating-point keys.
+        """
         oscillator.evaluate(1.0, store_history=False)
-        # Verify no keys are stored
+        
+        # Check that no key approximately equal to 1.0 exists
         history_keys = list(oscillator.history.keys())
-        assert not any(abs(k - 1.0) < 1e-9 for k in history_keys)
+        assert not any(np.isclose(key, 1.0, atol=1e-9, rtol=0) for key in history_keys)
+        # Verify no keys are stored
         Note: The history dict uses exact time values as keys (the same values
         passed to evaluate()). Since no floating-point arithmetic is performed
         on the time values before storage, exact equality checks are safe here.
