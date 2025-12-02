@@ -276,6 +276,7 @@ class TestIntegrateActivation:
             g_prime=np.sin,
             lower=0.0,
             upper=5.0,
+            params=(0.8, 0.3, 1.0),  # Use default params explicitly
         )
         assert error > 0
         assert np.isfinite(error)
@@ -286,8 +287,8 @@ class TestIntegrateActivation:
             activation=sigmoid,
             f=lambda x: x,
             g_prime=lambda x: 1,
-            lower=0,
-            upper=1,
+            lower=0.0,
+            upper=1.0,
             params=(1.0, 0.0, 0.5),
         )
         assert np.isfinite(result)
