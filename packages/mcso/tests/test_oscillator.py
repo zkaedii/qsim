@@ -88,8 +88,6 @@ class TestStochasticOscillator:
         Note: The history dictionary uses exact time values as keys.
         This test uses np.isclose to handle potential floating-point 
         precision issues when checking for key existence.
-        Note: history uses exact float keys. This test uses exact float values
-        that are passed to evaluate() to verify the keys exist in the dict.
         """
         oscillator.evaluate(1.0)
         oscillator.evaluate(2.0)
