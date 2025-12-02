@@ -1065,8 +1065,6 @@ class TestIntegrateActivation:
 class TestNumericalQuadrature:
     """Tests for numerical_quadrature function."""
 
-    def test_adaptive_method(self):
-        """Test adaptive quadrature."""
     def test_quadrature_adaptive(self):
         """Test adaptive quadrature method."""
         # Integrate x² from 0 to 1 = 1/3
@@ -1117,108 +1115,6 @@ class TestNumericalQuadrature:
 # =============================================================================
 # Tests for SDEIntegrator
 # =============================================================================
-
-    def test_adaptive_method(self):
-        """Test adaptive (scipy quad) method."""
-        result = numerical_quadrature(
-            f=lambda x: x**2,
-            lower=0,
-            upper=1,
-            method='adaptive'
-        )
-        expected = 1 / 3  # integral of x^2 from 0 to 1
-        assert np.isclose(result, expected, rtol=1e-6)
-
-    def test_trapezoid_method(self):
-        """Test trapezoidal quadrature."""
-            method="adaptive",
-        )
-        assert_allclose(result, 1 / 3, rtol=1e-6)
-
-    def test_trapezoid_method(self):
-        """Test trapezoidal rule."""
-        result = numerical_quadrature(
-            f=lambda x: x**2,
-            lower=0,
-            upper=1,
-            method='trapezoid',
-            n_points=1000
-        )
-        expected = 1 / 3
-        assert np.isclose(result, expected, rtol=1e-3)
-            method="trapezoid",
-            n_points=1000,
-        )
-        assert_allclose(result, 1 / 3, rtol=1e-3)
-
-    def test_simpson_method(self):
-        """Test Simpson's rule."""
-        result = numerical_quadrature(
-            f=lambda x: x**2,
-            lower=0,
-            upper=1,
-            method='simpson',
-            n_points=101
-        )
-        expected = 1 / 3
-        assert np.isclose(result, expected, rtol=1e-6)
-
-    def test_gauss_method(self):
-        """Test Gaussian quadrature."""
-            method="simpson",
-            n_points=101,
-        )
-        assert_allclose(result, 1 / 3, rtol=1e-5)
-
-    def test_gauss_method(self):
-        """Test Gauss-Legendre quadrature."""
-        result = numerical_quadrature(
-            f=lambda x: x**2,
-            lower=0,
-            upper=1,
-            method='gauss',
-            n_points=10
-        )
-        expected = 1 / 3
-        assert np.isclose(result, expected, rtol=1e-10)
-
-    def test_numerical_quadrature_invalid_method(self):
-        """Test invalid quadrature method raises error."""
-    def test_invalid_method(self):
-        """Test that invalid method raises error."""
-            method="gauss",
-            n_points=10,
-        )
-        assert_allclose(result, 1 / 3, rtol=1e-10)
-
-    def test_unknown_method_raises(self):
-        """Test that unknown method raises ValueError."""
-        with pytest.raises(ValueError, match="Unknown method"):
-            numerical_quadrature(
-                f=lambda x: x,
-                lower=0,
-                upper=1,
-                method='invalid'
-            )
-
-    def test_sinusoidal(self):
-        """Test integration of sinusoidal function."""
-                method="unknown",
-            )
-
-    def test_sin_integration(self):
-        """Test integration of sin over [0, pi]."""
-        result = numerical_quadrature(
-            f=np.sin,
-            lower=0,
-            upper=np.pi,
-            method='adaptive'
-        )
-        expected = 2.0  # integral of sin from 0 to pi
-        assert np.isclose(result, expected)
-            method="adaptive",
-        )
-        assert_allclose(result, 2.0, rtol=1e-6)
 
 
 class TestSDEIntegrator:
