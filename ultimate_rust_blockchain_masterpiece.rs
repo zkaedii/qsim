@@ -1,6 +1,6 @@
 // ==================== ERROR TYPES ====================
 #[derive(Error, Debug)]
-pub enum ${structName}Error {
+pub enum BlockchainManagerError {
     #[error("Network error: {message}")]
     Network { message: String },
     
@@ -56,11 +56,11 @@ pub enum ${structName}Error {
     Generic(#[from] anyhow::Error),
 }
 
-pub type ${structName}Result<T> = Result<T, ${structName}Error>;
+pub type BlockchainManagerResult<T> = Result<T, BlockchainManagerError>;
 
 // ==================== CONFIGURATION ====================
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ${structName}Config {
+pub struct BlockchainManagerConfig {
     pub network_url: String,
     pub chain_id: u64,
     pub gas_limit: u64,
@@ -73,7 +73,7 @@ pub struct ${structName}Config {
     pub api_keys: HashMap<String, String>,
 }
 
-impl Default for ${structName}Config {
+impl Default for BlockchainManagerConfig {
     fn default() -> Self {
         let mut api_keys = HashMap::new();
         api_keys.insert("infura".to_string(), "YOUR_INFURA_KEY".to_string());
@@ -116,17 +116,17 @@ pub struct SecurityManager;
 
 impl SecurityManager {
     /// Validate Ethereum address format
-    pub fn validate_address(address: &str) -> ${structName}Result<Address> {
+    pub fn validate_address(address: &str) -> BlockchainManagerResult<Address> {
         address.parse::<Address>()
-            .map_err(|e| ${structName}Error::Validation {
+            .map_err(|e| BlockchainManagerError::Validation {
                 message: format!("Invalid address format: {}", e),
             })
     }
     
     /// Sanitize user input to prevent injection attacks
-    pub fn sanitize_input(input: &str, max_length: usize) -> ${structName}Result<String> {
+    pub fn sanitize_input(input: &str, max_length: usize) -> BlockchainManagerResult<String> {
         if input.len() > max_length {
-            return Err(${structName}Error::Validation {
+            return Err(BlockchainManagerError::Validation {
                 message: format!("Input too long: {} > {}", input.len(), max_length),
             });
         }
@@ -168,7 +168,7 @@ impl SecurityManager {
         message: &str,
         signature: &str,
         public_key: &str,
-    ) -> ${structName}Result<bool> {
+    ) -> BlockchainManagerResult<bool> {
         // Simplified signature verification (implement proper crypto)
         let hash = Self::hash_data(message);
         let expected_sig = Self::hash_data(&format!("{}{}", hash, public_key));
@@ -176,7 +176,7 @@ impl SecurityManager {
     }
     
     /// Encrypt sensitive data
-    pub fn encrypt_data(data: &str, key: &str) -> ${structName}Result<String> {
+    pub fn encrypt_data(data: &str, key: &str) -> BlockchainManagerResult<String> {
         // Simplified encryption (use proper encryption in production)
         let key_hash = Self::hash_data(key);
         let mut encrypted = String::new();
@@ -190,14 +190,14 @@ impl SecurityManager {
     }
     
     /// Decrypt sensitive data
-    pub fn decrypt_data(encrypted_data: &str, key: &str) -> ${structName}Result<String> {
+    pub fn decrypt_data(encrypted_data: &str, key: &str) -> BlockchainManagerResult<String> {
         let decoded = base64::decode(encrypted_data)
-            .map_err(|e| ${structName}Error::Security {
+            .map_err(|e| BlockchainManagerError::Security {
                 message: format!("Failed to decode encrypted data: {}", e),
             })?;
         
         let encrypted = String::from_utf8(decoded)
-            .map_err(|e| ${structName}Error::Security {
+            .map_err(|e| BlockchainManagerError::Security {
                 message: format!("Invalid encrypted data format: {}", e),
             })?;
         
@@ -218,7 +218,7 @@ impl SecurityManager {
         }
         
         String::from_utf8(decrypted)
-            .map_err(|e| ${structName}Error::Security {
+            .map_err(|e| BlockchainManagerError::Security {
                 message: format!("Failed to decrypt data: {}", e),
             })
     }
@@ -545,8 +545,8 @@ pub struct Recommendation {
 
 // ==================== MAIN STRUCT ====================
 #[derive(Debug)]
-pub struct ${structName} {
-    config: ${structName}Config,
+pub struct BlockchainManager {
+    config: BlockchainManagerConfig,
     provider: Option<Arc<Provider<Http>>>,
     signer: Option<LocalWallet>,
     contracts: Arc<RwLock<HashMap<Address, Contract<SignerMiddleware<Provider<Http>, LocalWallet>>>>>,
@@ -555,14 +555,14 @@ pub struct ${structName} {
     security_manager: SecurityManager,
 }
 
-impl ${structName} {
-    /// Create a new ${structName} instance
-    pub fn new(config: ${structName}Config) -> Self {
+impl BlockchainManager {
+    /// Create a new BlockchainManager instance
+    pub fn new(config: BlockchainManagerConfig) -> Self {
         let session_id = SecurityManager::generate_secure_token();
         
         tracing::info!(
             session_id = %session_id,
-            "Creating new ${structName} instance"
+            "Creating new BlockchainManager instance"
         );
         
         Self {
@@ -577,7 +577,7 @@ impl ${structName} {
     }
     
     /// Initialize Web3 provider with retry logic
-    pub async fn initialize_provider(&mut self) -> ${structName}Result<()> {
+    pub async fn initialize_provider(&mut self) -> BlockchainManagerResult<()> {
         secure_operation!({
             retry_operation!({
                 let provider = Provider::<Http>::try_from(&self.config.network_url)
@@ -603,14 +603,14 @@ impl ${structName} {
     }
     
     /// Create or import wallet with enhanced security
-    pub async fn create_wallet(&mut self, private_key: Option<&str>) -> ${structName}Result<WalletInfo> {
+    pub async fn create_wallet(&mut self, private_key: Option<&str>) -> BlockchainManagerResult<WalletInfo> {
         monitor_performance!(self, {
             let wallet = match private_key {
                 Some(key) => {
                     // Import existing wallet
                     let sanitized_key = SecurityManager::sanitize_input(key, 64)?;
                     LocalWallet::from_str(&sanitized_key)
-                        .map_err(|e| ${structName}Error::Validation {
+                        .map_err(|e| BlockchainManagerError::Validation {
                             message: format!("Invalid private key: {}", e),
                         })?
                 }
@@ -644,15 +644,15 @@ impl ${structName} {
         bytecode: &str,
         abi: &str,
         constructor_args: Vec<ethers::abi::Token>,
-    ) -> ${structName}Result<DeploymentInfo> {
+    ) -> BlockchainManagerResult<DeploymentInfo> {
         monitor_performance!(self, {
             let provider = self.provider.as_ref()
-                .ok_or_else(|| ${structName}Error::Network {
+                .ok_or_else(|| BlockchainManagerError::Network {
                     message: "Provider not initialized".to_string(),
                 })?;
             
             let signer = self.signer.as_ref()
-                .ok_or_else(|| ${structName}Error::Authentication {
+                .ok_or_else(|| BlockchainManagerError::Authentication {
                     message: "Wallet not created".to_string(),
                 })?;
             
@@ -662,7 +662,7 @@ impl ${structName} {
             
             // Parse ABI
             let parsed_abi: ethers::abi::Abi = serde_json::from_str(&sanitized_abi)
-                .map_err(|e| ${structName}Error::Validation {
+                .map_err(|e| BlockchainManagerError::Validation {
                     message: format!("Invalid ABI: {}", e),
                 })?;
             
@@ -701,10 +701,10 @@ impl ${structName} {
     }
     
     /// Comprehensive contract analysis with advanced security scanning
-    pub async fn analyze_contract(&self, contract_address: Address) -> ${structName}Result<ContractAnalysis> {
+    pub async fn analyze_contract(&self, contract_address: Address) -> BlockchainManagerResult<ContractAnalysis> {
         monitor_performance!(self, {
             let provider = self.provider.as_ref()
-                .ok_or_else(|| ${structName}Error::Network {
+                .ok_or_else(|| BlockchainManagerError::Network {
                     message: "Provider not initialized".to_string(),
                 })?;
             
@@ -712,7 +712,7 @@ impl ${structName} {
             let code = provider.get_code(contract_address, None).await?;
             
             if code.is_empty() {
-                return Err(${structName}Error::Contract {
+                return Err(BlockchainManagerError::Contract {
                     message: "No contract found at this address".to_string(),
                 });
             }
@@ -775,7 +775,7 @@ impl ${structName} {
     }
     
     /// Advanced security feature analysis
-    async fn analyze_security_features(&self, code: &Bytes) -> ${structName}Result<SecurityAnalysis> {
+    async fn analyze_security_features(&self, code: &Bytes) -> BlockchainManagerResult<SecurityAnalysis> {
         let code_hex = hex::encode(code);
         
         // Check for various security patterns in bytecode
@@ -822,7 +822,7 @@ impl ${structName} {
     }
     
     /// Performance analysis with gas optimization insights
-    async fn analyze_performance(&self, code: &Bytes) -> ${structName}Result<PerformanceAnalysis> {
+    async fn analyze_performance(&self, code: &Bytes) -> BlockchainManagerResult<PerformanceAnalysis> {
         let code_size = code.len();
         
         // Estimate gas costs based on bytecode analysis
@@ -885,7 +885,7 @@ impl ${structName} {
     }
     
     /// Gas optimization analysis
-    async fn analyze_gas_optimization(&self, code: &Bytes) -> ${structName}Result<GasOptimization> {
+    async fn analyze_gas_optimization(&self, code: &Bytes) -> BlockchainManagerResult<GasOptimization> {
         let code_hex = hex::encode(code);
         
         // Check for gas optimization patterns
@@ -935,7 +935,7 @@ impl ${structName} {
     }
     
     /// Code quality analysis
-    async fn analyze_code_quality(&self, code: &Bytes) -> ${structName}Result<CodeQuality> {
+    async fn analyze_code_quality(&self, code: &Bytes) -> BlockchainManagerResult<CodeQuality> {
         let code_size = code.len();
         
         // Calculate complexity based on code size and patterns
@@ -978,7 +978,7 @@ impl ${structName} {
     }
     
     /// Comprehensive vulnerability scanning
-    async fn scan_vulnerabilities(&self, code: &Bytes) -> ${structName}Result<VulnerabilityScan> {
+    async fn scan_vulnerabilities(&self, code: &Bytes) -> BlockchainManagerResult<VulnerabilityScan> {
         let code_hex = hex::encode(code);
         let mut vulnerabilities = HashMap::new();
         
@@ -1021,7 +1021,7 @@ impl ${structName} {
     }
     
     /// Check compliance with standards
-    async fn check_compliance(&self, code: &Bytes) -> ${structName}Result<ComplianceCheck> {
+    async fn check_compliance(&self, code: &Bytes) -> BlockchainManagerResult<ComplianceCheck> {
         let code_hex = hex::encode(code);
         
         let erc20_standard = self.check_erc20_compliance(&code_hex);
@@ -1060,7 +1060,7 @@ impl ${structName} {
         security: &SecurityAnalysis,
         performance: &PerformanceAnalysis,
         vulnerabilities: &VulnerabilityScan,
-    ) -> ${structName}Result<Vec<Recommendation>> {
+    ) -> BlockchainManagerResult<Vec<Recommendation>> {
         let mut recommendations = Vec::new();
         
         // Security recommendations
@@ -1295,15 +1295,15 @@ impl ${structName} {
         to: Address,
         value: U256,
         data: Option<Bytes>,
-    ) -> ${structName}Result<TransactionInfo> {
+    ) -> BlockchainManagerResult<TransactionInfo> {
         monitor_performance!(self, {
             let provider = self.provider.as_ref()
-                .ok_or_else(|| ${structName}Error::Network {
+                .ok_or_else(|| BlockchainManagerError::Network {
                     message: "Provider not initialized".to_string(),
                 })?;
             
             let signer = self.signer.as_ref()
-                .ok_or_else(|| ${structName}Error::Authentication {
+                .ok_or_else(|| BlockchainManagerError::Authentication {
                     message: "Wallet not created".to_string(),
                 })?;
             
@@ -1334,7 +1334,7 @@ impl ${structName} {
             
             // Wait for confirmation
             let receipt = pending_tx.await?
-                .ok_or_else(|| ${structName}Error::TransactionFailed {
+                .ok_or_else(|| BlockchainManagerError::TransactionFailed {
                     tx_hash: format!("{:?}", pending_tx.tx_hash()),
                     reason: "Transaction not mined".to_string(),
                 })?;
@@ -1362,12 +1362,12 @@ impl ${structName} {
     }
     
     /// Get comprehensive metrics
-    pub async fn get_metrics(&self) -> ${structName}Result<PerformanceMetrics> {
+    pub async fn get_metrics(&self) -> BlockchainManagerResult<PerformanceMetrics> {
         Ok(self.metrics.read().await.clone())
     }
     
     /// Export all data in specified format
-    pub async fn export_data(&self, format: &str) -> ${structName}Result<String> {
+    pub async fn export_data(&self, format: &str) -> BlockchainManagerResult<String> {
         let metrics = self.get_metrics().await?;
         let export_data = ExportData {
             session_id: self.session_id.clone(),
@@ -1380,10 +1380,10 @@ impl ${structName} {
         match format {
             "json" => Ok(serde_json::to_string_pretty(&export_data)?),
             "yaml" => Ok(serde_yaml::to_string(&export_data)
-                .map_err(|e| ${structName}Error::Serialization {
+                .map_err(|e| BlockchainManagerError::Serialization {
                     message: format!("YAML serialization failed: {}", e),
                 })?),
-            _ => Err(${structName}Error::Validation {
+            _ => Err(BlockchainManagerError::Validation {
                 message: format!("Unsupported export format: {}", format),
             }),
         }
@@ -1427,36 +1427,36 @@ pub struct TransactionInfo {
 pub struct ExportData {
     pub session_id: String,
     pub timestamp: u64,
-    pub config: ${structName}Config,
+    pub config: BlockchainManagerConfig,
     pub metrics: PerformanceMetrics,
     pub contracts_count: usize,
 }
 
 // ==================== FACTORY IMPLEMENTATION ====================
-pub struct ${structName}Factory;
+pub struct BlockchainManagerFactory;
 
-impl ${structName}Factory {
+impl BlockchainManagerFactory {
     /// Create a new instance with default configuration
-    pub async fn create_default() -> ${structName}Result<${structName}> {
-        let config = ${structName}Config::default();
-        let mut manager = ${structName}::new(config);
+    pub async fn create_default() -> BlockchainManagerResult<BlockchainManager> {
+        let config = BlockchainManagerConfig::default();
+        let mut manager = BlockchainManager::new(config);
         manager.initialize_provider().await?;
         Ok(manager)
     }
     
     /// Create instance with custom configuration
-    pub async fn create_with_config(config: ${structName}Config) -> ${structName}Result<${structName}> {
-        let mut manager = ${structName}::new(config);
+    pub async fn create_with_config(config: BlockchainManagerConfig) -> BlockchainManagerResult<BlockchainManager> {
+        let mut manager = BlockchainManager::new(config);
         manager.initialize_provider().await?;
         Ok(manager)
     }
     
     /// Create instance for testing
-    pub fn create_for_testing() -> ${structName} {
-        let mut config = ${structName}Config::default();
+    pub fn create_for_testing() -> BlockchainManager {
+        let mut config = BlockchainManagerConfig::default();
         config.network_url = "http://localhost:8545".to_string();
         config.chain_id = 31337; // Hardhat default
-        ${structName}::new(config)
+        BlockchainManager::new(config)
     }
 }
 
@@ -1468,7 +1468,7 @@ pub mod tests {
     
     #[tokio::test]
     async fn test_manager_creation() {
-        let manager = ${structName}Factory::create_for_testing();
+        let manager = BlockchainManagerFactory::create_for_testing();
         assert!(!manager.session_id.is_empty());
         assert_eq!(manager.config.chain_id, 31337);
     }
@@ -1490,7 +1490,7 @@ pub mod tests {
     
     #[tokio::test]
     async fn test_wallet_creation() {
-        let mut manager = ${structName}Factory::create_for_testing();
+        let mut manager = BlockchainManagerFactory::create_for_testing();
         let wallet_info = manager.create_wallet(None).await.unwrap();
         
         assert!(!format!("{:?}", wallet_info.address).is_empty());
@@ -1499,7 +1499,7 @@ pub mod tests {
     
     #[tokio::test]
     async fn test_metrics_collection() {
-        let manager = ${structName}Factory::create_for_testing();
+        let manager = BlockchainManagerFactory::create_for_testing();
         let metrics = manager.get_metrics().await.unwrap();
         
         assert_eq!(metrics.operations_count, 0);
@@ -1509,7 +1509,7 @@ pub mod tests {
     
     #[tokio::test]
     async fn test_data_export() {
-        let manager = ${structName}Factory::create_for_testing();
+        let manager = BlockchainManagerFactory::create_for_testing();
         
         let json_data = manager.export_data("json").await.unwrap();
         assert!(json_data.contains("session_id"));
@@ -1523,7 +1523,7 @@ pub mod tests {
     
     #[tokio::test]
     async fn test_bytecode_analysis() {
-        let manager = ${structName}Factory::create_for_testing();
+        let manager = BlockchainManagerFactory::create_for_testing();
         let sample_code = hex::decode("608060405234801561001057600080fd5b50").unwrap();
         let code = Bytes::from(sample_code);
         
@@ -1537,18 +1537,18 @@ pub mod tests {
 
 // ==================== EXAMPLE USAGE ====================
 #[tokio::main]
-async fn main() -> ${structName}Result<()> {
+async fn main() -> BlockchainManagerResult<()> {
     // Initialize tracing
     tracing_subscriber::fmt::init();
     
-    println!("🚀 ${structName} - Ultimate Rust Blockchain Implementation");
+    println!("🚀 BlockchainManager - Ultimate Rust Blockchain Implementation");
     println!("Created by: iDeaKz - Master of All Trades");
     println!("Date: 2025-06-17 20:57:53 UTC");
     println!("{}\\n", "=".repeat(70));
     
     // Create manager instance
-    let mut manager = ${structName}Factory::create_for_testing();
-    println!("✅ ${structName} created with session ID: {}", manager.session_id);
+    let mut manager = BlockchainManagerFactory::create_for_testing();
+    println!("✅ BlockchainManager created with session ID: {}", manager.session_id);
     
     // Create wallet
     let wallet_info = manager.create_wallet(None).await?;
@@ -1577,7 +1577,7 @@ async fn main() -> ${structName}Result<()> {
     let exported_data = manager.export_data("json").await?;
     println!("💾 Data exported: {} characters", exported_data.len());
     
-    println!("\\n🎉 ${structName} demonstration completed successfully!");
+    println!("\\n🎉 BlockchainManager demonstration completed successfully!");
     println!("🏆 All features working perfectly - iDeaKz mastery achieved!");
     
     Ok(())
