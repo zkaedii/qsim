@@ -26,11 +26,97 @@ from __future__ import annotations
 
 import numpy as np
 from numpy.typing import NDArray
-from scipy.integrate import quad
+from scipy.integrate import quad, IntegrationWarning
 from scipy.special import expit
+import warnings
 from dataclasses import dataclass
-from typing import Callable, Optional, Dict, List, Tuple, Any
+from typing import Callable, Optional, Dict, List, Tuple, Any, Union
 from collections import defaultdict
+
+
+class CircularBuffer:
+    """
+    Memory-efficient circular buffer for storing history.
+
+    For long simulations, this limits memory usage by only keeping
+    the most recent `max_size` entries. Lookups beyond the buffer
+    will return the default value.
+
+    Parameters
+    ----------
+    max_size : int
+        Maximum number of entries to store.
+    default : float
+        Default value for missing entries (default: 0.0).
+
+    Examples
+    --------
+    >>> buf = CircularBuffer(max_size=100)
+    >>> buf[0] = 1.0
+    >>> buf[50] = 2.0
+    >>> buf[0]  # Still available
+    1.0
+    >>> buf[150] = 3.0  # Entry 0 may be evicted if full
+    """
+
+    def __init__(self, max_size: int, default: float = 0.0):
+        if max_size < 1:
+            raise ValueError("max_size must be at least 1")
+        self.max_size = max_size
+        self.default = default
+        self._buffer: Dict[int, float] = {}
+        self._min_idx: int = 0
+
+    def __setitem__(self, idx: int, value: float) -> None:
+        """Store a value at the given index."""
+        self._buffer[idx] = value
+
+        # Evict old entries if buffer is full
+        if len(self._buffer) > self.max_size:
+            # Remove oldest entries
+            keys_to_remove = sorted(self._buffer.keys())[: -self.max_size]
+            for key in keys_to_remove:
+                del self._buffer[key]
+
+            if self._buffer:
+                self._min_idx = min(self._buffer.keys())
+
+    def __getitem__(self, idx: int) -> float:
+        """Get value at index, returning default if not found."""
+        return self._buffer.get(idx, self.default)
+
+    def get(self, idx: int, default: Optional[float] = None) -> float:
+        """Get value with optional custom default."""
+        if default is None:
+            default = self.default
+        return self._buffer.get(idx, default)
+
+    def clear(self) -> None:
+        """Clear all entries."""
+        self._buffer.clear()
+        self._min_idx = 0
+
+    def __len__(self) -> int:
+        """Return number of stored entries."""
+        return len(self._buffer)
+
+    def __contains__(self, idx: int) -> bool:
+        """Check if index is in buffer."""
+        return idx in self._buffer
+
+    @property
+    def oldest_index(self) -> Optional[int]:
+        """Return the oldest index in the buffer, or None if empty."""
+        if self._buffer:
+            return min(self._buffer.keys())
+        return None
+
+    @property
+    def newest_index(self) -> Optional[int]:
+        """Return the newest index in the buffer, or None if empty."""
+        if self._buffer:
+            return max(self._buffer.keys())
+        return None
 
 
 @dataclass
@@ -123,6 +209,19 @@ class OscillatorConfig:
     clip_bounds: Tuple[float, float] = (-1000.0, 1000.0)
     t_max_safety: float = 20.0
 
+    # Memory optimization
+    history_buffer_size: Optional[int] = None
+    """
+    Maximum history buffer size for memory optimization.
+
+    If None (default), unlimited history is stored.
+    For long simulations (t_max > 10000), consider setting this to
+    limit memory usage. The buffer should be large enough to accommodate
+    the memory delay (memory_delay / dt steps).
+
+    Recommended: max(1000, int(2 * memory_delay / dt))
+    """
+
     # Random state
     seed: Optional[int] = None
 
@@ -171,29 +270,30 @@ class StochasticOscillator:
     >>> trajectory = osc.simulate(t_max=100, control_fn=control)
     """
 
-    def __init__(
-        self,
-        config: Optional[OscillatorConfig] = None,
-        **kwargs
-    ):
+    def __init__(self, config: Optional[OscillatorConfig] = None, **kwargs):
         if config is None:
             config = OscillatorConfig(**kwargs)
         elif kwargs:
             # Override config with kwargs
             config_dict = {
-                k: kwargs.get(k, getattr(config, k))
-                for k in config.__dataclass_fields__
+                k: kwargs.get(k, getattr(config, k)) for k in config.__dataclass_fields__
             }
             config = OscillatorConfig(**config_dict)
 
         self.config = config
-        self.history: Dict[float, float] = defaultdict(float)
+        # History uses integer indices to avoid floating-point key mismatches
+        # Use CircularBuffer for memory optimization when history_buffer_size is set
+        if config.history_buffer_size is not None:
+            self.history: Union[Dict[int, float], CircularBuffer] = CircularBuffer(
+                max_size=config.history_buffer_size
+            )
+        else:
+            self.history = defaultdict(float)
+        self._dt: Optional[float] = None  # Time step, set during simulate()
         self.rng = np.random.default_rng(config.seed)
 
         # Pre-compute phase offsets
-        self._phases = np.array([
-            np.pi / (i + 1) for i in range(config.n_components)
-        ])
+        self._phases = np.array([np.pi / (i + 1) for i in range(config.n_components)])
 
     def reset(self, seed: Optional[int] = None) -> None:
         """
@@ -205,6 +305,7 @@ class StochasticOscillator:
             New random seed.
         """
         self.history.clear()
+        self._dt = None
         if seed is not None:
             self.rng = np.random.default_rng(seed)
 
@@ -383,9 +484,30 @@ class StochasticOscillator:
             return activation * np.cos(x) * (-np.sin(x))
 
         try:
-            result, _ = quad(integrand, 0, t_bounded, limit=20)
+            with warnings.catch_warnings():
+                warnings.filterwarnings("error", category=IntegrationWarning)
+                result, _ = quad(integrand, 0, t_bounded, limit=20)
             return result
-        except Exception:
+        except IntegrationWarning as w:
+            warnings.warn(
+                f"Integration did not converge at t={t}: {w}. Returning 0.0",
+                RuntimeWarning,
+                stacklevel=2,
+            )
+            return 0.0
+        except ValueError as e:
+            warnings.warn(
+                f"Invalid value in integral_term at t={t}: {e}. Returning 0.0",
+                RuntimeWarning,
+                stacklevel=2,
+            )
+            return 0.0
+        except (FloatingPointError, OverflowError) as e:
+            warnings.warn(
+                f"Numerical error in integral_term at t={t}: {e}. Returning 0.0",
+                RuntimeWarning,
+                stacklevel=2,
+            )
             return 0.0
 
     def drift_term(self, t: float) -> float:
@@ -426,8 +548,16 @@ class StochasticOscillator:
             Memory contribution.
         """
         c = self.config
-        t_delayed = max(0, t - c.memory_delay)
-        x_delayed = self.history[t_delayed]
+
+        # Use integer index to avoid floating-point key mismatches
+        if self._dt is not None and self._dt > 0:
+            current_idx = int(round(t / self._dt))
+            delay_steps = int(round(c.memory_delay / self._dt))
+            delayed_idx = max(0, current_idx - delay_steps)
+            x_delayed = self.history[delayed_idx]
+        else:
+            # Fallback for direct evaluate() calls without simulate()
+            x_delayed = 0.0
 
         gated = self.sigmoid(c.memory_sensitivity * x_delayed)
         return c.memory_strength * x_delayed * gated
@@ -451,7 +581,17 @@ class StochasticOscillator:
             Noise contribution.
         """
         c = self.config
-        x_prev = self.history[max(0, t - 1)]
+
+        # Use integer index to avoid floating-point key mismatches
+        if self._dt is not None and self._dt > 0:
+            current_idx = int(round(t / self._dt))
+            # Look back 1 time unit (not 1 step)
+            prev_steps = int(round(1.0 / self._dt))
+            prev_idx = max(0, current_idx - prev_steps)
+            x_prev = self.history[prev_idx]
+        else:
+            # Fallback for direct evaluate() calls without simulate()
+            x_prev = 0.0
 
         # State-dependent variance
         variance = 1 + c.noise_state_coupling * min(abs(x_prev), 10.0)
@@ -459,7 +599,9 @@ class StochasticOscillator:
 
         return c.noise_scale * self.rng.normal(0, std)
 
-    def control_term(self, t: float, control_fn: Optional[Callable[[float], float]] = None) -> float:
+    def control_term(
+        self, t: float, control_fn: Optional[Callable[[float], float]] = None
+    ) -> float:
         """
         Compute control input U(t).
 
@@ -496,7 +638,8 @@ class StochasticOscillator:
         self,
         t: float,
         control_fn: Optional[Callable[[float], float]] = None,
-        store_history: bool = True
+        store_history: bool = True,
+        idx: Optional[int] = None,
     ) -> float:
         """
         Evaluate oscillator state X(t).
@@ -511,6 +654,8 @@ class StochasticOscillator:
             Custom control function.
         store_history : bool
             Whether to store result in history.
+        idx : int, optional
+            Step index for history storage. If None, computed from t and _dt.
 
         Returns
         -------
@@ -524,19 +669,26 @@ class StochasticOscillator:
 
         # Compute all components
         x = (
-            self.oscillatory_term(t_safe) +
-            self.integral_term(t_safe) +
-            self.drift_term(t_safe) +
-            self.memory_term(t_safe) +
-            self.noise_term(t_safe) +
-            self.control_term(t_safe, control_fn)
+            self.oscillatory_term(t_safe)
+            + self.integral_term(t_safe)
+            + self.drift_term(t_safe)
+            + self.memory_term(t_safe)
+            + self.noise_term(t_safe)
+            + self.control_term(t_safe, control_fn)
         )
 
         # Clip for numerical stability
         x = np.clip(x, c.clip_bounds[0], c.clip_bounds[1])
 
         if store_history:
-            self.history[t] = x
+            # Use provided index or compute from time
+            if idx is not None:
+                history_idx = idx
+            elif self._dt is not None and self._dt > 0:
+                history_idx = int(round(t / self._dt))
+            else:
+                history_idx = int(round(t))  # Fallback for direct calls
+            self.history[history_idx] = x
 
         return x
 
@@ -545,7 +697,7 @@ class StochasticOscillator:
         t_max: float = 100.0,
         dt: float = 1.0,
         control_fn: Optional[Callable[[float], float]] = None,
-        show_progress: bool = False
+        show_progress: bool = False,
     ) -> Dict[str, NDArray]:
         """
         Simulate oscillator trajectory.
@@ -570,28 +722,28 @@ class StochasticOscillator:
             - 'config': Configuration used
         """
         self.reset(self.config.seed)
+        self._dt = dt  # Store dt for memory/noise term index calculations
 
         times = np.arange(0, t_max, dt)
         values = np.zeros(len(times))
 
+        # Guard against division by zero for short runs
+        progress_interval = max(1, len(times) // 10)
+
         for idx, t in enumerate(times):
-            if show_progress and idx % (len(times) // 10) == 0:
+            if show_progress and idx % progress_interval == 0:
                 print(f"  Simulating: {100 * idx / len(times):.0f}%")
 
-            values[idx] = self.evaluate(t, control_fn)
+            values[idx] = self.evaluate(t, control_fn, idx=idx)
 
-        return {
-            'times': times,
-            'values': values,
-            'config': self.config
-        }
+        return {"times": times, "values": values, "config": self.config}
 
     def simulate_ensemble(
         self,
         n_realizations: int = 100,
         t_max: float = 100.0,
         dt: float = 1.0,
-        seeds: Optional[List[int]] = None
+        seeds: Optional[List[int]] = None,
     ) -> Dict[str, Any]:
         """
         Simulate ensemble of trajectories for statistical analysis.
@@ -626,21 +778,22 @@ class StochasticOscillator:
 
         for i, seed in enumerate(seeds):
             self.reset(seed)
+            self._dt = dt  # Store dt for memory/noise term index calculations
             for j, t in enumerate(times):
-                ensemble[i, j] = self.evaluate(t)
+                ensemble[i, j] = self.evaluate(t, idx=j)
 
         return {
-            'times': times,
-            'ensemble': ensemble,
-            'mean': np.mean(ensemble, axis=0),
-            'std': np.std(ensemble, axis=0),
-            'percentiles': {
+            "times": times,
+            "ensemble": ensemble,
+            "mean": np.mean(ensemble, axis=0),
+            "std": np.std(ensemble, axis=0),
+            "percentiles": {
                 5: np.percentile(ensemble, 5, axis=0),
                 25: np.percentile(ensemble, 25, axis=0),
                 50: np.percentile(ensemble, 50, axis=0),
                 75: np.percentile(ensemble, 75, axis=0),
                 95: np.percentile(ensemble, 95, axis=0),
-            }
+            },
         }
 
     def __repr__(self) -> str:

@@ -787,8 +787,16 @@ def create_summary_report(
     times = trajectory['times']
     values = trajectory['values']
 
+    # Compute dt separately to handle single-sample case
+    if len(times) > 1:
+        dt = times[1] - times[0]
+        dt_str = f"{dt:.4f}"
+    else:
+        dt = 1.0  # Default for spectral analysis
+        dt_str = "N/A"
+
     stats = compute_statistics(values)
-    spec = spectral_analysis(values, dt=times[1] - times[0] if len(times) > 1 else 1.0)
+    spec = spectral_analysis(values, dt=dt)
 
     report = f"""
 ================================================================================
@@ -799,7 +807,7 @@ SIMULATION PARAMETERS
 ---------------------
   Duration: {times[-1] - times[0]:.2f} time units
   Samples: {len(times)}
-  Time step: {times[1] - times[0] if len(times) > 1 else 'N/A':.4f}
+  Time step: {dt_str}
 
 STATISTICAL SUMMARY
 -------------------
