@@ -19,13 +19,12 @@ from numpy.typing import NDArray
 from scipy import stats, signal
 from scipy.fft import fft, fftfreq
 from dataclasses import dataclass
-from typing import Dict, Optional, Tuple, Any, List
+from typing import Dict, Optional, Tuple, Any
 import warnings
 
 # Optional imports for plotting
 try:
     import matplotlib.pyplot as plt
-    import matplotlib.colors as mcolors
     HAS_MATPLOTLIB = True
 except ImportError:
     HAS_MATPLOTLIB = False
@@ -173,7 +172,7 @@ def autocorrelation(values: NDArray, max_lag: Optional[int] = None) -> NDArray:
     return acf
 
 
-def test_stationarity(
+def check_stationarity(
     values: NDArray,
     method: str = 'adf'
 ) -> Dict[str, Any]:
@@ -351,7 +350,7 @@ def spectral_analysis(
 # =============================================================================
 
 def stability_analysis(
-    oscillator,
+    oscillator: 'StochasticOscillator',
     n_perturbations: int = 10,
     perturbation_scale: float = 0.1,
     t_max: float = 100.0,
@@ -613,7 +612,6 @@ def plot_phase_space(
         warnings.warn("matplotlib not available for plotting")
         return None
 
-    n = len(values)
     x = values[:-delay]
     y = values[delay:]
     colors = np.arange(len(x))
@@ -628,7 +626,7 @@ def plot_phase_space(
     ax.set_title(title)
     ax.set_aspect('equal', adjustable='box')
 
-    cbar = plt.colorbar(scatter, ax=ax, label='Time')
+    plt.colorbar(scatter, ax=ax, label='Time')
 
     plt.tight_layout()
 
@@ -735,7 +733,6 @@ def plot_ensemble(
     times = ensemble_result['times']
     ensemble = ensemble_result['ensemble']
     mean = ensemble_result['mean']
-    std = ensemble_result['std']
     percentiles = ensemble_result['percentiles']
 
     fig, ax = plt.subplots(figsize=figsize)
