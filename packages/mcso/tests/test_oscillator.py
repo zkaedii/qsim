@@ -42,6 +42,7 @@ class TestOscillatorConfig:
         """Test validation of memory_delay."""
         with pytest.raises(ValueError, match="memory_delay must be non-negative"):
             OscillatorConfig(memory_delay=-1.0)
+            OscillatorConfig(memory_delay=-0.1)
 
 
 class TestStochasticOscillator:
@@ -102,6 +103,27 @@ class TestStochasticOscillator:
         # Verify no keys are stored
         history_keys = list(oscillator.history.keys())
         assert not any(abs(k - 1.0) < 1e-9 for k in history_keys)
+        Note: The history dict uses exact time values as keys (the same values
+        passed to evaluate()). Since no floating-point arithmetic is performed
+        on the time values before storage, exact equality checks are safe here.
+        For computed time values (e.g., from arange), use approximate matching.
+        """
+        t1, t2 = 1.0, 2.0
+        oscillator.evaluate(t1)
+        oscillator.evaluate(t2)
+
+        # Check that exact time values are stored as keys
+        assert t1 in oscillator.history
+        assert t2 in oscillator.history
+
+    def test_evaluate_no_history(self, oscillator):
+        """Test evaluate with store_history=False.
+        
+        Uses exact time value for key check (see test_evaluate_stores_history).
+        """
+        t = 1.0
+        oscillator.evaluate(t, store_history=False)
+        assert t not in oscillator.history
 
     def test_simulate_returns_dict(self, oscillator):
         """Test simulate returns correct structure."""
