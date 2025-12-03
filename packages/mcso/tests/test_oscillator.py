@@ -105,30 +105,6 @@ class TestStochasticOscillator:
     def test_evaluate_no_history(self, oscillator):
         """Test evaluate with store_history=False.
         
-        Note: Uses approximate comparison for floating-point keys.
-        """
-        oscillator.evaluate(1.0, store_history=False)
-        
-        # Check that no key approximately equal to 1.0 exists
-        history_keys = list(oscillator.history.keys())
-        assert not any(np.isclose(key, 1.0, atol=1e-9, rtol=0) for key in history_keys)
-        # Verify no keys are stored
-        Note: The history dict uses exact time values as keys (the same values
-        passed to evaluate()). Since no floating-point arithmetic is performed
-        on the time values before storage, exact equality checks are safe here.
-        For computed time values (e.g., from arange), use approximate matching.
-        """
-        t1, t2 = 1.0, 2.0
-        oscillator.evaluate(t1)
-        oscillator.evaluate(t2)
-
-        # Check that exact time values are stored as keys
-        assert t1 in oscillator.history
-        assert t2 in oscillator.history
-
-    def test_evaluate_no_history(self, oscillator):
-        """Test evaluate with store_history=False.
-        
         Uses exact time value for key check (see test_evaluate_stores_history).
         """
         t = 1.0
