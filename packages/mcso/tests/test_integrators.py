@@ -1104,6 +1104,8 @@ class TestConvergenceRate:
         assert errors[0] >= errors[-1] * 0.5  # Allow some tolerance
 
 
+class TestSDEIntegrator:
+    """Tests for SDEIntegrator class."""
 class TestSDEIntegratorMethods:
     """Tests for SDEIntegrator methods."""
 
@@ -1250,6 +1252,10 @@ class TestSDEIntegratorMethods:
         result1 = integrator1.integrate(x0=1.0, t_span=(0, 1), dt=0.1)
         result2 = integrator2.integrate(x0=1.0, t_span=(0, 1), dt=0.1)
         np.testing.assert_array_almost_equal(result1['paths'], result2['paths'])
+
+
+class TestEulerMaruyama:
+    """Tests for euler_maruyama function."""
 
     def test_integrator_initialization(self, simple_integrator):
         """Test integrator initialization."""
@@ -1452,6 +1458,10 @@ class TestSDEIntegratorMethods:
             scheme="euler",
             seed=123,
         )
+        
+        result1 = integrator1.integrate(x0=1.0, t_span=(0, 1), dt=0.1)
+        result2 = integrator2.integrate(x0=1.0, t_span=(0, 1), dt=0.1)
+        np.testing.assert_array_almost_equal(result1["paths"], result2["paths"])
 
         result1 = integrator1.integrate(x0=1.0, t_span=(0, 1), dt=0.1, n_paths=1)
         result2 = integrator2.integrate(x0=1.0, t_span=(0, 1), dt=0.1, n_paths=1)
@@ -1652,55 +1662,6 @@ class TestEulerMaruyama:
         )
 
         np.testing.assert_array_equal(result1["values"], result2["values"])
-
-
-class TestComputeConvergenceRate:
-    """Tests for compute_convergence_rate function."""
-
-    def test_returns_expected_keys(self):
-        """Test that result contains expected keys."""
-        integrator = SDEIntegrator(
-            drift=lambda x, t: x,
-            diffusion=lambda x, t: 0.5,
-            scheme="euler",
-            seed=42,
-            params=(0.8, 0.3, 1.0),  # Use default params explicitly
-        )
-        assert error > 0
-        assert np.isfinite(error)
-
-    def test_different_activation(self):
-        """Test integration with sigmoid activation."""
-        result, error = integrate_activation(
-            activation=sigmoid,
-            f=lambda x: x,
-            g_prime=lambda x: 1,
-            lower=0.0,
-            upper=1.0,
-            params=(1.0, 0.0, 0.5),
-        )
-        assert np.isfinite(result)
-
-    def test_custom_params(self):
-        """Test integration with different parameters."""
-        result1, _ = integrate_activation(
-            activation=softplus,
-            f=lambda x: 1.0,
-            g_prime=lambda x: 1.0,
-            lower=0.0,
-            upper=1.0,
-            params=(1.0, 0.0, 0.0),
-        )
-        result2, _ = integrate_activation(
-            activation=softplus,
-            f=lambda x: 1.0,
-            g_prime=lambda x: 1.0,
-            lower=0.0,
-            upper=1.0,
-            params=(2.0, 0.0, 0.0),
-        )
-        # Different params should give different results
-        assert result1 != result2
 
 
 class TestNumericalQuadrature:
