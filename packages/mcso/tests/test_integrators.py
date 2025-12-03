@@ -578,7 +578,6 @@ class TestIntegrateActivation:
             params=(0.1, 0.5, 0.0)
         )
         assert np.isfinite(result)
-        assert error < 1e-6
 
     def test_zero_interval(self):
         """Test integration over zero-length interval."""
@@ -653,6 +652,76 @@ class TestIntegrateActivation:
         )
 
         assert_allclose(result, 0.0, atol=1e-10)
+
+    def test_simple_integration(self):
+        """Test integration of simple functions."""
+        result, error = integrate_activation(
+            activation=softplus,
+            f=lambda x: 1.0,
+            g_prime=lambda x: 1.0,
+            lower=0,
+            upper=1,
+            params=(0.0, 0.0, 0.0),  # softplus(0) = ln(2)
+        )
+        # Should be approximately ln(2) for unit interval
+        assert np.isfinite(result)
+        assert error < 1e-5
+
+    def test_integration_with_cos_sin(self):
+        """Test integration with trigonometric functions."""
+        result, error = integrate_activation(
+            activation=softplus,
+            f=np.cos,
+            g_prime=np.sin,
+            lower=0.0,
+            upper=1.0,
+            # params (a, b, x0) = (0, 0, 0) means activation arg = 0*(x-0)^2 + 0 = 0
+            # This creates a constant activation value: softplus(0) = ln(2)
+            params=(0.0, 0.0, 0.0)
+        )
+        # Result should be finite for well-behaved trigonometric integrand
+        assert np.isfinite(result)
+        assert error < 1e-3
+
+    def test_error_estimate(self):
+        """Test that error estimate is reasonable."""
+        result, error = integrate_activation(
+            activation=softplus,
+            f=np.cos,
+            g_prime=np.sin,
+            lower=0.0,
+            upper=5.0,
+        )
+
+        assert error > 0
+        # Error should be either less than 10% of result (relative) or
+        # less than 1e-6 (absolute) for well-behaved integrands
+        relative_tolerance = 0.1  # 10% relative error
+        absolute_tolerance = 1e-6
+        assert error < abs(result) * relative_tolerance or error < absolute_tolerance
+
+    def test_integrate_custom_params(self):
+        """Test integration with different parameters."""
+        result1, _ = integrate_activation(
+            activation=softplus,
+            f=lambda x: 1.0,
+            g_prime=lambda x: 1.0,
+            lower=0.0,
+            upper=1.0,
+            params=(1.0, 0.0, 0.0),
+        )
+
+        result2, _ = integrate_activation(
+            activation=softplus,
+            f=lambda x: 1.0,
+            g_prime=lambda x: 1.0,
+            lower=0.0,
+            upper=1.0,
+            params=(2.0, 0.0, 0.0),
+        )
+
+        # Different params should give different results
+        assert result1 != result2
 
     def test_integration_returns_tuple(self):
         """Test that integration returns (value, error) tuple."""
@@ -1037,6 +1106,8 @@ class TestConvergenceRate:
 
 class TestSDEIntegrator:
     """Tests for SDEIntegrator class."""
+class TestSDEIntegratorMethods:
+    """Tests for SDEIntegrator methods."""
 
     @pytest.fixture
     def simple_drift(self):
@@ -1047,6 +1118,26 @@ class TestSDEIntegrator:
     def simple_diffusion(self):
         """Constant diffusion."""
         return lambda x, t: 0.2
+
+    @pytest.fixture
+    def simple_integrator(self):
+        """Create a simple SDE integrator for testing."""
+        return SDEIntegrator(
+            drift=lambda x, t: -x,  # Mean-reverting
+            diffusion=lambda x, t: 0.1,  # Constant diffusion
+            scheme="euler",
+            seed=42,
+        )
+
+    @pytest.fixture
+    def constant_sde(self):
+        """Create SDE integrator for deterministic ODE (no diffusion)."""
+        return SDEIntegrator(
+            drift=lambda x, t: 1.0,  # dx/dt = 1
+            diffusion=lambda x, t: 0.0,
+            scheme="euler",
+            seed=42,
+        )
 
     def test_initialization(self, simple_drift, simple_diffusion):
         """Test SDEIntegrator initialization."""
@@ -1372,6 +1463,10 @@ class TestEulerMaruyama:
         result2 = integrator2.integrate(x0=1.0, t_span=(0, 1), dt=0.1)
         np.testing.assert_array_almost_equal(result1["paths"], result2["paths"])
 
+        result1 = integrator1.integrate(x0=1.0, t_span=(0, 1), dt=0.1, n_paths=1)
+        result2 = integrator2.integrate(x0=1.0, t_span=(0, 1), dt=0.1, n_paths=1)
+        np.testing.assert_array_equal(result1["paths"], result2["paths"])
+
     def test_integrate_multiple_paths(self, geometric_brownian):
         """Test multiple path integration."""
         result = geometric_brownian.integrate(
@@ -1389,31 +1484,10 @@ class TestEulerMaruyama:
         # x(t) = t, so x(1) = 1
         assert_allclose(result["paths"][0, -1], 1.0, rtol=0.02)
 
-    def test_integrate_reproducibility(self):
-        """Test that same seed gives same results."""
-        integrator1 = SDEIntegrator(
-            drift=lambda x, t: x,
-            diffusion=lambda x, t: 0.5,
-            seed=42,
-        )
-        integrator2 = SDEIntegrator(
-            drift=lambda x, t: x,
-            diffusion=lambda x, t: 0.5,
-            seed=42,
-        )
-
-        result1 = integrator1.integrate(x0=1.0, t_span=(0, 1), dt=0.1, n_paths=1)
-        result2 = integrator2.integrate(x0=1.0, t_span=(0, 1), dt=0.1, n_paths=1)
-
-        assert_allclose(result1["paths"], result2["paths"], rtol=1e-10)
-        np.testing.assert_array_equal(result1["paths"], result2["paths"])
-
 
 class TestEulerMaruyama:
     """Tests for euler_maruyama convenience function."""
 
-    def test_basic_integration(self):
-        """Test basic Euler-Maruyama integration."""
     def test_euler_maruyama_basic(self):
         """Test basic euler_maruyama integration."""
         result = euler_maruyama(

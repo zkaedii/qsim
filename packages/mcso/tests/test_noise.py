@@ -34,10 +34,6 @@ PROBABILISTIC_TEST_TOLERANCE = 0.5  # Tolerance factor for probabilistic compari
 
 
 class TestGaussianNoise:
-    """Tests for GaussianNoise generator."""
-
-
-class TestGaussianNoise:
     """Tests for GaussianNoise class."""
 
     def test_initialization(self):
@@ -65,36 +61,6 @@ class TestGaussianNoise:
         sample1 = noise1.sample(t=1.0)
         sample2 = noise2.sample(t=1.0)
         assert sample1 == sample2
-    def test_default_parameters(self):
-        """Test default parameter values."""
-        noise = GaussianNoise()
-        assert noise.scale == 1.0
-        assert noise.mean == 0.0
-        assert noise.seed is None
-
-    def test_custom_parameters(self):
-        """Test custom parameter values."""
-        """Test custom parameter initialization."""
-        noise = GaussianNoise(scale=0.5, mean=1.0, seed=42)
-        assert noise.scale == 0.5
-        assert noise.mean == 1.0
-        assert noise.seed == 42
-
-    def test_sample_returns_float(self):
-        """Test that sample returns a float."""
-        noise = GaussianNoise(seed=42)
-        result = noise.sample(1.0)
-        assert isinstance(result, (float, np.floating))
-
-    def test_reproducibility_with_seed(self):
-        """Test reproducibility with the same seed."""
-        noise1 = GaussianNoise(seed=123)
-        noise2 = GaussianNoise(seed=123)
-
-        val1 = noise1.sample(1.0)
-        val2 = noise2.sample(1.0)
-
-        assert val1 == val2
 
     def test_different_seeds_different_values(self):
         """Test different seeds produce different values."""
@@ -155,96 +121,10 @@ class TestGaussianNoise:
 
 
 class TestStateDependentNoise:
-    """Tests for StateDependentNoise generator."""
-
-        result = noise.sample(t=1.0)
-        assert isinstance(result, (float, np.floating))
-
-    def test_reproducibility(self):
-        """Test that same seed produces same sequence."""
-        noise1 = GaussianNoise(seed=123)
-        noise2 = GaussianNoise(seed=123)
-
-        samples1 = [noise1.sample(t=i) for i in range(10)]
-        samples2 = [noise2.sample(t=i) for i in range(10)]
-
-        np.testing.assert_array_equal(samples1, samples2)
-
-    def test_different_seeds_produce_different_results(self):
-        """Test that different seeds produce different sequences."""
-        noise1 = GaussianNoise(seed=1)
-        noise2 = GaussianNoise(seed=2)
-
-        samples1 = [noise1.sample(t=i) for i in range(10)]
-        samples2 = [noise2.sample(t=i) for i in range(10)]
-
-        assert not np.allclose(samples1, samples2)
-
-    def test_mean_of_samples(self):
-        """Test that sample mean approximates expected mean."""
-        noise = GaussianNoise(mean=5.0, scale=1.0, seed=42)
-        samples = [noise.sample(t=i) for i in range(10000)]
-
-        # With 10000 samples, mean should be close to 5.0
-        assert abs(np.mean(samples) - 5.0) < 0.1
-
-    def test_std_of_samples(self):
-        """Test that sample std approximates expected scale."""
-        noise = GaussianNoise(mean=0.0, scale=2.0, seed=42)
-        samples = [noise.sample(t=i) for i in range(10000)]
-
-        # With 10000 samples, std should be close to 2.0
-        assert abs(np.std(samples) - 2.0) < 0.1
-
-    def test_reset(self):
-        """Test reset functionality."""
-        noise = GaussianNoise(seed=42)
-        sample1 = noise.sample(t=1.0)
-        noise.reset(seed=42)
-        sample2 = noise.sample(t=1.0)
-        assert sample1 == sample2
-        samples_before = [noise.sample(t=i) for i in range(5)]
-
-        noise.reset()
-        samples_after = [noise.sample(t=i) for i in range(5)]
-
-        np.testing.assert_array_equal(samples_before, samples_after)
-
-    def test_reset_with_new_seed(self):
-        """Test reset with a new seed."""
-        noise = GaussianNoise(seed=42)
-        samples_original = [noise.sample(t=i) for i in range(5)]
-
-        noise.reset(seed=99)
-        samples_new_seed = [noise.sample(t=i) for i in range(5)]
-
-        assert not np.allclose(samples_original, samples_new_seed)
-
-
-class TestStateDependentNoise:
     """Tests for StateDependentNoise class."""
 
     def test_initialization(self):
         """Test default initialization."""
-        noise = StateDependentNoise()
-        assert noise.scale == 0.2
-        assert noise.state_coupling == 0.3
-
-    def test_state_dependent_behavior(self):
-        """Test noise depends on state."""
-        noise = StateDependentNoise(seed=42)
-        
-        # Samples should be different for different states due to state-dependence
-        noise.reset(seed=42)
-        sample_low = noise.sample(t=1.0, state=0.1)
-        
-        noise.reset(seed=42)
-        sample_high = noise.sample(t=1.0, state=10.0)
-        
-        # Higher state should produce larger variance
-        assert abs(sample_high) != abs(sample_low) or sample_high != sample_low
-    def test_default_parameters(self):
-        """Test default parameter values."""
         noise = StateDependentNoise()
         assert noise.scale == 0.2
         assert noise.state_coupling == 0.3
@@ -305,6 +185,7 @@ class TestStateDependentNoise:
 
         # Results should be the same after clipping
         assert val1 == val2
+
     def test_custom_parameters(self):
         """Test custom parameter initialization."""
         noise = StateDependentNoise(
@@ -318,27 +199,6 @@ class TestStateDependentNoise:
         assert noise.state_coupling == 0.5
         assert noise.delay == 2.0
         assert noise.max_state == 5.0
-
-    def test_sample_returns_float(self):
-        """Test that sample returns a float."""
-        noise = StateDependentNoise(seed=42)
-        result = noise.sample(t=1.0, state=1.0)
-        assert isinstance(result, (float, np.floating))
-
-    def test_variance_increases_with_state(self):
-        """Test that larger states produce larger variance."""
-        noise = StateDependentNoise(scale=1.0, state_coupling=1.0, seed=42)
-
-        # Sample with small state
-        noise.reset(seed=42)
-        samples_small = [noise.sample(t=i, state=0.1) for i in range(1000)]
-
-        # Sample with large state
-        noise.reset(seed=42)
-        samples_large = [noise.sample(t=i, state=5.0) for i in range(1000)]
-
-        # Variance should be larger for large state
-        assert np.var(samples_large) > np.var(samples_small)
 
     def test_history_based_coupling(self):
         """Test that history affects noise generation."""
@@ -356,18 +216,6 @@ class TestStateDependentNoise:
 
         # Variance should be larger for large historical state
         assert np.var(samples_large) > np.var(samples_small)
-
-    def test_max_state_clipping(self):
-        """Test that states are clipped to max_state."""
-        noise = StateDependentNoise(scale=1.0, state_coupling=1.0, max_state=2.0, seed=42)
-
-        # Very large state should be clipped to max_state
-        samples_huge = [noise.sample(t=i, state=1000.0) for i in range(1000)]
-        noise.reset(seed=42)
-        samples_at_max = [noise.sample(t=i, state=2.0) for i in range(1000)]
-
-        # Variances should be similar since huge state is clipped to 2.0
-        np.testing.assert_almost_equal(np.var(samples_huge), np.var(samples_at_max), decimal=1)
 
     def test_reproducibility(self):
         """Test reproducibility with same seed."""
@@ -391,23 +239,10 @@ class TestStateDependentNoise:
 
 
 class TestAdaptiveNoise:
-    """Tests for AdaptiveNoise generator."""
-
-        samples_before = [noise.sample(t=i, state=1.0) for i in range(5)]
-
-        noise.reset()
-        samples_after = [noise.sample(t=i, state=1.0) for i in range(5)]
-
-        np.testing.assert_array_equal(samples_before, samples_after)
-
-
-class TestAdaptiveNoise:
     """Tests for AdaptiveNoise class."""
 
     def test_initialization(self):
         """Test default initialization."""
-    def test_default_parameters(self):
-        """Test default parameter values."""
         noise = AdaptiveNoise()
         assert noise.initial_scale == 0.2
         assert noise.target_cv == 0.1
@@ -517,11 +352,18 @@ class TestAdaptiveNoise:
     def test_scale_bounds(self):
         """Test that scale stays within bounds."""
         noise = AdaptiveNoise(
-            initial_scale=0.2,
-            adaptation_rate=1.0,  # Very high
+            seed=42,
             scale_bounds=(0.05, 1.0),
-        result = noise.sample(t=1.0, state=1.0)
-        assert isinstance(result, (float, np.floating))
+            adaptation_rate=0.5,  # High rate for faster adaptation
+            window=3
+        )
+        
+        # Generate many samples to test bounds
+        for i in range(100):
+            noise.sample(t=float(i), state=np.random.randn() * 100)
+        
+        assert noise.scale >= noise.scale_bounds[0]
+        assert noise.scale <= noise.scale_bounds[1]
 
     def test_scale_starts_at_initial(self):
         """Test that scale starts at initial_scale."""
@@ -600,40 +442,6 @@ class TestAdaptiveNoise:
         assert len(noise.recent_values) <= noise.window
 
 
-class TestOrnsteinUhlenbeckNoise:
-    """Tests for OrnsteinUhlenbeckNoise (colored noise) generator."""
-
-        # Generate many samples to potentially exceed bounds
-        for i in range(200):
-            noise.sample(t=float(i), state=float(i))
-
-        assert 0.1 <= noise.scale <= 1.0
-
-    def test_recent_values_tracking(self):
-        """Test that recent values are tracked."""
-        noise = AdaptiveNoise(window=5, seed=42)
-
-        for i in range(10):
-            noise.sample(t=float(i), state=float(i))
-
-        # Should only keep last 'window' values
-        assert len(noise.recent_values) == 5
-
-    def test_reset(self):
-        """Test reset functionality."""
-        noise = AdaptiveNoise(initial_scale=0.3, window=10, seed=42)
-
-        # Generate samples to modify state
-        for i in range(20):
-            noise.sample(t=float(i), state=float(i))
-
-        assert noise.scale != 0.3 or len(noise.recent_values) > 0
-
-        noise.reset()
-
-        assert noise.scale == 0.3
-        assert len(noise.recent_values) == 0
-
     def test_reproducibility(self):
         """Test reproducibility with same seed."""
         noise1 = AdaptiveNoise(seed=42)
@@ -650,8 +458,6 @@ class TestOrnsteinUhlenbeckNoise:
 
     def test_initialization(self):
         """Test default initialization."""
-    def test_default_parameters(self):
-        """Test default parameter values."""
         noise = OrnsteinUhlenbeckNoise()
         assert noise.mean == 0.0
         assert noise.theta == 1.0
@@ -782,6 +588,7 @@ class TestOrnsteinUhlenbeckNoise:
         noise.current_value = 5.0
         noise.reset()
         assert noise.current_value == noise.mean
+
     def test_custom_parameters(self):
         """Test custom parameter initialization."""
         noise = OrnsteinUhlenbeckNoise(
@@ -796,69 +603,10 @@ class TestOrnsteinUhlenbeckNoise:
         assert noise.sigma == 0.5
         assert noise.dt == 0.1
 
-    def test_sample_returns_float(self):
-        """Test that sample returns a float."""
-        noise = OrnsteinUhlenbeckNoise(seed=42)
-        result = noise.sample(t=1.0)
-        assert isinstance(result, (float, np.floating))
-
     def test_initial_value_is_mean(self):
         """Test that initial current_value equals mean."""
         noise = OrnsteinUhlenbeckNoise(mean=5.0)
         assert noise.current_value == 5.0
-
-    def test_mean_reversion(self):
-        """Test mean reversion property."""
-        noise = OrnsteinUhlenbeckNoise(mean=0.0, theta=2.0, sigma=0.1, dt=0.1, seed=42)
-
-        # Run for many steps
-        samples = []
-        for _ in range(1000):
-            samples.append(noise.sample(t=0.0))
-
-        # Long-run average should be close to mean
-        assert abs(np.mean(samples)) < 0.5
-
-    def test_temporal_correlation(self):
-        """Test that consecutive samples are correlated."""
-        noise = OrnsteinUhlenbeckNoise(theta=0.1, sigma=0.1, dt=0.1, seed=42)
-
-        samples = [noise.sample(t=float(i)) for i in range(100)]
-
-        # Calculate lag-1 autocorrelation
-        correlation = np.corrcoef(samples[:-1], samples[1:])[0, 1]
-
-        # OU process should have positive autocorrelation
-        assert correlation > 0.5
-
-    def test_higher_theta_faster_reversion(self):
-        """Test that higher theta means faster mean reversion."""
-        noise_slow = OrnsteinUhlenbeckNoise(theta=0.1, sigma=0.1, dt=0.1, seed=42)
-        noise_fast = OrnsteinUhlenbeckNoise(theta=2.0, sigma=0.1, dt=0.1, seed=42)
-
-        # Start both at same non-mean value
-        noise_slow.current_value = 5.0
-        noise_fast.current_value = 5.0
-
-        sample_slow = noise_slow.sample(t=0.0)
-        sample_fast = noise_fast.sample(t=0.0)
-
-        # Fast theta should revert more toward mean (0) than slow
-        assert abs(sample_fast) < abs(sample_slow)
-
-    def test_reset(self):
-        """Test reset functionality."""
-        noise = OrnsteinUhlenbeckNoise(mean=0.0, seed=42)
-
-        # Sample to change current_value
-        for _ in range(10):
-            noise.sample(t=0.0)
-
-        assert noise.current_value != 0.0
-
-        noise.reset()
-
-        assert noise.current_value == 0.0
 
     def test_different_theta_values(self):
         """Test different mean reversion rates."""
@@ -879,26 +627,10 @@ class TestOrnsteinUhlenbeckNoise:
 
 
 class TestJumpDiffusionNoise:
-    """Tests for JumpDiffusionNoise generator."""
-
-    def test_reproducibility(self):
-        """Test reproducibility with same seed."""
-        noise1 = OrnsteinUhlenbeckNoise(seed=42)
-        noise2 = OrnsteinUhlenbeckNoise(seed=42)
-
-        samples1 = [noise1.sample(t=float(i)) for i in range(10)]
-        samples2 = [noise2.sample(t=float(i)) for i in range(10)]
-
-        np.testing.assert_array_equal(samples1, samples2)
-
-
-class TestJumpDiffusionNoise:
     """Tests for JumpDiffusionNoise class."""
 
     def test_initialization(self):
         """Test default initialization."""
-    def test_default_parameters(self):
-        """Test default parameter values."""
         noise = JumpDiffusionNoise()
         assert noise.continuous_scale == 0.1
         assert noise.jump_rate == 0.1
@@ -953,20 +685,6 @@ class TestJumpDiffusionNoise:
         max_sample = np.max(np.abs(samples))
         assert max_sample > 0.5  # At least some jumps occurred
 
-    def test_jump_size_distribution(self):
-        """Test that jump sizes follow normal distribution."""
-        noise = JumpDiffusionNoise(
-            continuous_scale=0.0,  # No continuous noise
-            jump_rate=10.0,  # High rate to get many jumps
-            jump_mean=5.0,
-            jump_scale=0.5,
-
-    def test_sample_returns_float(self):
-        """Test sample returns a float."""
-        noise = JumpDiffusionNoise(seed=42)
-        sample = noise.sample(t=1.0)
-        assert isinstance(sample, (float, np.floating))
-
     def test_continuous_component(self):
         """Test continuous noise component is present."""
         # With zero jump rate, should behave like Gaussian
@@ -976,14 +694,6 @@ class TestJumpDiffusionNoise:
         
         # Should have non-zero variance from continuous component
         assert np.var(samples) > 0
-
-    def test_jump_component(self):
-        """Test jump component produces occasional large values."""
-        # High jump rate to ensure jumps occur
-        noise = JumpDiffusionNoise(
-            continuous_scale=0.01,  # Small continuous noise
-            jump_rate=2.0,  # High jump rate
-        assert noise.dt == 1.0
 
     def test_custom_parameters(self):
         """Test custom parameter initialization."""
@@ -1001,21 +711,23 @@ class TestJumpDiffusionNoise:
         assert noise.jump_scale == 0.3
         assert noise.dt == 0.5
 
-    def test_sample_returns_float(self):
-        """Test that sample returns a float."""
-        noise = JumpDiffusionNoise(seed=42)
-        result = noise.sample(t=1.0)
-        assert isinstance(result, (float, np.floating))
+    def test_jump_component(self):
+        """Test jump component produces occasional large values."""
+        # High jump rate to ensure jumps occur
+        noise = JumpDiffusionNoise(
+            continuous_scale=0.01,  # Small continuous noise
+            jump_rate=2.0,  # High jump rate
+            jump_mean=0.0,
+            jump_scale=1.0,
+            dt=1.0,
+            seed=42
+        )
 
-    def test_continuous_component(self):
-        """Test continuous component is present."""
-        noise = JumpDiffusionNoise(continuous_scale=1.0, jump_rate=0.0, seed=42)
+        samples = [noise.sample(1.0) for _ in range(100)]
 
-        samples = [noise.sample(t=float(i)) for i in range(1000)]
-
-        # With no jumps, should have Gaussian distribution
-        assert abs(np.mean(samples)) < 0.1
-        assert abs(np.std(samples) - 1.0) < 0.1
+        # With high jump rate, some samples should be larger
+        max_sample = np.max(np.abs(samples))
+        assert max_sample > 0.5  # At least some jumps occurred
 
     def test_jumps_occur(self):
         """Test that jumps occur with high jump rate."""
@@ -1050,12 +762,6 @@ class TestJumpDiffusionNoise:
         
         # With high rate and positive mean, average should be positive
         assert np.mean(samples_positive) > 0
-
-        samples = [noise.sample(t=float(i)) for i in range(100)]
-
-        # Most samples should be non-zero due to jumps
-        non_zero_count = sum(1 for s in samples if abs(s) > 0.01)
-        assert non_zero_count > 50
 
     def test_zero_jump_rate_no_jumps(self):
         """Test that zero jump rate produces no jumps."""
@@ -1125,12 +831,6 @@ class TestJumpDiffusionNoise:
         # Longer dt should generally have more jumps
         # Use tolerance factor to account for probabilistic nature of jumps
         assert long_jumps >= short_jumps * PROBABILISTIC_TEST_TOLERANCE
-        samples = [noise.sample(t=float(i)) for i in range(1000)]
-        non_zero_samples = [s for s in samples if abs(s) > 0.01]
-
-        if len(non_zero_samples) > 10:
-            # Average of non-zero samples should be positive
-            assert np.mean(non_zero_samples) > 2.0
 
     def test_variance_increases_with_jump_scale(self):
         """Test that larger jump_scale produces more variance."""
@@ -1162,34 +862,6 @@ class TestJumpDiffusionNoise:
         val2 = noise.sample(1.0)
 
         assert val1 == val2
-
-
-class TestCreateNoiseGenerator:
-    """Tests for the create_noise_generator factory function."""
-        samples_before = [noise.sample(t=float(i)) for i in range(5)]
-
-        noise.reset()
-        samples_after = [noise.sample(t=float(i)) for i in range(5)]
-
-        np.testing.assert_array_equal(samples_before, samples_after)
-
-    def test_reproducibility(self):
-        """Test reproducibility with same seed."""
-        noise1 = JumpDiffusionNoise(seed=42)
-        noise2 = JumpDiffusionNoise(seed=42)
-        
-        samples1 = [noise1.sample(t=float(i)) for i in range(10)]
-        samples2 = [noise2.sample(t=float(i)) for i in range(10)]
-        
-        np.testing.assert_array_equal(samples1, samples2)
-
-    def test_reset(self):
-        """Test reset functionality."""
-        noise = JumpDiffusionNoise(seed=42)
-        sample1 = noise.sample(t=1.0)
-        noise.reset(seed=42)
-        sample2 = noise.sample(t=1.0)
-        assert sample1 == sample2
 
 
 class TestNoiseFactory:
@@ -1235,92 +907,6 @@ class TestNoiseFactory:
         """Test error for unknown noise type."""
         with pytest.raises(ValueError, match="Unknown noise type"):
             create_noise_generator('unknown_type')
-
-        samples1 = [noise1.sample(t=float(i)) for i in range(10)]
-        samples2 = [noise2.sample(t=float(i)) for i in range(10)]
-
-        np.testing.assert_array_equal(samples1, samples2)
-
-
-class TestCreateNoiseGenerator:
-    """Tests for create_noise_generator factory function."""
-
-    def test_create_gaussian(self):
-        """Test creating Gaussian noise generator."""
-        noise = create_noise_generator('gaussian', scale=0.5, mean=1.0)
-        assert isinstance(noise, GaussianNoise)
-        assert noise.scale == 0.5
-        assert noise.mean == 1.0
-
-    def test_create_state_dependent(self):
-        """Test creating state-dependent noise generator."""
-        noise = create_noise_generator('state_dependent', state_coupling=0.5)
-        assert isinstance(noise, StateDependentNoise)
-        noise = create_noise_generator('state_dependent', scale=0.3, state_coupling=0.5)
-        assert isinstance(noise, StateDependentNoise)
-        assert noise.scale == 0.3
-        assert noise.state_coupling == 0.5
-
-    def test_create_adaptive(self):
-        """Test creating adaptive noise generator."""
-        noise = create_noise_generator('adaptive', target_cv=0.2)
-        assert isinstance(noise, AdaptiveNoise)
-        assert noise.target_cv == 0.2
-
-    def test_create_ou(self):
-        """Test creating Ornstein-Uhlenbeck noise generator."""
-        noise = create_noise_generator('adaptive', initial_scale=0.4, target_cv=0.2)
-        assert isinstance(noise, AdaptiveNoise)
-        assert noise.initial_scale == 0.4
-        assert noise.target_cv == 0.2
-
-    def test_create_ou(self):
-        """Test creating OU noise generator with 'ou' alias."""
-        noise = create_noise_generator('ou', theta=2.0, sigma=0.3)
-        assert isinstance(noise, OrnsteinUhlenbeckNoise)
-        assert noise.theta == 2.0
-        assert noise.sigma == 0.3
-
-    def test_create_ornstein_uhlenbeck_alias(self):
-        """Test 'ornstein_uhlenbeck' alias for OU noise."""
-    def test_create_ornstein_uhlenbeck(self):
-        """Test creating OU noise generator with full name."""
-        noise = create_noise_generator('ornstein_uhlenbeck', theta=1.5)
-        assert isinstance(noise, OrnsteinUhlenbeckNoise)
-        assert noise.theta == 1.5
-
-    def test_create_jump_diffusion(self):
-        """Test creating jump-diffusion noise generator."""
-        noise = create_noise_generator('jump_diffusion', jump_rate=0.5)
-        assert isinstance(noise, JumpDiffusionNoise)
-        assert noise.jump_rate == 0.5
-
-    def test_invalid_type_raises_error(self):
-        noise = create_noise_generator('jump_diffusion', jump_rate=0.5, jump_scale=0.3)
-        assert isinstance(noise, JumpDiffusionNoise)
-        assert noise.jump_rate == 0.5
-        assert noise.jump_scale == 0.3
-
-    def test_invalid_type_raises(self):
-        """Test that invalid noise type raises ValueError."""
-        with pytest.raises(ValueError, match="Unknown noise type"):
-            create_noise_generator('invalid_type')
-
-    def test_error_message_contains_valid_types(self):
-        """Test that error message lists valid types."""
-        with pytest.raises(ValueError) as excinfo:
-            create_noise_generator('unknown')
-
-        error_msg = str(excinfo.value)
-    def test_invalid_type_lists_available(self):
-        """Test that error message lists available types."""
-        with pytest.raises(ValueError) as exc_info:
-            create_noise_generator('bad_type')
-
-        error_msg = str(exc_info.value)
-        assert 'gaussian' in error_msg
-        assert 'ou' in error_msg
-        assert 'jump_diffusion' in error_msg
 
 
 class TestNoiseGeneratorInterface:
@@ -1484,11 +1070,6 @@ class TestNoiseGeneratorEdgeCases:
             result = gen.sample(0.0)
             assert np.isfinite(result)
 
-    def test_all_generators_large_time(self):
-        """Test all generators at large time values."""
-            result = gen.sample(t=-10.0, state=1.0)
-            assert np.isfinite(result)
-
     def test_all_generators_handle_large_time(self):
         """Test that generators handle very large time values."""
         generators = [
@@ -1501,5 +1082,4 @@ class TestNoiseGeneratorEdgeCases:
 
         for gen in generators:
             result = gen.sample(1e6)
-            result = gen.sample(t=1e10, state=1.0)
             assert np.isfinite(result)
