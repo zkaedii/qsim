@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import numpy as np
 from numpy.typing import NDArray
+from scipy.integrate import quad
 from scipy.integrate import quad, quad_vec, solve_ivp, IntegrationWarning
 from scipy.special import expit
 from dataclasses import dataclass
@@ -516,7 +517,6 @@ def compute_convergence_rate(
     if reference_dt is None:
         reference_dt = min(dt_values) / 10
 
-    t_end = t_span[1]
     errors = []
 
     for dt in dt_values:

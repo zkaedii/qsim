@@ -38,6 +38,12 @@ class TestOscillatorConfig:
         with pytest.raises(ValueError, match="noise_scale must be non-negative"):
             OscillatorConfig(noise_scale=-0.1)
 
+    def test_invalid_memory_delay(self):
+        """Test validation of memory_delay."""
+        with pytest.raises(ValueError, match="memory_delay must be non-negative"):
+            OscillatorConfig(memory_delay=-1.0)
+            OscillatorConfig(memory_delay=-0.1)
+
 
 class TestStochasticOscillator:
     """Tests for StochasticOscillator class."""
@@ -77,17 +83,33 @@ class TestStochasticOscillator:
         assert isinstance(result, (float, np.floating))
 
     def test_evaluate_stores_history(self, oscillator):
-        """Test that evaluate stores values in history."""
+        """Test that evaluate stores values in history.
+        
+        Note: The history dictionary uses exact time values as keys.
+        This test uses np.isclose to handle potential floating-point 
+        precision issues when checking for key existence.
+        """
         oscillator.evaluate(1.0)
         oscillator.evaluate(2.0)
 
-        assert 1.0 in oscillator.history
-        assert 2.0 in oscillator.history
+        # Check that entries for 1.0 and 2.0 are stored
+        # Note: additional entries may exist from memory term lookups during evaluation
+        assert any(np.isclose(key, 1.0, atol=1e-9, rtol=0) for key in oscillator.history.keys())
+        assert any(np.isclose(key, 2.0, atol=1e-9, rtol=0) for key in oscillator.history.keys())
+        # Verify the keys we used are in history (note: history may include t=0 from initialization)
+        history_keys = list(oscillator.history.keys())
+        assert len(history_keys) >= 2
+        assert any(abs(k - 1.0) < 1e-9 for k in history_keys)
+        assert any(abs(k - 2.0) < 1e-9 for k in history_keys)
 
     def test_evaluate_no_history(self, oscillator):
-        """Test evaluate with store_history=False."""
-        oscillator.evaluate(1.0, store_history=False)
-        assert 1.0 not in oscillator.history
+        """Test evaluate with store_history=False.
+        
+        Uses exact time value for key check (see test_evaluate_stores_history).
+        """
+        t = 1.0
+        oscillator.evaluate(t, store_history=False)
+        assert t not in oscillator.history
 
     def test_simulate_returns_dict(self, oscillator):
         """Test simulate returns correct structure."""

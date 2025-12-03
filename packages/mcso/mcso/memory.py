@@ -27,7 +27,6 @@ For computational efficiency, we typically use:
 from __future__ import annotations
 
 import numpy as np
-from numpy.typing import NDArray
 from scipy.special import expit
 from abc import ABC, abstractmethod
 from dataclasses import dataclass

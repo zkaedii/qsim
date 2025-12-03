@@ -13,11 +13,9 @@ can be applied to financial time series modeling, including:
 
 import numpy as np
 from mcso import StochasticOscillator, OscillatorConfig
-from mcso.noise import create_noise_generator, JumpDiffusionNoise
-from mcso.memory import create_memory_kernel, AdaptiveMemory
+from mcso.noise import JumpDiffusionNoise
 from mcso.analysis import (
     compute_statistics,
-    spectral_analysis,
     autocorrelation,
 )
 
@@ -184,7 +182,7 @@ def regime_switching_simulation():
         n_components=5,
         noise_scale=0.01,
         memory_strength=1.5,      # Mean-reverting
-        memory_sensitivity=-2.0,  # Negative = mean reversion
+        memory_sensitivity=-2.0,  # Negative biases memory toward mean reversion (see model for details)
         seed=42
     )
 
