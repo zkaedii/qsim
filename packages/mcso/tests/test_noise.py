@@ -54,8 +54,8 @@ class TestGaussianNoise:
         sample = noise.sample(t=1.0)
         assert isinstance(sample, (float, np.floating))
 
-    def test_reproducibility(self):
-        """Test reproducibility with same seed."""
+    def test_single_value_reproducibility(self):
+        """Test single-value reproducibility with same seed."""
         noise1 = GaussianNoise(seed=42)
         noise2 = GaussianNoise(seed=42)
         sample1 = noise1.sample(t=1.0)
@@ -137,8 +137,8 @@ class TestStateDependentNoise:
         result = noise.sample(1.0, state=0.5)
         assert isinstance(result, (float, np.floating))
 
-    def test_reproducibility(self):
-        """Test reproducibility with same seed."""
+    def test_sequence_reproducibility(self):
+        """Test reproducibility of a sequence with same seed."""
         noise1 = StateDependentNoise(seed=42)
         noise2 = StateDependentNoise(seed=42)
 
