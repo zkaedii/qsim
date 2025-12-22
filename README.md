@@ -75,10 +75,8 @@ qsim/
 ### Basic Hamiltonian Simulation
 
 ```python
-# Import from benchmarks (until package restructuring is complete)
-import sys
-sys.path.append('benchmarks/suites')
-from hamiltonian_simulation import ComplexHamiltonianSimulator
+# Import from the packaged module
+from hmodelz.core.hamiltonian_simulation import ComplexHamiltonianSimulator
 
 # Create simulator
 simulator = ComplexHamiltonianSimulator()
