@@ -73,7 +73,7 @@ class ComplexHamiltonianSimulator:
         }
 
     def softplus(self, x: float) -> float:
-        """Smooth, non-negative activation function using scipy.special.softplus."""
+        """Smooth, non-negative activation function."""
         return np.log(1 + np.exp(x))
 
     def sigmoid(self, x: float) -> float:
