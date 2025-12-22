@@ -14,6 +14,7 @@ __all__ = [
     "h_model_z_black_vault_framework",
     "h_model_z_mathematical_framework",
     "h_model_z_flash_loan_analyzer",
+    "hamiltonian_simulation",
 ]
 
 # Core components can be imported like:
