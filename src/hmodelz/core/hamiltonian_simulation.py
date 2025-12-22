@@ -1,12 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import quad
-from scipy.special import softplus
-import seaborn as sns
-from typing import Callable, Dict, List, Tuple
+from scipy.special import expit
+from typing import Dict, Tuple
 import warnings
 
-warnings.filterwarnings("ignore")
+warnings.filterwarnings("ignore", category=UserWarning)
 
 
 class ComplexHamiltonianSimulator:
@@ -74,12 +73,12 @@ class ComplexHamiltonianSimulator:
         }
 
     def softplus(self, x: float) -> float:
-        """Smooth, non-negative activation function."""
+        """Smooth, non-negative activation function using scipy.special.softplus."""
         return np.log(1 + np.exp(x))
 
     def sigmoid(self, x: float) -> float:
-        """Sigmoid activation function."""
-        return 1 / (1 + np.exp(-x))
+        """Sigmoid activation function using scipy.special.expit for numerical stability."""
+        return expit(x)
 
     def f_function(self, x: float) -> float:
         """Arbitrary function f(x) for the integral term."""
@@ -119,7 +118,7 @@ class ComplexHamiltonianSimulator:
         try:
             result, _ = quad(integrand, 0, t)
             return result
-        except:
+        except Exception:
             # Fallback for numerical issues
             return 0.0
 
@@ -265,19 +264,33 @@ class ComplexHamiltonianSimulator:
         # Calculate correlations between components
         correlations = {}
         for name, values in component_arrays.items():
-            if len(values) == len(H_values):
-                corr = np.corrcoef(H_values, values)[0, 1]
+            if len(values) == len(H_values) and len(values) > 1:
+                # Check for zero variance to avoid NaN
+                h_std = np.std(H_values)
+                v_std = np.std(values)
+                if h_std > 0 and v_std > 0:
+                    corr = np.corrcoef(H_values, values)[0, 1]
+                else:
+                    corr = 0.0
                 correlations[name] = corr
 
         # Detect patterns
-        patterns = {
-            "oscillatory_dominant": np.std(component_arrays["oscillatory"])
-            > np.std(H_values) * 0.5,
-            "stochastic_dominant": np.std(component_arrays["stochastic"]) > np.std(H_values) * 0.3,
-            "integral_growing": np.corrcoef(t_values, component_arrays["integral"])[0, 1] > 0.5,
-            "feedback_stable": np.std(component_arrays["delayed_feedback"])
-            < np.std(H_values) * 0.2,
-        }
+        patterns = {}
+        patterns["oscillatory_dominant"] = np.std(component_arrays["oscillatory"]) > np.std(H_values) * 0.5
+        patterns["stochastic_dominant"] = np.std(component_arrays["stochastic"]) > np.std(H_values) * 0.3
+        
+        # Check for zero variance before computing correlation
+        if len(t_values) > 1 and len(component_arrays["integral"]) == len(t_values):
+            t_std = np.std(t_values)
+            i_std = np.std(component_arrays["integral"])
+            if t_std > 0 and i_std > 0:
+                patterns["integral_growing"] = np.corrcoef(t_values, component_arrays["integral"])[0, 1] > 0.5
+            else:
+                patterns["integral_growing"] = False
+        else:
+            patterns["integral_growing"] = False
+            
+        patterns["feedback_stable"] = np.std(component_arrays["delayed_feedback"]) < np.std(H_values) * 0.2
 
         return stats, correlations, patterns
 
@@ -285,9 +298,17 @@ class ComplexHamiltonianSimulator:
         """Create comprehensive visualization of the simulation results."""
         print("\n📈 Generating Visualizations...")
 
-        # Set up the plotting style
-        plt.style.use("seaborn-v0_8")
-        fig = plt.figure(figsize=(20, 16))
+        # Set up the plotting style with a version-tolerant choice
+        try:
+            plt.style.use("seaborn-v0_8-darkgrid")
+        except (OSError, ValueError):
+            # Fallback for environments where the version-specific style is unavailable
+            try:
+                plt.style.use("seaborn-darkgrid")
+            except (OSError, ValueError):
+                # Final fallback to default style
+                pass
+        plt.figure(figsize=(20, 16))
 
         # Main Hamiltonian evolution
         ax1 = plt.subplot(3, 2, 1)
@@ -337,8 +358,16 @@ class ComplexHamiltonianSimulator:
 
         for i, name1 in enumerate(component_names):
             for j, name2 in enumerate(component_names):
-                if len(component_arrays[name1]) == len(component_arrays[name2]):
-                    corr = np.corrcoef(component_arrays[name1], component_arrays[name2])[0, 1]
+                x = component_arrays[name1]
+                y = component_arrays[name2]
+                if len(x) == len(y) and len(x) > 1:
+                    # Avoid np.corrcoef returning NaN when one of the arrays has zero variance
+                    x_std = np.std(x)
+                    y_std = np.std(y)
+                    if x_std > 0 and y_std > 0:
+                        corr = np.corrcoef(x, y)[0, 1]
+                    else:
+                        corr = 0.0
                     corr_matrix[i, j] = corr
 
         im = ax5.imshow(corr_matrix, cmap="RdBu_r", vmin=-1, vmax=1)
