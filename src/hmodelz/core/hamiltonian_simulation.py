@@ -300,14 +300,18 @@ class ComplexHamiltonianSimulator:
 
         # Set up the plotting style with a version-tolerant choice
         try:
-            plt.style.use("seaborn-v0_8-darkgrid")
+            # Prefer the original seaborn v0.8 style for consistent appearance
+            plt.style.use("seaborn-v0_8")
         except (OSError, ValueError):
-            # Fallback for environments where the version-specific style is unavailable
+            # Fallbacks for environments where specific styles are unavailable
             try:
-                plt.style.use("seaborn-darkgrid")
+                plt.style.use("seaborn-v0_8-darkgrid")
             except (OSError, ValueError):
-                # Final fallback to default style
-                pass
+                try:
+                    plt.style.use("seaborn-darkgrid")
+                except (OSError, ValueError):
+                    # Final fallback to default style
+                    pass
         plt.figure(figsize=(20, 16))
 
         # Main Hamiltonian evolution
