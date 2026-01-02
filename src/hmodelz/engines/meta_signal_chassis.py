@@ -306,7 +306,6 @@ class MultiOscillator(Subsystem):
         self.default_harmonics = {
             "A": 1.0,  # Default amplitude multiplier
             "phi": 0.0,  # Default phase offset
-            "exponential_decay": lambda t, C, D: C * np.exp(-D * t),
         }
 
     def add_oscillator(
@@ -339,6 +338,29 @@ class MultiOscillator(Subsystem):
         }
         self.models.append(model)
 
+    @staticmethod
+    def _compute_exponential_decay(
+        t: Union[float, NDArray[np.floating]], C: float, D: float
+    ) -> Union[float, NDArray[np.floating]]:
+        """
+        Compute exponential decay: C * exp(-D*t).
+
+        Parameters
+        ----------
+        t : Union[float, NDArray[np.floating]]
+            Time value(s)
+        C : float
+            Amplitude coefficient
+        D : float
+            Decay constant
+
+        Returns
+        -------
+        Union[float, NDArray[np.floating]]
+            Decay envelope
+        """
+        return C * np.exp(-D * t)
+
     def compute_superposition(
         self, t: Union[float, NDArray[np.floating]]
     ) -> Union[float, NDArray[np.floating]]:
@@ -368,7 +390,7 @@ class MultiOscillator(Subsystem):
 
             # Exponential decay: C * exp(-D*t)
             if model["decay_constant"] > 0:
-                decay = self.default_harmonics["exponential_decay"](
+                decay = self._compute_exponential_decay(
                     t, model["amplitude"], model["decay_constant"]
                 )
                 result += oscillation * decay
